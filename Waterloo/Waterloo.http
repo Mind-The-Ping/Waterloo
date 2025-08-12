@@ -1,0 +1,6 @@
+@Waterloo_HostAddress = http://localhost:5148
+
+GET {{Waterloo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
