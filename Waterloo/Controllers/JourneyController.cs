@@ -74,7 +74,7 @@ public class JourneyController(LineRepository lineRepository,
 
     [Authorize]
     [HttpGet("affectedJourneys")]
-    public async Task<IActionResult> AffectedJourneys(AffectedJourneysDto affectedJourneysDto)
+    public async Task<IActionResult> AffectedJourneys([FromQuery] AffectedJourneysDto affectedJourneysDto)
     {
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             affectedJourneysDto.LineId,

@@ -39,7 +39,11 @@ public class JourneyRepository(
 
     public async Task<bool> RemoveJourneyAsync(Guid id)
     {
-        var journey = _journeyDbContext.Journeys.Single(x => x.Id == id);
+        var journey = _journeyDbContext.Journeys.SingleOrDefault(x => x.Id == id);
+
+        if (journey == null) {
+            return false;
+        }
 
         _journeyDbContext.Remove(journey);
         return await _journeyDbContext.SaveChangesAsync() > 0;
