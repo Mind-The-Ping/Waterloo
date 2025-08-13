@@ -22,6 +22,9 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
     private readonly Model.Journey _defaultJourney;
 
+    private readonly static TimeZoneInfo _londonTimeZone =
+       TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
+
     public JourneyRepositoryTests(CustomWebApplicationFactory factory)
     {
         _scope = factory.Services.CreateScope();
@@ -84,8 +87,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         record.UserId.Should().Be(journey.UserId);
         record.LineId.Should().Be(journey.LineId);
         record.StationIds.Should().BeEquivalentTo(record.StationIds);
-        record.StartTime.Should().Be(journey.StartTime);
-        record.EndTime.Should().Be(journey.EndTime);
+        record.StartTime.Should().Be(ConvertToUtc(journey.StartTime));
+        record.EndTime.Should().Be(ConvertToUtc(journey.EndTime));
         record.DaysToCheck.Should().BeEquivalentTo(journey.DaysToCheck);
         record.Serverity.Should().Be(journey.Serverity);
     }
@@ -427,6 +430,16 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
           _affectedDay);
 
         result.Should().BeEmpty();
+    }
+
+    private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
+    {
+        var localDateTime = DateTime.Today.Add(timeOnly.ToTimeSpan());
+        var londonOffset = new DateTimeOffset(localDateTime, _londonTimeZone.GetUtcOffset(localDateTime));
+
+        var utcDateTime = londonOffset.ToUniversalTime().DateTime;
+
+        return TimeOnly.FromDateTime(utcDateTime);
     }
 
     public void Dispose()

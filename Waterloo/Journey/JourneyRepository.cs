@@ -13,6 +13,9 @@ public class JourneyRepository(
     private readonly RouteRepository _routeRepository = routeRepository;
     private readonly JourneyDbContext _journeyDbContext = journeyDbContext;
 
+    private readonly static TimeZoneInfo _londonTimeZone =  
+        TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
+
     public async Task<bool> AddJourneyAsync(
         Guid userId, 
         Guid lineId, 
@@ -27,8 +30,8 @@ public class JourneyRepository(
             UserId = userId,
             LineId = lineId,
             StationIds = [.. stationIds],
-            StartTime = startTime,
-            EndTime = endTime,
+            StartTime = ConvertToUtc(startTime),
+            EndTime = ConvertToUtc(endTime),
             DaysToCheck = [.. daysToCheck],
             Serverity = serverity
         };
@@ -102,7 +105,7 @@ public class JourneyRepository(
         return dirA != 0 && dirA == dirB;
     }
 
-    static int GetDirection(List<Guid> master, List<Guid> partial)
+    private static int GetDirection(List<Guid> master, List<Guid> partial)
     {
         var indexes = partial.Select(station => master.IndexOf(station)).ToList();
 
@@ -128,5 +131,15 @@ public class JourneyRepository(
         if (decreasing) return -1;
 
         return 0;
+    }
+
+    private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
+    {
+        var localDateTime = DateTime.Today.Add(timeOnly.ToTimeSpan());
+        var londonOffset = new DateTimeOffset(localDateTime, _londonTimeZone.GetUtcOffset(localDateTime));
+
+        var utcDateTime = londonOffset.ToUniversalTime().DateTime;
+
+        return TimeOnly.FromDateTime(utcDateTime);
     }
 }
