@@ -114,6 +114,29 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task JourneyRepository_Remove_Journey_WrongId_Fails()
+    {
+        var journey = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe
+        };
+
+        await _dbContext.Journeys.AddAsync(journey);
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid());
+        result.Should().BeFalse();
+
+        _dbContext.Journeys.Any(x => x.Id == journey.Id).Should().BeTrue();
+    }
+
+    [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Partial_Outside_Beginning_Successful()
     {
         var journey = new Model.Journey()

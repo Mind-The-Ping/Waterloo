@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -7,24 +8,34 @@ namespace Waterloo.Integration.Tests.ControllerTests;
 public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
+    private readonly HttpClient _unauthorizedClient;
 
     public MapControllerTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
         var token = factory.GenerateTestJwt(Guid.NewGuid());
 
+        _unauthorizedClient = factory.CreateClient();
+
         _client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
     }
 
     [Fact]
-    public async Task MapControllers_Get_Lines_Successful()
+    public async Task MapControllers_GetLines_Successful()
     {
         var response = await _client.GetAsync("api/map/lines");
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<IEnumerable<Model.Line>>();
         result.Count().Should().Be(11);
+    }
+
+    [Fact]
+    public async Task MapController_GetLines_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync("api/map/lines");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -41,6 +52,20 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task MapController_GetStationsByLineId_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync($"api/map/stations?id={Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50")}");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task MapController_GetStationsByLineId_InCorrectId_Fails()
+    {
+        var response = await _client.GetAsync($"api/map/stations?id={Guid.NewGuid()}");
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task MapController_GetStationByName_Successful()
     {
         var response = await _client.GetAsync($"api/map/station?name=angel");
@@ -50,5 +75,19 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Id.Should().Be(Guid.Parse("57fd1550-4c55-434e-8e96-041207c1ac63"));
         result.Name.Should().Be("Angel");
+    }
+
+    [Fact]
+    public async Task MapController_GetStationByName_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync($"api/map/station?name=angel");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task MapController_GetStationByName_WrongName_Fails()
+    {
+        var response = await _client.GetAsync($"api/map/station?name=wrong");
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
