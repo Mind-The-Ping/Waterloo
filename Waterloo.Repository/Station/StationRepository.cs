@@ -23,7 +23,7 @@ public class StationRepository
 
     public Model.Station? GetStationByName(string name)
     {
-       var station = Stations.FirstOrDefault(x => AreStringEqual(x.Name, name));
+       var station = Stations.FirstOrDefault(x => StationNameMatch(name, x.Name));
         return station == null ?
             null : new Model.Station(station.Id, station.Name);
     }
@@ -35,14 +35,24 @@ public class StationRepository
             null : new Model.Station(station.Id, station.Name);
     }
 
-    private static bool AreStringEqual(string a, string b)
+    private static bool StationNameMatch(string query, string stationName)
     {
-        a = a.ToLowerInvariant();
-        b = b.ToLowerInvariant();
+        query = NormalizeString(query);
+        stationName = NormalizeString(stationName);
 
-        a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
-        b = string.Concat(b.Where(c => !char.IsWhiteSpace(c)));
+        return query.Contains(stationName);
+    }
 
-        return string.Equals(a, b, StringComparison.Ordinal);
+    private static string NormalizeString(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) {
+            return string.Empty;
+        }
+
+        return new string(input
+            .Where(c => char.IsLetterOrDigit(c))
+            .ToArray())
+            .ToLowerInvariant()
+            .Trim();
     }
 }
