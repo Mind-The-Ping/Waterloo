@@ -19,6 +19,12 @@ public class MapController(LineRepository lineRepository, StationRepository stat
     }
 
     [Authorize]
+    [HttpGet("lineByName")]
+    public IActionResult Line(string name) {
+        return Ok(_lineRepository.GetLineByName(name));
+    }
+
+    [Authorize]
     [HttpGet("stations")]
     public IActionResult Stations(Guid id)
     {

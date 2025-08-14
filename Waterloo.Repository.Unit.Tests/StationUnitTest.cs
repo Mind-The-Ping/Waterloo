@@ -495,6 +495,7 @@ public class StationUnitTest
     [InlineData("St.John's Wood")]
     [InlineData("St. John's Wood")]
     [InlineData("st.jOhn's wooD")]
+    [InlineData("st.jOhn's wooD UnderGround Station")]
     public void StationRepository_GetStationByName_CorrectStation(string name)
     {
         var result = _stationRepository.GetStationByName(name);

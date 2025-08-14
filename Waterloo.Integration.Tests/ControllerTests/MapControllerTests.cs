@@ -52,6 +52,25 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task MapController_GetLineByName_Successful()
+    {
+        var response = await _client.GetAsync($"api/map/lineByName?name=bakerloo");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        var result = await response.Content.ReadFromJsonAsync<Model.Line>();
+
+        result.Id.Should().Be(Guid.Parse("e6d7a23e-0f5f-4a90-a1c7-4e8e48c64823"));
+        result.Name.Should().Be("Bakerloo");
+    }
+
+    [Fact]
+    public async Task MapController_GetLineByName_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync($"api/map/lineByName?name=bakerloo");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
     public async Task MapController_GetStationsByLineId_UnAuthorized_User_Fails()
     {
         var response = await _unauthorizedClient.GetAsync($"api/map/stations?id={Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50")}");

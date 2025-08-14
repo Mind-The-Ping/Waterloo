@@ -22,4 +22,21 @@ public class LineRepository
         return line == null ? null : new Model.Line(line.Id, line.Name);
     }
 
+    public Model.Line? GetLineByName(string name)
+    {
+        var line = Lines.FirstOrDefault(x => AreStringEqual(x.Name, name));
+        return line == null ?
+            null : new Model.Line(line.Id, line.Name);
+    }
+
+    private static bool AreStringEqual(string a, string b)
+    {
+        a = a.ToLowerInvariant();
+        b = b.ToLowerInvariant();
+
+        a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
+        b = string.Concat(b.Where(c => !char.IsWhiteSpace(c)));
+
+        return string.Equals(a, b, StringComparison.Ordinal);
+    }
 }
