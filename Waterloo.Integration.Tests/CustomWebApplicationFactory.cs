@@ -60,7 +60,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
              ]),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationInMinutes")),
             SigningCredentials = credentials,
-            Issuer = configuration["Jwt:Issuer"],
+            Issuer = configuration.GetSection("Jwt:Issuers").Get<string[]>()!.First(),
             Audience = configuration["Jwt:Audience"]
         };
 

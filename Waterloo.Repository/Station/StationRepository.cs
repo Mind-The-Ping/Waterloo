@@ -7,7 +7,7 @@ public class StationRepository
 
     public StationRepository()
     {
-        using StreamReader r = new("station.json");
+        using StreamReader r = new(Path.Combine(AppContext.BaseDirectory, "Data", "station.json"));
         string json = r.ReadToEnd();
         Stations = JsonSerializer.Deserialize<Station[]>(json)
             ?? throw new Exception("station.json file not found");
@@ -50,7 +50,7 @@ public class StationRepository
         }
 
         return new string(input
-            .Where(c => char.IsLetterOrDigit(c))
+            .Where(char.IsLetterOrDigit)
             .ToArray())
             .ToLowerInvariant()
             .Trim();

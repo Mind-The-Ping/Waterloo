@@ -1,6 +1,6 @@
-@Waterloo_HostAddress = http://localhost:5148
+@Waterloo_HostAddress = https://localhost:7089
 
-GET {{Waterloo_HostAddress}}/weatherforecast/
-Accept: application/json
+@name=string
+GET {{Waterloo_HostAddress}}/api/map/lineByName?name={{name}}
 
 ###

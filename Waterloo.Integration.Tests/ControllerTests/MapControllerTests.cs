@@ -55,7 +55,7 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     public async Task MapController_GetLineByName_Successful()
     {
         var response = await _client.GetAsync($"api/map/lineByName?name=bakerloo");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<Model.Line>();
 
