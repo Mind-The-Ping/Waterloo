@@ -8,7 +8,7 @@ public class RouteRepository
 
     public RouteRepository()
     {
-        using StreamReader r = new("route.json");
+        using StreamReader r = new(Path.Combine(AppContext.BaseDirectory, "Data", "route.json"));
         string json = r.ReadToEnd();
         Lines = JsonSerializer.Deserialize<LineData>(json)
            ?? throw new Exception("route.json file not found");

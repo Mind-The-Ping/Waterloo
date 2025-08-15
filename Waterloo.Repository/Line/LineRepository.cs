@@ -7,7 +7,7 @@ public class LineRepository
 
     public LineRepository()
     {
-        using StreamReader r = new("line.json");
+        using StreamReader r = new(Path.Combine(AppContext.BaseDirectory, "Data", "line.json"));
         string json = r.ReadToEnd();
         Lines = JsonSerializer.Deserialize<Line[]>(json)
             ?? throw new Exception($" line.json file wasn't found");
