@@ -226,8 +226,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<List<Guid>>();
-        result.First().Should().Be(journey.UserId);
+        var result = await response.Content.ReadFromJsonAsync<List<AffectedUser>>();
+        result.First().Id.Should().Be(journey.UserId);
     }
 
     [Fact]

@@ -15,7 +15,7 @@ public interface IJourneyRepository
 
     public Task<bool> RemoveJourneyAsync(Guid id);
 
-    public Task<IEnumerable<Guid>> GetUserIdsForAffectedJourneysAsync(
+    public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
         Guid startStation,
         Guid endStation,

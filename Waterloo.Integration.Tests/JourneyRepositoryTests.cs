@@ -173,7 +173,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.UserId);
+        result.First().EndTime.Should().Be(journey.EndTime);
     }
 
     [Fact]
@@ -206,7 +207,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.UserId);
+        result.First().EndTime.Should().Be(journey.EndTime);
     }
 
     [Fact]
@@ -239,7 +241,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.UserId);
+        result.First().EndTime.Should().Be(journey.EndTime);
     }
 
     [Fact]
@@ -277,7 +280,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.UserId);
+        result.First().EndTime.Should().Be(journey.EndTime);
     }
 
     [Fact]
@@ -344,7 +348,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
           _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.UserId);
+        result.First().EndTime.Should().Be(journey.EndTime);
     }
 
     [Fact]
@@ -410,7 +415,9 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
           _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Should().Be(_defaultJourney.UserId);
+
+        result.First().Id.Should().Be(_defaultJourney.UserId);
+        result.First().EndTime.Should().Be(_defaultJourney.EndTime);
     }
 
     [Fact]

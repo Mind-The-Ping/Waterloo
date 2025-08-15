@@ -52,7 +52,7 @@ public class JourneyRepository(
         return await _journeyDbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<IEnumerable<Guid>> GetUserIdsForAffectedJourneysAsync(
+    public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
         Guid startStation,
         Guid endStation,
@@ -78,7 +78,7 @@ public class JourneyRepository(
                   endStation, 
                   [.. j.StationIds], 
                   [.. queryStations]))
-              .Select(j => j.UserId)
+              .Select(j => new AffectedUser(j.UserId, j.EndTime))
               .Distinct();
 
 
