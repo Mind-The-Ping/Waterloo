@@ -12,6 +12,8 @@ using Waterloo.Database;
 namespace Waterloo.Integration.Tests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
+    private readonly string _databaseName = $"testdb_{Guid.NewGuid():N}";
+
     public JourneyDbContext DbContext { get; private set; } = null!;
     public IConfiguration Configuration { get; private set; } = null!;
 
@@ -27,7 +29,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             }
 
             services.AddDbContext<JourneyDbContext>(options => {
-                options.UseNpgsql("Host=localhost;Port=5432;Database=waterloo_db;Username=waterlooUser;Password=password12345");
+                options.UseNpgsql($"Host=localhost;Port=5432;Database={_databaseName};Username=waterlooUser;Password=password12345");
             });
 
             var sp = services.BuildServiceProvider();
