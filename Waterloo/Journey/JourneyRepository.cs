@@ -144,4 +144,7 @@ public class JourneyRepository(
 
         return TimeOnly.FromDateTime(utcDateTime);
     }
+
+    public IEnumerable<Model.Journey> GetJourneysByUserId(Guid userId) =>
+         _journeyDbContext.Journeys.Where(x => x.UserId == userId);
 }
