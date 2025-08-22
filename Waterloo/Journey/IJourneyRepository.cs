@@ -22,4 +22,6 @@ public interface IJourneyRepository
         Serverity serverity,
         TimeOnly dateTime,
         DayOfWeek queryDay);
+
+    public IEnumerable<Model.Journey> GetJourneysByUserId(Guid userId);
 }

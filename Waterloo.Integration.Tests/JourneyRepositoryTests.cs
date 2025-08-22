@@ -439,6 +439,57 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task JourneyRepository_GetJourneysByUserId_Successful()
+    {
+        await _dbContext.Journeys.AddAsync(_defaultJourney);
+        await _dbContext.SaveChangesAsync();
+
+        var result = _journeyRepository.GetJourneysByUserId(_defaultJourney.UserId);
+
+        result.Count().Should().Be(1);
+        result.Should().BeEquivalentTo([_defaultJourney]);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_GetJourneysByUserId_Non_Existent_User_Fails()
+    {
+        await _dbContext.Journeys.AddAsync(_defaultJourney);
+        await _dbContext.SaveChangesAsync();
+
+        var result = _journeyRepository.GetJourneysByUserId(Guid.NewGuid());
+
+        result.Count().Should().Be(0);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_GetJourneysByUserId_Gets_Correct_Journey()
+    {
+        var diffJourney = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.Parse("9c834a1e-8a34-4c1e-943e-6f37b8e1e9d4"),
+            StationIds = [
+               Guid.Parse("8f56cc51-2827-4fcb-8983-b1959c3c1e07"),
+               Guid.Parse("e7beb5c1-a574-421f-b92e-ea66acddc230"),
+               Guid.Parse("68807451-ca6b-491d-9da6-722ce632ffa6")
+             ],
+            StartTime = new TimeOnly(10, 00),
+            EndTime = new TimeOnly(12, 00),
+            DaysToCheck = [DayOfWeek.Monday, DayOfWeek.Tuesday],
+            Serverity = Serverity.Minor
+        };
+
+        await _dbContext.Journeys.AddAsync(diffJourney);
+        await _dbContext.Journeys.AddAsync(_defaultJourney);
+        await _dbContext.SaveChangesAsync();
+
+        var result = _journeyRepository.GetJourneysByUserId(diffJourney.UserId);
+
+        result.Count().Should().Be(1);
+        result.Should().BeEquivalentTo([diffJourney]);
+    }
+
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
         var londonToday = TimeZoneInfo.ConvertTime(DateTime.Today, _londonTimeZone);

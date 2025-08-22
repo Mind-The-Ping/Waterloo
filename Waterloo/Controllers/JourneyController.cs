@@ -59,13 +59,26 @@ public class JourneyController(LineRepository lineRepository,
     }
 
     [Authorize]
+    [HttpGet("getByUserId")]
+    public IActionResult GetJourneysByUserId(Guid id)
+    {
+        var result = _journeyRepository.GetJourneysByUserId(id);
+
+        if (result == null || !result.Any()) {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [Authorize]
     [HttpDelete("delete")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await _journeyRepository.RemoveJourneyAsync(id);
 
         if (!result) {
-            return BadRequest($"Sorry couldn't delete {id}");
+            return BadRequest($" Could not delete {id}");
         }
 
         return Ok(id);

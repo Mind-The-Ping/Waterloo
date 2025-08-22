@@ -130,6 +130,58 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task JourneyControllers_GetJourneysByUserId_Successful()
+    {
+        var journey = new Model.Journey
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(6, 00),
+            DaysToCheck = [DayOfWeek.Thursday],
+            Serverity = Serverity.Severe
+        };
+
+        await _dbContext.Journeys.AddAsync(journey);
+        await _dbContext.SaveChangesAsync();
+
+        var response = await _client.GetAsync($"api/journey/getByUserId?id={journey.UserId}");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<Model.Journey>>();
+        result.First().UserId.Should().Be(journey.UserId);
+    }
+
+    [Fact]
+    public async Task JourneyControllers_GetJourneysByUserId_UnAuthorized_Fails()
+    {
+        var journey = new Model.Journey
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(6, 00),
+            DaysToCheck = [DayOfWeek.Thursday],
+            Serverity = Serverity.Severe
+        };
+
+        await _dbContext.Journeys.AddAsync(journey);
+        await _dbContext.SaveChangesAsync();
+
+        var response = await _unauthorizedClient.GetAsync($"api/journey/getByUserId?id={journey.UserId}");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task JourneyControllers_GetJourneysByUserId_No_Matching_User_Fails()
+    {
+        var response = await _client.GetAsync($"api/journey/getByUserId?id={Guid.NewGuid()}");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task JourneyControllers_Delete_Successful()
     {
         var journey = new Model.Journey
@@ -143,12 +195,13 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        _dbContext.Journeys.Add(journey);
+        await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
         var response = await _client.DeleteAsync($"api/journey/delete?id={journey.Id}");
         response.EnsureSuccessStatusCode();
     }
+
 
     [Fact]
     public async Task JourneyControllers_Delete_UnAuthorized_User_Fails()
@@ -164,7 +217,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        _dbContext.Journeys.Add(journey);
+        await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
         var response = await _unauthorizedClient.DeleteAsync($"api/journey/delete?id={journey.Id}");
@@ -185,7 +238,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        _dbContext.Journeys.Add(journey);
+        await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
         var response = await _client.DeleteAsync($"api/journey/delete?id={Guid.NewGuid()}");
@@ -208,7 +261,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        _dbContext.Journeys.Add(journey);
+        await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
         var url = QueryHelpers.AddQueryString(
@@ -245,7 +298,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        _dbContext.Journeys.Add(journey);
+        await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
         var url = QueryHelpers.AddQueryString(
