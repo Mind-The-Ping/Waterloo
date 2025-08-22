@@ -135,10 +135,12 @@ public class JourneyRepository(
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
-        var localDateTime = DateTime.Today.Add(timeOnly.ToTimeSpan());
-        var londonOffset = new DateTimeOffset(localDateTime, _londonTimeZone.GetUtcOffset(localDateTime));
+        var londonDateTime = DateTime.SpecifyKind(
+            DateTime.Today.Add(timeOnly.ToTimeSpan()),
+            DateTimeKind.Unspecified
+        );
 
-        var utcDateTime = londonOffset.ToUniversalTime().DateTime;
+        var utcDateTime = TimeZoneInfo.ConvertTimeToUtc(londonDateTime, _londonTimeZone);
 
         return TimeOnly.FromDateTime(utcDateTime);
     }
