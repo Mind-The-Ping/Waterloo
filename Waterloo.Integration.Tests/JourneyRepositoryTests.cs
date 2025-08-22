@@ -441,10 +441,10 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
-        var localDateTime = DateTime.SpecifyKind(DateTime.Today.Add(timeOnly.ToTimeSpan()), DateTimeKind.Unspecified);
-        var londonOffset = new DateTimeOffset(localDateTime, _londonTimeZone.GetUtcOffset(localDateTime));
+        var londonToday = TimeZoneInfo.ConvertTime(DateTime.Today, _londonTimeZone);
+        var londonDateTime = londonToday.Date + timeOnly.ToTimeSpan();
 
-        var utcDateTime = londonOffset.UtcDateTime;
+        var utcDateTime = TimeZoneInfo.ConvertTimeToUtc(londonDateTime, _londonTimeZone);
 
         return TimeOnly.FromDateTime(utcDateTime);
     }
