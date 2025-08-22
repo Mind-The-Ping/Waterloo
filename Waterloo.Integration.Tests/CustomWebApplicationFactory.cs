@@ -13,7 +13,6 @@ namespace Waterloo.Integration.Tests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _databaseName = $"testdb_{Guid.NewGuid():N}";
-
     public JourneyDbContext DbContext { get; private set; } = null!;
     public IConfiguration Configuration { get; private set; } = null!;
 
