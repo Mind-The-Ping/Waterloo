@@ -40,6 +40,17 @@ public class JourneyRepository(
         return await _journeyDbContext.SaveChangesAsync() > 0;
     }
 
+    public IEnumerable<JourneyReturn> GetJourneysByUserId(Guid userId) =>
+     _journeyDbContext.Journeys.Where(x => x.UserId == userId)
+        .AsEnumerable()
+        .Select(x => new JourneyReturn(
+            x.StationIds.First(), 
+            x.StationIds.Last(),
+            x.StartTime,
+            x.EndTime,
+            x.DaysToCheck,
+            x.Serverity));
+
     public async Task<bool> RemoveJourneyAsync(Guid id)
     {
         var journey = _journeyDbContext.Journeys.SingleOrDefault(x => x.Id == id);
@@ -144,7 +155,4 @@ public class JourneyRepository(
 
         return TimeOnly.FromDateTime(utcDateTime);
     }
-
-    public IEnumerable<Model.Journey> GetJourneysByUserId(Guid userId) =>
-         _journeyDbContext.Journeys.Where(x => x.UserId == userId);
 }

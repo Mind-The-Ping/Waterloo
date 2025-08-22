@@ -149,8 +149,10 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         var response = await _client.GetAsync($"api/journey/getByUserId?id={journey.UserId}");
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<IEnumerable<Model.Journey>>();
-        result.First().UserId.Should().Be(journey.UserId);
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<JourneyReturn>>();
+
+        result.First().StartStationId.Should().Be(journey.StationIds.First());
+        result.First().EndStationId.Should().Be(journey.StationIds.Last());
     }
 
     [Fact]
