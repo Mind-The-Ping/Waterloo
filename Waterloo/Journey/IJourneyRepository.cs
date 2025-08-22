@@ -23,5 +23,5 @@ public interface IJourneyRepository
         TimeOnly dateTime,
         DayOfWeek queryDay);
 
-    public IEnumerable<Model.Journey> GetJourneysByUserId(Guid userId);
+    public IEnumerable<JourneyReturn> GetJourneysByUserId(Guid userId);
 }

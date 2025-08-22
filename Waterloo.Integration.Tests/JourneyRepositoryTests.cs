@@ -448,7 +448,14 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         var result = _journeyRepository.GetJourneysByUserId(_defaultJourney.UserId);
 
         result.Count().Should().Be(1);
-        result.Should().BeEquivalentTo([_defaultJourney]);
+        result.Should().BeEquivalentTo([
+            new JourneyReturn(
+                _defaultJourney.StationIds.First(),
+                _defaultJourney.StationIds.Last(),
+                _defaultJourney.StartTime,
+                _defaultJourney.EndTime,
+                _defaultJourney.DaysToCheck,
+                _defaultJourney.Serverity)]);
     }
 
     [Fact]
@@ -487,7 +494,14 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         var result = _journeyRepository.GetJourneysByUserId(diffJourney.UserId);
 
         result.Count().Should().Be(1);
-        result.Should().BeEquivalentTo([diffJourney]);
+        result.Should().BeEquivalentTo([
+          new JourneyReturn(
+                diffJourney.StationIds.First(),
+                diffJourney.StationIds.Last(),
+                diffJourney.StartTime,
+                diffJourney.EndTime,
+                diffJourney.DaysToCheck,
+                diffJourney.Serverity)]);
     }
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
