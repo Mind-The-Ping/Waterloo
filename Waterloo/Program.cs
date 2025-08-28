@@ -21,15 +21,13 @@ builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
         var issuers = builder.Configuration.GetSection("Jwt:Issuers").Get<string[]>();
-
-
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidIssuers = issuers,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
