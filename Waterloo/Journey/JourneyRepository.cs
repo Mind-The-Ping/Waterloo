@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using Waterloo.Database;
 using Waterloo.Model;
 using Waterloo.Repository.Route;
+using Waterloo.Repository.Station;
 
 namespace Waterloo.Journey;
 
 public class JourneyRepository(
     JourneyDbContext journeyDbContext, 
-    RouteRepository routeRepository) : IJourneyRepository
+    RouteRepository routeRepository,
+    StationRepository stationRepository) : IJourneyRepository
 {
     private readonly RouteRepository _routeRepository = routeRepository;
     private readonly JourneyDbContext _journeyDbContext = journeyDbContext;
+    private readonly StationRepository _stationRepository = stationRepository;
 
     private readonly static TimeZoneInfo _londonTimeZone =  
         TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
@@ -89,7 +91,11 @@ public class JourneyRepository(
                   endStation, 
                   [.. j.StationIds], 
                   [.. queryStations]))
-              .Select(j => new AffectedUser(j.UserId, j.EndTime))
+              .Select(j => new AffectedUser(
+                  j.UserId,
+                      _stationRepository.GetStationById(startStation) ?? throw new InvalidOperationException($"Station {startStation} not found"),
+    _stationRepository.GetStationById(endStation) ?? throw new InvalidOperationException($"Station {endStation} not found"),
+                  j.EndTime))
               .Distinct();
 
 
