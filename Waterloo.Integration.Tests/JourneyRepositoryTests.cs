@@ -32,7 +32,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         _dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
-        _journeyRepository = new JourneyRepository(_dbContext, new RouteRepository());
+        _journeyRepository = new JourneyRepository(_dbContext, new RouteRepository(), new Repository.Station.StationRepository());
 
        _defaultJourney = new Model.Journey()
         {
@@ -174,6 +174,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
+        result.First().StartStation.Should().Be(_affectedStationStart);
+        result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -208,6 +210,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
+        result.First().StartStation.Should().Be(_affectedStationStart);
+        result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -242,6 +246,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
+        result.First().StartStation.Should().Be(_affectedStationStart);
+        result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -281,6 +287,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
+        result.First().StartStation.Should().Be(_affectedStationStart);
+        result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -349,6 +357,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
+        result.First().StartStation.Should().Be(_affectedStationEnd);
+        result.First().EndStation.Should().Be(_affectedStationStart);
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -408,7 +418,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-           _affectedStationStart.Id,
+          _affectedStationStart.Id,
           _affectedStationEnd.Id,
           _affectedSeverity,
           _affectedTime,
@@ -417,6 +427,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Should().NotBeEmpty();
 
         result.First().Id.Should().Be(_defaultJourney.UserId);
+        result.First().StartStation.Should().Be(_affectedStationStart);
+        result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(_defaultJourney.EndTime);
     }
 
