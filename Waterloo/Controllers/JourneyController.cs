@@ -96,10 +96,6 @@ public class JourneyController(LineRepository lineRepository,
             affectedJourneysDto.QueryTime,
             affectedJourneysDto.QueryDay);
 
-        if(result == null || !result.Any()) {
-            return NotFound();
-        }
-
         return Ok(result);
     }
 }
