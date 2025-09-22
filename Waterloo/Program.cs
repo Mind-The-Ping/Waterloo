@@ -1,5 +1,9 @@
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.Text;
 using Waterloo.Database;
 using Waterloo.Journey;
@@ -9,8 +13,55 @@ using Waterloo.Repository.Station;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var insightsConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+
+builder.Logging.ClearProviders();
+
+if(builder.Environment.IsProduction())
+{
+    var resourceBuilder = ResourceBuilder.CreateDefault()
+       .AddService(
+           serviceName: builder.Environment.ApplicationName,
+           serviceVersion: "1.0.0");
+
+    builder.Logging.AddOpenTelemetry(logging =>
+    {
+        logging.IncludeFormattedMessage = true;
+        logging.IncludeScopes = true;
+        logging.SetResourceBuilder(resourceBuilder);
+
+        logging.AddAzureMonitorLogExporter(o =>
+        {
+            o.ConnectionString = insightsConnectionString;
+        });
+    });
+
+    builder.Services.AddOpenTelemetry()
+      .ConfigureResource(rb => rb.AddService(builder.Environment.ApplicationName))
+      .WithTracing(tracing => tracing
+          .AddAspNetCoreInstrumentation()
+          .AddHttpClientInstrumentation()
+          .AddSqlClientInstrumentation()
+          .AddAzureMonitorTraceExporter(o =>
+          {
+              o.ConnectionString = insightsConnectionString;
+          }))
+      .WithMetrics(metrics => metrics
+          .AddAspNetCoreInstrumentation()
+          .AddHttpClientInstrumentation()
+          .AddRuntimeInstrumentation()
+          .AddAzureMonitorMetricExporter(o =>
+          {
+              o.ConnectionString = insightsConnectionString;
+          }));
+}
+else
+{
+    builder.Logging.AddConsole();
+}
+
 builder.Services.AddDbContext<JourneyDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<LineRepository>();
 builder.Services.AddScoped<RouteRepository>();
@@ -30,7 +81,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuers = issuers,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
         };
     });
 

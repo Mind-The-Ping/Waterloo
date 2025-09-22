@@ -134,7 +134,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         var journey = new Model.Journey
         {
-            UserId = Guid.NewGuid(),
+            UserId = _id,
             LineId = Guid.NewGuid(),
             StationIds = [Guid.NewGuid()],
             StartTime = new TimeOnly(5, 00),
@@ -146,7 +146,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         await _dbContext.Journeys.AddAsync(journey);
         await _dbContext.SaveChangesAsync();
 
-        var response = await _client.GetAsync($"api/journey/getByUserId?id={journey.UserId}");
+        var response = await _client.GetAsync($"api/journey/getByUserId");
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<IEnumerable<JourneyReturn>>();
@@ -227,7 +227,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task JourneyControllers_Delete_WrongId_Fails()
+    public async Task JourneyControllers_Delete_WrongId_Successful()
     {
         var journey = new Model.Journey
         {
@@ -244,7 +244,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         await _dbContext.SaveChangesAsync();
 
         var response = await _client.DeleteAsync($"api/journey/delete?id={Guid.NewGuid()}");
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.EnsureSuccessStatusCode();
     }
 
 

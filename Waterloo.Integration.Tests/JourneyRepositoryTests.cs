@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using Waterloo.Database;
 using Waterloo.Journey;
 using Waterloo.Model;
@@ -19,6 +21,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly Serverity _affectedSeverity = Serverity.Severe;
     private readonly TimeOnly _affectedTime = new(8, 00);
     private readonly DayOfWeek _affectedDay = DayOfWeek.Monday;
+    private readonly ILogger<JourneyRepository> _logger = Substitute.For<ILogger<JourneyRepository>>();
 
     private readonly Model.Journey _defaultJourney;
 
@@ -32,7 +35,12 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         _dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
-        _journeyRepository = new JourneyRepository(_dbContext, new RouteRepository(), new Repository.Station.StationRepository());
+
+        _journeyRepository = new JourneyRepository(
+            _dbContext, 
+            new RouteRepository(), 
+            new Repository.Station.StationRepository(),
+            _logger);
 
        _defaultJourney = new Model.Journey()
         {
@@ -78,7 +86,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             journey.DaysToCheck,
             journey.Serverity);
 
-        result.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         var record = _dbContext.Journeys
             .Single(x =>
@@ -111,7 +119,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         await _dbContext.SaveChangesAsync();
 
         var result = await _journeyRepository.RemoveJourneyAsync(journey.Id);
-        result.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         _dbContext.Journeys.Any(x => x.Id == journey.Id).Should().BeFalse();
     }
@@ -134,7 +142,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         await _dbContext.SaveChangesAsync();
 
         var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid());
-        result.Should().BeFalse();
+        result.IsSuccess.Should().BeTrue();
 
         _dbContext.Journeys.Any(x => x.Id == journey.Id).Should().BeTrue();
     }

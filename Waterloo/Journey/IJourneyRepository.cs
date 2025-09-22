@@ -1,10 +1,11 @@
-﻿using Waterloo.Model;
+﻿using CSharpFunctionalExtensions;
+using Waterloo.Model;
 
 namespace Waterloo.Journey;
 
 public interface IJourneyRepository
 {
-    public Task<bool> AddJourneyAsync(
+    public Task<Result> AddJourneyAsync(
         Guid userId, 
         Guid lineId, 
         IEnumerable<Guid> stationIds,
@@ -13,7 +14,7 @@ public interface IJourneyRepository
         IEnumerable<DayOfWeek> daysToCheck,
         Serverity serverity);
 
-    public Task<bool> RemoveJourneyAsync(Guid id);
+    public Task<Result> RemoveJourneyAsync(Guid id);
 
     public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,

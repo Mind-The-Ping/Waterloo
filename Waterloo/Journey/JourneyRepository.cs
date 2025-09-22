@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
 using Waterloo.Database;
 using Waterloo.Model;
 using Waterloo.Repository.Route;
@@ -9,16 +10,18 @@ namespace Waterloo.Journey;
 public class JourneyRepository(
     JourneyDbContext journeyDbContext, 
     RouteRepository routeRepository,
-    StationRepository stationRepository) : IJourneyRepository
+    StationRepository stationRepository,
+    ILogger<JourneyRepository> logger) : IJourneyRepository
 {
     private readonly RouteRepository _routeRepository = routeRepository;
     private readonly JourneyDbContext _journeyDbContext = journeyDbContext;
     private readonly StationRepository _stationRepository = stationRepository;
+    private readonly ILogger<JourneyRepository> _logger = logger;
 
     private readonly static TimeZoneInfo _londonTimeZone =  
         TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
 
-    public async Task<bool> AddJourneyAsync(
+    public async Task<Result> AddJourneyAsync(
         Guid userId, 
         Guid lineId, 
         IEnumerable<Guid> stationIds,
@@ -38,8 +41,20 @@ public class JourneyRepository(
             Serverity = serverity
         };
 
-        _journeyDbContext.Journeys.Add(journey);
-        return await _journeyDbContext.SaveChangesAsync() > 0;
+        try
+        {
+            await _journeyDbContext.Journeys.AddAsync(journey);
+            await _journeyDbContext.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            var message = $"Could not save journey for user: {userId}.";
+
+            _logger.LogError(ex, message);
+            return Result.Failure(message);
+        }
+
+        return Result.Success();
     }
 
     public IEnumerable<JourneyReturn> GetJourneysByUserId(Guid userId) =>
@@ -53,16 +68,30 @@ public class JourneyRepository(
             x.DaysToCheck,
             x.Serverity));
 
-    public async Task<bool> RemoveJourneyAsync(Guid id)
+    public async Task<Result> RemoveJourneyAsync(Guid id)
     {
         var journey = _journeyDbContext.Journeys.SingleOrDefault(x => x.Id == id);
 
-        if (journey == null) {
-            return false;
+        if(journey == null)
+        {
+            _logger.LogInformation("Could not find {id} to delete.", id);
+            return Result.Success();
         }
 
-        _journeyDbContext.Remove(journey);
-        return await _journeyDbContext.SaveChangesAsync() > 0;
+        try
+        {
+            _journeyDbContext.Remove(journey);
+            await _journeyDbContext.SaveChangesAsync();
+        }
+        catch(Exception ex)
+        {
+            var message = $"Could not delete journey {id}.";
+
+            _logger.LogError(ex, message);
+            return Result.Failure(message);
+        }
+
+        return Result.Success();
     }
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
