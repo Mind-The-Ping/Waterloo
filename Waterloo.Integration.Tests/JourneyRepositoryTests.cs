@@ -6,6 +6,7 @@ using Waterloo.Database;
 using Waterloo.Journey;
 using Waterloo.Model;
 using Waterloo.Repository.Route;
+using Waterloo.Repository.Station;
 
 namespace Waterloo.Integration.Tests;
 
@@ -16,8 +17,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly JourneyRepository _journeyRepository;
 
     private readonly Line _affectedLine = new(Guid.Parse("2f0c75a5-8149-49b7-9cc6-32e4a5246d7f"), "Jubilee");
-    private readonly Station _affectedStationStart = new(Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), "Bond Street");
-    private readonly Station _affectedStationEnd = new(Guid.Parse("28cee11a-267d-4170-9cdc-2e7ef7b6ca40"), "Canada Water");
+    private readonly Model.Station _affectedStationStart = new(Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), "Bond Street");
+    private readonly Model.Station _affectedStationEnd = new(Guid.Parse("28cee11a-267d-4170-9cdc-2e7ef7b6ca40"), "Canada Water");
     private readonly Serverity _affectedSeverity = Serverity.Severe;
     private readonly TimeOnly _affectedTime = new(8, 00);
     private readonly DayOfWeek _affectedDay = DayOfWeek.Monday;
@@ -28,6 +29,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly static TimeZoneInfo _londonTimeZone =
        TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
 
+    private readonly StationRepository _stationRepository;
+
     public JourneyRepositoryTests(CustomWebApplicationFactory factory)
     {
         _scope = factory.Services.CreateScope();
@@ -36,10 +39,12 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         _dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
 
+        _stationRepository = new StationRepository();
+
         _journeyRepository = new JourneyRepository(
             _dbContext, 
             new RouteRepository(), 
-            new Repository.Station.StationRepository(),
+            _stationRepository,
             _logger);
 
        _defaultJourney = new Model.Journey()
@@ -182,8 +187,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
-        result.First().StartStation.Should().Be(_affectedStationStart);
-        result.First().EndStation.Should().Be(_affectedStationEnd);
+        result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
+        result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -218,8 +223,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
-        result.First().StartStation.Should().Be(_affectedStationStart);
-        result.First().EndStation.Should().Be(_affectedStationEnd);
+        result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
+        result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -254,8 +259,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
-        result.First().StartStation.Should().Be(_affectedStationStart);
-        result.First().EndStation.Should().Be(_affectedStationEnd);
+        result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
+        result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
@@ -365,8 +370,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.UserId);
-        result.First().StartStation.Should().Be(_affectedStationEnd);
-        result.First().EndStation.Should().Be(_affectedStationStart);
+        result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
+        result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
     }
 
