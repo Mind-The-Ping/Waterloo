@@ -122,8 +122,8 @@ public class JourneyRepository(
                   [.. queryStations]))
               .Select(j => new AffectedUser(
                   j.UserId,
-                      _stationRepository.GetStationById(startStation) ?? throw new InvalidOperationException($"Station {startStation} not found"),
-    _stationRepository.GetStationById(endStation) ?? throw new InvalidOperationException($"Station {endStation} not found"),
+                  _stationRepository.GetStationById(j.StationIds.First()) ?? throw new InvalidOperationException($"Station {startStation} not found"),
+                  _stationRepository.GetStationById(j.StationIds.Last()) ?? throw new InvalidOperationException($"Station {endStation} not found"),
                   j.EndTime))
               .Distinct();
 
