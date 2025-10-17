@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Waterloo.Dtos;
 
 namespace Waterloo.Integration.Tests.ControllerTests;
 
@@ -47,8 +48,8 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
         var result = await response.Content.ReadFromJsonAsync<List<Model.Station>>();
 
         result.Count().Should().Be(2);
-        result[0].Should().NotBeEquivalentTo(new Model.Station(Guid.Parse("8cebdb43-8d17-49a2-a06b-1f3513091845"), "Waterloo"));
-        result[1].Should().NotBeEquivalentTo(new Model.Station(Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), "Bank"));
+        result[0].Should().BeEquivalentTo(new Model.Station(Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), "Bank"));
+        result[1].Should().BeEquivalentTo(new Model.Station(Guid.Parse("8cebdb43-8d17-49a2-a06b-1f3513091845"), "Waterloo"));
     }
 
     [Fact]
@@ -108,5 +109,34 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         var response = await _client.GetAsync($"api/map/station?name=wrong");
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task MapController_ToStations_Successful()
+    {
+        var lineId = Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50");
+        var stationId = Guid.Parse("8cebdb43-8d17-49a2-a06b-1f3513091845");
+
+        var toStationDto = new ToStationDto(lineId, stationId);
+
+        var response = await _client.PostAsJsonAsync("api/map/toStations", toStationDto);
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<Model.Station>>();
+
+        result.Count().Should().Be(1);
+        result.ElementAt(0).Should().BeEquivalentTo(new Model.Station(Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), "Bank"));
+    }
+
+    [Fact]
+    public async Task MapController_ToStations_UnAuthorized_User_Fails()
+    {
+        var lineId = Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50");
+        var stationId = Guid.Parse("8cebdb43-8d17-49a2-a06b-1f3513091845");
+
+        var toStationDto = new ToStationDto(lineId, stationId);
+
+        var response = await _unauthorizedClient.PostAsJsonAsync("api/map/toStations", toStationDto);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }
