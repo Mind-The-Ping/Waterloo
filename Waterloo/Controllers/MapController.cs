@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Waterloo.Dtos;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Station;
 
@@ -59,6 +60,28 @@ public class MapController(
         {
             var message = $"Sorry couldn't find stations for {id}.";
             
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        return Ok(stations);
+    }
+
+    [Authorize]
+    [HttpPost("toStations")]
+    public IActionResult ToStations([FromBody] ToStationDto toStationDto)
+    {
+        _logger.LogInformation("Begin to get to stations by line {lineId} and from station {fromStationId}.",
+            toStationDto.LineId, toStationDto.FromStationId);
+
+        var stations = _stationRepository.GetByToStation(
+            toStationDto.LineId, 
+            toStationDto.FromStationId);
+
+        if (!stations.Any())
+        {
+            var message = $"Sorry couldn't find stations for line {toStationDto.LineId} and from station {toStationDto.FromStationId}.";
+
             _logger.LogError(message);
             return BadRequest(message);
         }

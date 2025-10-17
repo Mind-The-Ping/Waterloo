@@ -503,4 +503,47 @@ public class StationUnitTest
         result.Name.Should().Be("St.John's Wood");
         result.Id.Should().Be(Guid.Parse("02da1648-25ed-41cf-b99b-a2eb9d448380"));
     }
+
+    [Fact]
+    public void StationRepository_GetByToStations_Northern_Battersea_Power_Station_ShouldReturnCorrectStations()
+    {
+        var lineId = Guid.Parse("62e93d5d-cc67-4c42-8ff5-24582f89d624");
+        var stationId = Guid.Parse("668e4ceb-b98d-46d4-8d1f-6abb248fb577");
+
+        var result = _stationRepository.GetByToStation(lineId, stationId);
+
+        result.Should().Contain(x => x.Name == "Nine Elms");
+        result.Should().Contain(x => x.Name == "Kennington");
+        result.Should().Contain(x => x.Name == "Waterloo");
+        result.Should().Contain(x => x.Name == "Embankment");
+        result.Should().Contain(x => x.Name == "Charing Cross");
+        result.Should().Contain(x => x.Name == "Leicester Square");
+        result.Should().Contain(x => x.Name == "Tottenham Court Road");
+        result.Should().Contain(x => x.Name == "Goodge Street");
+        result.Should().Contain(x => x.Name == "Warren Street");
+        result.Should().Contain(x => x.Name == "Euston");
+        result.Should().Contain(x => x.Name == "Mornington Crescent");
+        result.Should().Contain(x => x.Name == "Camden Town");
+        result.Should().Contain(x => x.Name == "Chalk Farm");
+        result.Should().Contain(x => x.Name == "Belsize Park");
+        result.Should().Contain(x => x.Name == "Hampstead");
+        result.Should().Contain(x => x.Name == "Golders Green");
+        result.Should().Contain(x => x.Name == "Brent Cross");
+        result.Should().Contain(x => x.Name == "Hendon Central");
+        result.Should().Contain(x => x.Name == "Colindale");
+        result.Should().Contain(x => x.Name == "Burnt Oak");
+        result.Should().Contain(x => x.Name == "Edgware");
+        result.Should().Contain(x => x.Name == "Kentish Town");
+        result.Should().Contain(x => x.Name == "Tufnell Park");
+        result.Should().Contain(x => x.Name == "Archway");
+        result.Should().Contain(x => x.Name == "Highgate");
+        result.Should().Contain(x => x.Name == "East Finchley");
+        result.Should().Contain(x => x.Name == "Finchley Central");
+        result.Should().Contain(x => x.Name == "West Finchley");
+        result.Should().Contain(x => x.Name == "Woodside Park");
+        result.Should().Contain(x => x.Name == "Totteridge & Whetstone");
+        result.Should().Contain(x => x.Name == "High Barnet");
+
+        result.Count().Should().Be(31);
+    }
 }
