@@ -66,7 +66,8 @@ public class StationRepository
             }
         }
 
-        return validStations;
+        return validStations
+            .OrderBy(x => x.Name);
     }
 
     private static bool StationNameMatch(string query, string stationName)
