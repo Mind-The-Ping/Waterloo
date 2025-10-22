@@ -135,12 +135,14 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         var journey = new Model.Journey
         {
             UserId = _id,
-            LineId = Guid.NewGuid(),
-            StationIds = [Guid.NewGuid()],
+            LineId = Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50"),
+            StationIds = [Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), 
+                          Guid.Parse("8cebdb43-8d17-49a2-a06b-1f3513091845")],
             StartTime = new TimeOnly(5, 00),
             EndTime = new TimeOnly(6, 00),
             DaysToCheck = [DayOfWeek.Thursday],
-            Serverity = Serverity.Severe
+            Serverity = Serverity.Severe,
+            CreatedAt = DateTime.UtcNow,
         };
 
         await _dbContext.Journeys.AddAsync(journey);
@@ -151,8 +153,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         var result = await response.Content.ReadFromJsonAsync<IEnumerable<JourneyReturn>>();
 
-        result.First().StartStationId.Should().Be(journey.StationIds.First());
-        result.First().EndStationId.Should().Be(journey.StationIds.Last());
+        result.First().StartStation.Id.Should().Be(journey.StationIds.First());
+        result.First().EndStation.Id.Should().Be(journey.StationIds.Last());
     }
 
     [Fact]

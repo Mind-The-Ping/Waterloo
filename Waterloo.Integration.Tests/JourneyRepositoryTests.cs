@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using System;
 using Waterloo.Database;
 using Waterloo.Journey;
 using Waterloo.Model;
+using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
 
@@ -15,8 +17,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly IServiceScope _scope;
     private readonly JourneyDbContext _dbContext;
     private readonly JourneyRepository _journeyRepository;
+    private readonly LineRepository _lineRepository;
+    private readonly StationRepository _stationRepository;
 
-    private readonly Line _affectedLine = new(Guid.Parse("2f0c75a5-8149-49b7-9cc6-32e4a5246d7f"), "Jubilee");
+
+    private readonly Model.Line _affectedLine = new(Guid.Parse("2f0c75a5-8149-49b7-9cc6-32e4a5246d7f"), "Jubilee");
     private readonly Model.Station _affectedStationStart = new(Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), "Bond Street");
     private readonly Model.Station _affectedStationEnd = new(Guid.Parse("28cee11a-267d-4170-9cdc-2e7ef7b6ca40"), "Canada Water");
     private readonly Serverity _affectedSeverity = Serverity.Severe;
@@ -24,12 +29,12 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly DayOfWeek _affectedDay = DayOfWeek.Monday;
     private readonly ILogger<JourneyRepository> _logger = Substitute.For<ILogger<JourneyRepository>>();
 
+    private readonly TimeOnly _defaultStartTime = new TimeOnly(7, 00);
+    private readonly TimeOnly _defaultEndTime = new TimeOnly(9, 00);
     private readonly Model.Journey _defaultJourney;
 
     private readonly static TimeZoneInfo _londonTimeZone =
        TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
-
-    private readonly StationRepository _stationRepository;
 
     public JourneyRepositoryTests(CustomWebApplicationFactory factory)
     {
@@ -39,10 +44,12 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         _dbContext.Database.EnsureDeleted();
         _dbContext.Database.EnsureCreated();
 
+        _lineRepository = new LineRepository();
         _stationRepository = new StationRepository();
 
         _journeyRepository = new JourneyRepository(
             _dbContext, 
+            _lineRepository,
             new RouteRepository(), 
             _stationRepository,
             _logger);
@@ -61,10 +68,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
                Guid.Parse("6842d9a0-acc8-4843-a3d3-2e06d03fdcd1"),
                Guid.Parse("28cee11a-267d-4170-9cdc-2e7ef7b6ca40")
               ],
-            StartTime = new TimeOnly(7, 00),
-            EndTime = new TimeOnly(9, 00),
+            StartTime = ConvertToUtc(_defaultStartTime),
+            EndTime = ConvertToUtc(_defaultEndTime),
             DaysToCheck = [DayOfWeek.Monday],
-            Serverity = Serverity.Severe
+            Serverity = Serverity.Severe,
+            CreatedAt = DateTime.UtcNow,
         };
     }
 
@@ -104,6 +112,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         record.EndTime.Should().Be(ConvertToUtc(journey.EndTime));
         record.DaysToCheck.Should().BeEquivalentTo(journey.DaysToCheck);
         record.Serverity.Should().Be(journey.Serverity);
+        record.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
     }
 
     [Fact]
@@ -475,10 +484,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
             new JourneyReturn(
-                _defaultJourney.StationIds.First(),
-                _defaultJourney.StationIds.Last(),
-                _defaultJourney.StartTime,
-                _defaultJourney.EndTime,
+                _lineRepository.GetLineById(_defaultJourney.LineId)!,
+                _stationRepository.GetStationById(_defaultJourney.StationIds.First())!,
+                _stationRepository.GetStationById(_defaultJourney.StationIds.Last())!,
+                _defaultStartTime,
+                _defaultEndTime,
                 _defaultJourney.DaysToCheck,
                 _defaultJourney.Serverity)]);
     }
@@ -497,6 +507,9 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetJourneysByUserId_Gets_Correct_Journey()
     {
+        var startTime = new TimeOnly(10, 00);
+        var endTime = new TimeOnly(12, 00);
+
         var diffJourney = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -506,10 +519,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
                Guid.Parse("e7beb5c1-a574-421f-b92e-ea66acddc230"),
                Guid.Parse("68807451-ca6b-491d-9da6-722ce632ffa6")
              ],
-            StartTime = new TimeOnly(10, 00),
-            EndTime = new TimeOnly(12, 00),
+            StartTime = ConvertToUtc(startTime),
+            EndTime = ConvertToUtc(endTime),
             DaysToCheck = [DayOfWeek.Monday, DayOfWeek.Tuesday],
-            Serverity = Serverity.Minor
+            Serverity = Serverity.Minor,
+            CreatedAt = DateTime.UtcNow
         };
 
         await _dbContext.Journeys.AddAsync(diffJourney);
@@ -521,10 +535,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
           new JourneyReturn(
-                diffJourney.StationIds.First(),
-                diffJourney.StationIds.Last(),
-                diffJourney.StartTime,
-                diffJourney.EndTime,
+                _lineRepository.GetLineById(diffJourney.LineId)!,
+                _stationRepository.GetStationById(diffJourney.StationIds.First())!,
+                _stationRepository.GetStationById(diffJourney.StationIds.Last())!,
+                startTime,
+                endTime,
                 diffJourney.DaysToCheck,
                 diffJourney.Serverity)]);
     }
