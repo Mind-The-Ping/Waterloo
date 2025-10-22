@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using System;
 using Waterloo.Database;
 using Waterloo.Journey;
 using Waterloo.Model;
