@@ -1,8 +1,9 @@
 ﻿namespace Waterloo.Model;
 
 public record JourneyReturn(
-    Guid StartStationId, 
-    Guid EndStationId, 
+    Line Line,
+    Station StartStation, 
+    Station EndStation, 
     TimeOnly StartTime,
     TimeOnly EndTime,
     IList<DayOfWeek> DaysToCheck,

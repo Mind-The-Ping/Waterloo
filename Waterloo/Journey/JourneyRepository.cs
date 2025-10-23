@@ -2,17 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Waterloo.Database;
 using Waterloo.Model;
+using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
 
 namespace Waterloo.Journey;
 
 public class JourneyRepository(
-    JourneyDbContext journeyDbContext, 
+    JourneyDbContext journeyDbContext,
+    LineRepository lineRepository,
     RouteRepository routeRepository,
     StationRepository stationRepository,
     ILogger<JourneyRepository> logger) : IJourneyRepository
 {
+    private readonly LineRepository _lineRepository = lineRepository;
     private readonly RouteRepository _routeRepository = routeRepository;
     private readonly JourneyDbContext _journeyDbContext = journeyDbContext;
     private readonly StationRepository _stationRepository = stationRepository;
@@ -38,7 +41,8 @@ public class JourneyRepository(
             StartTime = ConvertToUtc(startTime),
             EndTime = ConvertToUtc(endTime),
             DaysToCheck = [.. daysToCheck],
-            Serverity = serverity
+            Serverity = serverity,
+            CreatedAt = DateTime.UtcNow,
         };
 
         try
@@ -60,13 +64,23 @@ public class JourneyRepository(
     public IEnumerable<JourneyReturn> GetJourneysByUserId(Guid userId) =>
      _journeyDbContext.Journeys.Where(x => x.UserId == userId)
         .AsEnumerable()
-        .Select(x => new JourneyReturn(
-            x.StationIds.First(), 
-            x.StationIds.Last(),
-            x.StartTime,
-            x.EndTime,
-            x.DaysToCheck,
-            x.Serverity));
+        .Select(x =>
+        {
+            var utcStartDateTime = x.CreatedAt.Date.Add(x.StartTime.ToTimeSpan());
+            var utcEndDateTime = x.CreatedAt.Date.Add(x.EndTime.ToTimeSpan());
+
+            var localStartTime = TimeZoneInfo.ConvertTimeFromUtc(utcStartDateTime, _londonTimeZone);
+            var localEndTime = TimeZoneInfo.ConvertTimeFromUtc(utcEndDateTime, _londonTimeZone);
+
+            return new JourneyReturn(
+               _lineRepository.GetLineById(x.LineId)!,
+               _stationRepository.GetStationById(x.StationIds.First())!,
+               _stationRepository.GetStationById(x.StationIds.Last())!,
+               TimeOnly.FromDateTime(localStartTime),
+               TimeOnly.FromDateTime(localEndTime),
+               x.DaysToCheck,
+               x.Serverity);
+        });
 
     public async Task<Result> RemoveJourneyAsync(Guid id)
     {

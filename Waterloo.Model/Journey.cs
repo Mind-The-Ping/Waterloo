@@ -19,4 +19,5 @@ public class Journey
     public TimeOnly EndTime { get; set; }
     public required IList<DayOfWeek> DaysToCheck { get; set; }
     public required Serverity Serverity { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
