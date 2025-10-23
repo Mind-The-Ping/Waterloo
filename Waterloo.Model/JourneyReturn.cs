@@ -1,6 +1,7 @@
 ﻿namespace Waterloo.Model;
 
 public record JourneyReturn(
+    Guid Id,
     Line Line,
     Station StartStation, 
     Station EndStation, 

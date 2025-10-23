@@ -483,6 +483,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
             new JourneyReturn(
+                _defaultJourney.Id,
                 _lineRepository.GetLineById(_defaultJourney.LineId)!,
                 _stationRepository.GetStationById(_defaultJourney.StationIds.First())!,
                 _stationRepository.GetStationById(_defaultJourney.StationIds.Last())!,
@@ -534,6 +535,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
           new JourneyReturn(
+                diffJourney.Id,
                 _lineRepository.GetLineById(diffJourney.LineId)!,
                 _stationRepository.GetStationById(diffJourney.StationIds.First())!,
                 _stationRepository.GetStationById(diffJourney.StationIds.Last())!,
