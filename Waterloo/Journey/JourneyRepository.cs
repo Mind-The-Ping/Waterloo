@@ -73,6 +73,7 @@ public class JourneyRepository(
             var localEndTime = TimeZoneInfo.ConvertTimeFromUtc(utcEndDateTime, _londonTimeZone);
 
             return new JourneyReturn(
+                x.Id,
                _lineRepository.GetLineById(x.LineId)!,
                _stationRepository.GetStationById(x.StationIds.First())!,
                _stationRepository.GetStationById(x.StationIds.Last())!,
