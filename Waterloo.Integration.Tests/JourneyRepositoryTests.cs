@@ -198,6 +198,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
+        result.First().AffectedStations.Should().HaveCount(1);
+        result.First().AffectedStations.First().Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
     }
 
     [Fact]
@@ -234,6 +236,10 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
+        result.First().AffectedStations.Should().HaveCount(3);
+        result.First().AffectedStations.ElementAt(0).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(0)));
+        result.First().AffectedStations.ElementAt(1).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(1)));
+        result.First().AffectedStations.ElementAt(2).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(2)));
     }
 
     [Fact]
@@ -270,6 +276,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
+        result.First().AffectedStations.Should().HaveCount(1);
+        result.First().AffectedStations.First().Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
     }
 
     [Fact]
@@ -311,6 +319,15 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
+        result.First().AffectedStations.Should().HaveCount(8);
+        result.First().AffectedStations.ElementAt(0).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(0)));
+        result.First().AffectedStations.ElementAt(1).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(1)));
+        result.First().AffectedStations.ElementAt(2).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(2)));
+        result.First().AffectedStations.ElementAt(3).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(3)));
+        result.First().AffectedStations.ElementAt(4).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(4)));
+        result.First().AffectedStations.ElementAt(5).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(5)));
+        result.First().AffectedStations.ElementAt(6).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(6)));
+        result.First().AffectedStations.ElementAt(7).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(7)));
     }
 
     [Fact]
@@ -381,6 +398,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
+        result.First().AffectedStations.Should().HaveCount(4);
+        result.First().AffectedStations.ElementAt(0).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(0)));
+        result.First().AffectedStations.ElementAt(1).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(1)));
+        result.First().AffectedStations.ElementAt(2).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(2)));
+        result.First().AffectedStations.ElementAt(3).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(3)));
     }
 
     [Fact]
@@ -451,6 +473,15 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(_defaultJourney.EndTime);
+        result.First().AffectedStations.Should().HaveCount(8);
+        result.First().AffectedStations.ElementAt(0).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(0)));
+        result.First().AffectedStations.ElementAt(1).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(1)));
+        result.First().AffectedStations.ElementAt(2).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(2)));
+        result.First().AffectedStations.ElementAt(3).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(3)));
+        result.First().AffectedStations.ElementAt(4).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(4)));
+        result.First().AffectedStations.ElementAt(5).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(5)));
+        result.First().AffectedStations.ElementAt(6).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(6)));
+        result.First().AffectedStations.ElementAt(7).Should().Be(_stationRepository.GetStationById(_defaultJourney.StationIds.ElementAt(7)));
     }
 
     [Fact]
