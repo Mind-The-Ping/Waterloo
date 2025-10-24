@@ -110,41 +110,53 @@ public class JourneyRepository(
     }
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
-        Guid line,
-        Guid startStation,
-        Guid endStation,
-        Serverity serverity,
-        TimeOnly queryTime,
-        DayOfWeek queryDay)
+    Guid line,
+    Guid startStation,
+    Guid endStation,
+    Serverity serverity,
+    TimeOnly queryTime,
+    DayOfWeek queryDay)
     {
-        var queryStations = _routeRepository.GetStationsBetween(line, startStation, endStation).Select(x => x.Id);
+        var queryStations = _routeRepository
+            .GetStationsBetween(line, startStation, endStation)
+            .Select(x => x.Id)
+            .ToList();
 
         var filteredJourneys = await _journeyDbContext.Journeys
-             .Where(x => 
-             x.LineId == line &&
-             queryTime >= x.StartTime && 
-             queryTime <= x.EndTime && 
-             x.DaysToCheck.Contains(queryDay) &&
-             serverity >= x.Serverity)
-             .ToListAsync();
+            .Where(x =>
+                x.LineId == line &&
+                queryTime >= x.StartTime &&
+                queryTime <= x.EndTime &&
+                x.DaysToCheck.Contains(queryDay) &&
+                serverity >= x.Serverity)
+            .ToListAsync();
 
-        var matchingUserIds = filteredJourneys
-              .Where(j => DoesJourneyOverlapSegment(
-                  line, 
-                  startStation, 
-                  endStation, 
-                  [.. j.StationIds], 
-                  [.. queryStations]))
-              .Select(j => new AffectedUser(
-                  j.UserId,
-                  _stationRepository.GetStationById(j.StationIds.First()) ?? throw new InvalidOperationException($"Station {startStation} not found"),
-                  _stationRepository.GetStationById(j.StationIds.Last()) ?? throw new InvalidOperationException($"Station {endStation} not found"),
-                  j.EndTime))
-              .Distinct();
+        var matchingUsers = filteredJourneys
+            .Where(j => DoesJourneyOverlapSegment(
+                line,
+                startStation,
+                endStation,
+                [.. j.StationIds],
+                [.. queryStations]))
+            .Select(j =>
+            {
+                var overlapStations = GetOverlappingStations(line, j.StationIds, queryStations);
 
+                return new AffectedUser(
+                    j.UserId,
+                    _stationRepository.GetStationById(j.StationIds.First())
+                        ?? throw new InvalidOperationException($"Station {j.StationIds.First()} not found"),
+                    _stationRepository.GetStationById(j.StationIds.Last())
+                        ?? throw new InvalidOperationException($"Station {j.StationIds.Last()} not found"),
+                    overlapStations,
+                    j.EndTime
+                );
+            })
+            .Distinct();
 
-        return matchingUserIds;
+        return matchingUsers;
     }
+
 
 
     bool DoesJourneyOverlapSegment(
@@ -192,6 +204,22 @@ public class JourneyRepository(
         if (decreasing) return -1;
 
         return 0;
+    }
+
+    private IEnumerable<Model.Station> GetOverlappingStations(Guid lineId, IEnumerable<Guid> journeyStations, IEnumerable<Guid> affectedSegment)
+    {
+        var masterLine = _routeRepository.GetRoute(lineId, journeyStations.First(), journeyStations.Last())
+            .Select(x => x.Id)
+            .ToList();
+
+        var overlapIds = journeyStations.Intersect(affectedSegment).ToList();
+
+        var orderedOverlap = overlapIds
+            .OrderBy(id => masterLine.IndexOf(id))
+            .Select(id => _stationRepository.GetStationById(id))
+            .Where(s => s != null)!;
+
+        return orderedOverlap!;
     }
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
