@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Waterloo.Dtos;
+using Waterloo.Model;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Station;
 
@@ -49,6 +51,27 @@ public class MapController(
     }
 
     [Authorize]
+    [HttpGet("lineById")]
+    public IActionResult Line(Guid id)
+    {
+        _logger.LogInformation("Begin to get line by id {id}.", id);
+
+        var line = _lineRepository.GetLineById(id);
+
+        if (line is null)
+        {
+            var message = $"Could not get line {id}.";
+
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        _logger.LogInformation("Successfully got line {line}.", line);
+
+        return Ok(line);
+    }
+
+    [Authorize]
     [HttpGet("stations")]
     public IActionResult Stations(Guid id)
     {
@@ -93,6 +116,8 @@ public class MapController(
     [HttpGet("station")]
     public IActionResult Station(string name)
     {
+        _logger.LogInformation("Begin to get station by name {id}.", name);
+
         var station = _stationRepository.GetStationByName(name);
 
         if(station is null) 
@@ -102,6 +127,29 @@ public class MapController(
             _logger.LogError(message);
             return BadRequest(message);
         }
+
+        _logger.LogInformation("Successfully got station {station}.", station);
+
+        return Ok(station);
+    }
+
+    [Authorize]
+    [HttpGet("stationById")]
+    public IActionResult Station(Guid id)
+    {
+        _logger.LogInformation("Begin to get station by id {id}.", id);
+
+        var station = _stationRepository.GetStationById(id);
+
+        if (station is null)
+        {
+            var message = $"Sorry couldn't find station {id}.";
+
+            _logger.LogError(message);
+            return BadRequest(message);
+        }
+
+        _logger.LogInformation("Successfully got station {station}.", station);
 
         return Ok(station);
     }

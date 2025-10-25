@@ -72,6 +72,25 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task MapController_GetLineById_Successful()
+    {
+        var response = await _client.GetAsync($"api/map/lineById?id=9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<Model.Line>();
+
+        result.Id.Should().Be(Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6"));
+        result.Name.Should().Be("Metropolitan");
+    }
+
+    [Fact]
+    public async Task MapController_GetLineBy_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync($"api/map/lineById?id=9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
     public async Task MapController_GetStationsByLineId_UnAuthorized_User_Fails()
     {
         var response = await _unauthorizedClient.GetAsync($"api/map/stations?id={Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50")}");
@@ -109,6 +128,25 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         var response = await _client.GetAsync($"api/map/station?name=wrong");
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task MapController_GetStationById_Successfully()
+    {
+        var response = await _client.GetAsync($"api/map/stationById?id=5ec78131-73b3-4b18-8e2f-d1b71eaa63d7");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadFromJsonAsync<Model.Station>();
+
+        result.Id.Should().Be(Guid.Parse("5ec78131-73b3-4b18-8e2f-d1b71eaa63d7"));
+        result.Name.Should().Be("Bounds Green");
+    }
+
+    [Fact]
+    public async Task MapController_GetStationById_UnAuthorized_User_Fails()
+    {
+        var response = await _unauthorizedClient.GetAsync($"api/map/stationById?id=5ec78131-73b3-4b18-8e2f-d1b71eaa63d7");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
