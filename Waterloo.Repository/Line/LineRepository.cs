@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using CSharpFunctionalExtensions;
+using System.Text.Json;
 
 namespace Waterloo.Repository.Line;
 public class LineRepository
@@ -20,6 +21,26 @@ public class LineRepository
     {
         var line = Lines.SingleOrDefault(x => x.Id == id);
         return line == null ? null : new Model.Line(line.Id, line.Name);
+    }
+
+    public Result<IEnumerable<Model.Line>> GetLinesById(IEnumerable<Guid> lineIds)
+    {
+        var lines = new HashSet<Model.Line>();
+
+        foreach (var lineId in lineIds)
+        {
+            var line = GetLineById(lineId);
+            if (line == null)
+            {
+
+                return Result.Failure<IEnumerable<Model.Line>>
+                    ($"Could not find line with id: {lineId}");
+            }
+
+            lines.Add(line);
+        }
+
+        return Result.Success<IEnumerable<Model.Line>>(lines);
     }
 
     public Model.Line? GetLineByName(string name)

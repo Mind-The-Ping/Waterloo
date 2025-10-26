@@ -5,6 +5,7 @@ using Waterloo.Dtos;
 using Waterloo.Model;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Station;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Waterloo.Controllers;
 
@@ -69,6 +70,25 @@ public class MapController(
         _logger.LogInformation("Successfully got line {line}.", line);
 
         return Ok(line);
+    }
+
+    [Authorize]
+    [HttpPost("linesById")]
+    public IActionResult Lines([FromBody]IEnumerable<Guid> ids)
+    {
+        _logger.LogInformation("Begin to get stations by ids: {ids}.", ids);
+
+        var lines = _lineRepository.GetLinesById(ids);
+
+        if (lines.IsFailure)
+        {
+            _logger.LogError(lines.Error);
+            return BadRequest(lines.Error);
+        }
+
+        _logger.LogInformation("Successfully got lines {lines}.", lines);
+
+        return Ok(lines.Value);
     }
 
     [Authorize]
@@ -137,7 +157,7 @@ public class MapController(
     [HttpGet("stationById")]
     public IActionResult Station(Guid id)
     {
-        _logger.LogInformation("Begin to get station by id {id}.", id);
+        _logger.LogInformation("Begin to get station by id: {id}.", id);
 
         var station = _stationRepository.GetStationById(id);
 
@@ -152,5 +172,24 @@ public class MapController(
         _logger.LogInformation("Successfully got station {station}.", station);
 
         return Ok(station);
+    }
+
+    [Authorize]
+    [HttpPost("stationsById")]
+    public IActionResult Stations([FromBody]IEnumerable<Guid> ids)
+    {
+        _logger.LogInformation("Begin to get stations by ids: {ids}.", ids);
+
+        var stations = _stationRepository.GetStationsById(ids);
+
+        if(stations.IsFailure)
+        {
+            _logger.LogError(stations.Error);
+            return BadRequest(stations.Error);
+        }
+
+        _logger.LogInformation("Successfully got stations {stations}.", stations);
+
+        return Ok(stations.Value);
     }
 }
