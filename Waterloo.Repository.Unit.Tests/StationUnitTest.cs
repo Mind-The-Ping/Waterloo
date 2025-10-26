@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Waterloo.Model;
 using Waterloo.Repository.Station;
 
 namespace Waterloo.Repository.Unit.Tests;
@@ -489,6 +490,75 @@ public class StationUnitTest
         result.Should().Contain(x => x.Name == "Waterloo");
 
         result.Count().Should().Be(2);
+    }
+
+    [Fact]
+    public void StationRepository_GetByStationId_Should_Return_Station()
+    {
+        var result = _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"));
+
+        result.Id.Should().Be(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"));
+        result.Name.Should().Be("Camden Town");
+    }
+
+    [Fact]
+    public void StationRepository_GetStationsById_Should_Return_All_Stations()
+    {
+        var stationIds = new List<Guid>()
+        {
+            Guid.Parse("ec8f48bc-23d5-4788-9251-f3fa1ff8a5d4"),
+            Guid.Parse("36ce6d95-4979-4511-aef0-aa8f7b031838"),
+            Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec")
+        };
+
+        var expectedStations = new List<Model.Station>()
+        {
+            new(Guid.Parse("ec8f48bc-23d5-4788-9251-f3fa1ff8a5d4"), "Burnt Oak"),
+            new(Guid.Parse("36ce6d95-4979-4511-aef0-aa8f7b031838"), "Caledonian Road"),
+            new(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"), "Camden Town")
+        };
+
+        var stations = _stationRepository.GetStationsById(stationIds);
+
+        stations.IsSuccess.Should().BeTrue();
+        stations.Value.Should().BeEquivalentTo(expectedStations);
+    }
+
+    [Fact]
+    public void StationRepository_GetStationsById_With_Incorrect_Id_Should_Fail()
+    {
+        var stationIds = new List<Guid>()
+        {
+            Guid.Parse("a6eaa521-f8b0-4d94-ba06-eb3aac222bde"),
+            Guid.Parse("36ce6d95-4979-4511-aef0-aa8f7b031838"),
+            Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec")
+        };
+
+        var stations = _stationRepository.GetStationsById(stationIds);
+        stations.IsFailure.Should().BeTrue();
+        stations.Error.Should().Be($"Could not find station with id: {stationIds.First()}");
+    }
+
+    [Fact]
+    public void LineRepository_GeStationsById_With_Same_Station_Should_Return_Line_Once()
+    {
+        var stationIds = new List<Guid>()
+        {
+            Guid.Parse("ec8f48bc-23d5-4788-9251-f3fa1ff8a5d4"),
+            Guid.Parse("ec8f48bc-23d5-4788-9251-f3fa1ff8a5d4"),
+            Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec")
+        };
+
+        var expectedStations = new List<Model.Station>()
+        {
+            new(Guid.Parse("ec8f48bc-23d5-4788-9251-f3fa1ff8a5d4"), "Burnt Oak"),
+            new(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"), "Camden Town")
+        };
+
+        var stations = _stationRepository.GetStationsById(stationIds);
+
+        stations.IsSuccess.Should().BeTrue();
+        stations.Value.Should().BeEquivalentTo(expectedStations);
     }
 
     [Theory]

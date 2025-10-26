@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using CSharpFunctionalExtensions;
+using System.Text.Json;
 using Waterloo.Repository.Route;
 
 namespace Waterloo.Repository.Station;
@@ -41,6 +42,25 @@ public class StationRepository
         var station = Stations.FirstOrDefault(x => x.Id == id);
         return station == null ?
             null : new Model.Station(station.Id, station.Name);
+    }
+
+    public Result<IEnumerable<Model.Station>> GetStationsById(IEnumerable<Guid> stationIds)
+    {
+        var stations = new HashSet<Model.Station>();
+
+        foreach(var stationId in stationIds)
+        {
+            var station = GetStationById(stationId);
+            if (station == null) {
+                
+                return Result.Failure<IEnumerable<Model.Station>>
+                    ($"Could not find station with id: {stationId}");
+            }
+
+            stations.Add(station);
+        }
+
+        return Result.Success<IEnumerable<Model.Station>>(stations);
     }
 
     public IEnumerable<Model.Station> GetByToStation(Guid lineId, Guid fromStationId)
