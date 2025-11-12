@@ -277,7 +277,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
                 ["EndStationId"] = "3686c2bf-12bd-43cf-8975-6891896189ba",
                 ["QueryTime"] = new TimeOnly(5, 30).ToString("HH:mm"),
                 ["QueryDay"] = journey.DaysToCheck.First().ToString(),
-                ["Serverity"] = Serverity.Suspended.ToString()
+                ["Serverity"] = Serverity.Closed.ToString()
             });
 
         var response = await _client.GetAsync(url);
@@ -314,7 +314,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
                 ["EndStationId"] = "3686c2bf-12bd-43cf-8975-6891896189ba",
                 ["QueryTime"] = new TimeOnly(5, 30).ToString("HH:mm"),
                 ["QueryDay"] = journey.DaysToCheck.First().ToString(),
-                ["Serverity"] = Serverity.Suspended.ToString()
+                ["Serverity"] = Serverity.Closed.ToString()
             });
 
         var response = await _unauthorizedClient.GetAsync(url);

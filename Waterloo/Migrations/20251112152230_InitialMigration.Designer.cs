@@ -12,8 +12,8 @@ using Waterloo.Database;
 namespace Waterloo.Migrations
 {
     [DbContext(typeof(JourneyDbContext))]
-    [Migration("20251022092827_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251112152230_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
