@@ -1,4 +1,7 @@
-﻿namespace Waterloo.Model;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Waterloo.Model;
 
 public enum Serverity
 {
@@ -9,6 +12,8 @@ public enum Serverity
 
 public class Journey
 {
+    [property: BsonId]
+    [property: BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public Guid LineId { get; set; }

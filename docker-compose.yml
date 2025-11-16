@@ -1,12 +1,14 @@
 version: '3.9'
 services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_DB: waterloo_db
-      POSTGRES_USER: waterlooUser
-      POSTGRES_PASSWORD: password12345
+  mongodb:
+    image: mongo:6.0
+    container_name: test-mongodb
     ports:
-      - "5432:5432"
-volumes:
-  pgdata:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: testdb
+    networks:
+      - test-network
+      
+networks:
+  test-network:

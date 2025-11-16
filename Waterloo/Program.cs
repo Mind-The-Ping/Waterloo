@@ -1,12 +1,13 @@
-using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.EntityFrameworkCore;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text;
-using Waterloo.Database;
 using Waterloo.Journey;
+using Waterloo.Options;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
@@ -60,9 +61,6 @@ else
     builder.Logging.AddConsole();
 }
 
-builder.Services.AddDbContext<JourneyDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddScoped<LineRepository>();
 builder.Services.AddScoped<RouteRepository>();
 builder.Services.AddScoped<StationRepository>();
@@ -84,6 +82,18 @@ builder.Services.AddAuthentication("Bearer")
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
         };
     });
+
+    builder.Services.AddSingleton(sp =>
+    {
+        var options = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+
+        var client = new MongoClient(options.ConnectionString);
+        var database = client.GetDatabase(options.Name);
+
+        return database;
+    });
+
+builder.Services.AddHostedService<MongoIndexInitializer>();
 
 builder.Services.AddControllers();
 

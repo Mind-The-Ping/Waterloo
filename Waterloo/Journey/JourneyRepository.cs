@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.EntityFrameworkCore;
-using Waterloo.Database;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Waterloo.Model;
+using Waterloo.Options;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
@@ -9,7 +10,8 @@ using Waterloo.Repository.Station;
 namespace Waterloo.Journey;
 
 public class JourneyRepository(
-    JourneyDbContext journeyDbContext,
+    IOptions<DatabaseOptions> databaseOptions,
+    IMongoDatabase mongoDatabase,
     LineRepository lineRepository,
     RouteRepository routeRepository,
     StationRepository stationRepository,
@@ -17,9 +19,10 @@ public class JourneyRepository(
 {
     private readonly LineRepository _lineRepository = lineRepository;
     private readonly RouteRepository _routeRepository = routeRepository;
-    private readonly JourneyDbContext _journeyDbContext = journeyDbContext;
     private readonly StationRepository _stationRepository = stationRepository;
     private readonly ILogger<JourneyRepository> _logger = logger;
+    private readonly IMongoCollection<Model.Journey> _journeyCollection =
+        mongoDatabase.GetCollection<Model.Journey>(databaseOptions.Value.Collection);
 
     private readonly static TimeZoneInfo _londonTimeZone =  
         TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
@@ -45,10 +48,8 @@ public class JourneyRepository(
             CreatedAt = DateTime.UtcNow,
         };
 
-        try
-        {
-            await _journeyDbContext.Journeys.AddAsync(journey);
-            await _journeyDbContext.SaveChangesAsync();
+        try {
+            await _journeyCollection.InsertOneAsync(journey);
         }
         catch(Exception ex)
         {
@@ -61,42 +62,50 @@ public class JourneyRepository(
         return Result.Success();
     }
 
-    public IEnumerable<JourneyReturn> GetJourneysByUserId(Guid userId) =>
-     _journeyDbContext.Journeys.Where(x => x.UserId == userId)
-        .AsEnumerable()
-        .Select(x =>
+    public async Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId)
+    {
+        var journeys = await _journeyCollection
+        .Find(j => j.UserId == userId)
+        .ToListAsync();
+
+        var results = new List<JourneyReturn>();
+
+        foreach (var journey in journeys)
         {
-            var utcStartDateTime = x.CreatedAt.Date.Add(x.StartTime.ToTimeSpan());
-            var utcEndDateTime = x.CreatedAt.Date.Add(x.EndTime.ToTimeSpan());
+            var utcStartDateTime = journey.CreatedAt.Date.Add(journey.StartTime.ToTimeSpan());
+            var utcEndDateTime = journey.CreatedAt.Date.Add(journey.EndTime.ToTimeSpan());
 
-            var localStartTime = TimeZoneInfo.ConvertTimeFromUtc(utcStartDateTime, _londonTimeZone);
-            var localEndTime = TimeZoneInfo.ConvertTimeFromUtc(utcEndDateTime, _londonTimeZone);
+            var localStart = TimeZoneInfo.ConvertTimeFromUtc(utcStartDateTime, _londonTimeZone);
+            var localEnd = TimeZoneInfo.ConvertTimeFromUtc(utcEndDateTime, _londonTimeZone);
 
-            return new JourneyReturn(
-                x.Id,
-               _lineRepository.GetLineById(x.LineId)!,
-               _stationRepository.GetStationById(x.StationIds.First())!,
-               _stationRepository.GetStationById(x.StationIds.Last())!,
-               TimeOnly.FromDateTime(localStartTime),
-               TimeOnly.FromDateTime(localEndTime),
-               x.DaysToCheck,
-               x.Serverity);
-        });
+            results.Add(new JourneyReturn(
+               journey.Id,
+               _lineRepository.GetLineById(journey.LineId)!,
+               _stationRepository.GetStationById(journey.StationIds.First())!,
+               _stationRepository.GetStationById(journey.StationIds.Last())!,
+               TimeOnly.FromDateTime(localStart),
+               TimeOnly.FromDateTime(localEnd),
+               journey.DaysToCheck,
+               journey.Serverity));
+        }
+
+        return results;
+    }
 
     public async Task<Result> RemoveJourneyAsync(Guid id)
     {
-        var journey = _journeyDbContext.Journeys.SingleOrDefault(x => x.Id == id);
-
-        if(journey == null)
-        {
-            _logger.LogInformation("Could not find {id} to delete.", id);
-            return Result.Success();
-        }
-
         try
         {
-            _journeyDbContext.Remove(journey);
-            await _journeyDbContext.SaveChangesAsync();
+            var result = await _journeyCollection.DeleteOneAsync(x => x.Id == id);
+
+            if (result.DeletedCount == 0)
+            {
+                _logger.LogInformation("Could not find {id} to delete.", id);
+                return Result.Success();
+            }
+
+
+            return Result.Success();
         }
         catch(Exception ex)
         {
@@ -105,8 +114,6 @@ public class JourneyRepository(
             _logger.LogError(ex, message);
             return Result.Failure(message);
         }
-
-        return Result.Success();
     }
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
@@ -118,12 +125,17 @@ public class JourneyRepository(
     DayOfWeek queryDay)
     {
         var queryStations = _routeRepository
-            .GetStationsBetween(line, startStation, endStation)
-            .Select(x => x.Id)
-            .ToList();
+           .GetStationsBetween(line, startStation, endStation)
+           .Select(s => s.Id)
+           .ToList();
 
-        var filteredJourneys = await _journeyDbContext.Journeys
-            .Where(x =>
+        var masterRoute = _routeRepository
+           .GetRoute(line, startStation, endStation)
+           .Select(s => s.Id)
+           .ToList();
+
+        var journeys = await _journeyCollection
+            .Find(x =>
                 x.LineId == line &&
                 queryTime >= x.StartTime &&
                 queryTime <= x.EndTime &&
@@ -131,51 +143,39 @@ public class JourneyRepository(
                 serverity >= x.Serverity)
             .ToListAsync();
 
-        var matchingUsers = filteredJourneys
-            .Where(j => DoesJourneyOverlapSegment(
-                line,
-                startStation,
-                endStation,
-                [.. j.StationIds],
-                [.. queryStations]))
-            .Select(j =>
-            {
-                var overlapStations = GetOverlappingStations(line, j.StationIds, queryStations);
+        var results = new List<AffectedUser>(journeys.Count);
 
-                return new AffectedUser(
-                    j.UserId,
-                    _stationRepository.GetStationById(j.StationIds.First())
-                        ?? throw new InvalidOperationException($"Station {j.StationIds.First()} not found"),
-                    _stationRepository.GetStationById(j.StationIds.Last())
-                        ?? throw new InvalidOperationException($"Station {j.StationIds.Last()} not found"),
-                    overlapStations,
-                    j.EndTime
-                );
-            })
-            .Distinct();
+        foreach (var journey in journeys)
+        {
+            if (!journey.StationIds.Any(queryStations.Contains)) {
+                continue;
+            }
 
-        return matchingUsers;
-    }
+            int jDir = GetDirection(masterRoute, [.. journey.StationIds]);
+            int segDir = GetDirection(masterRoute, queryStations);
 
+            if (jDir == 0 || jDir != segDir) {
+                continue;
+            }
 
+            var overlapStations = journey.StationIds
+               .Where(queryStations.Contains)
+               .OrderBy(id => masterRoute.IndexOf(id))
+               .Select(id => _stationRepository.GetStationById(id)!)
+               .ToList();
 
-    bool DoesJourneyOverlapSegment(
-        Guid line,
-        Guid startStation, 
-        Guid endStation,
-        List<Guid> journeyStations, 
-        List<Guid> affectedSegment)
-    {
-        if (!journeyStations.Any(affectedSegment.Contains)) {
-            return false;
+            results.Add(new AffectedUser(
+                journey.UserId,
+                _stationRepository.GetStationById(journey.StationIds.First())!,
+                _stationRepository.GetStationById(journey.StationIds.Last())!,
+                overlapStations,
+                journey.EndTime
+            ));
         }
 
-        var masterLine = _routeRepository.GetRoute(line, startStation, endStation).Select(x => x.Id).ToList();
-
-        int dirA = GetDirection(masterLine, journeyStations);
-        int dirB = GetDirection(masterLine, affectedSegment);
-
-        return dirA != 0 && dirA == dirB;
+        return results
+            .GroupBy(x => x.Id)
+            .Select(g => g.First());
     }
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
@@ -204,22 +204,6 @@ public class JourneyRepository(
         if (decreasing) return -1;
 
         return 0;
-    }
-
-    private IEnumerable<Model.Station> GetOverlappingStations(Guid lineId, IEnumerable<Guid> journeyStations, IEnumerable<Guid> affectedSegment)
-    {
-        var masterLine = _routeRepository.GetRoute(lineId, journeyStations.First(), journeyStations.Last())
-            .Select(x => x.Id)
-            .ToList();
-
-        var overlapIds = journeyStations.Intersect(affectedSegment).ToList();
-
-        var orderedOverlap = overlapIds
-            .OrderBy(id => masterLine.IndexOf(id))
-            .Select(id => _stationRepository.GetStationById(id))
-            .Where(s => s != null)!;
-
-        return orderedOverlap!;
     }
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
