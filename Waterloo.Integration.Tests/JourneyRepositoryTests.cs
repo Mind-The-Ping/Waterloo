@@ -51,7 +51,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         {
             Name = factory.DatabaseName,
             Collection = "Journeys",
-            ConnectionString = "mongodb://localhost:27017",
+            ConnectionString = "mongodb://localhost:27017"
         };
 
         var options = Microsoft.Extensions.Options.Options.Create(databaseOptions);
