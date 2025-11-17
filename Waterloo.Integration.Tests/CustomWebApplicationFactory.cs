@@ -5,41 +5,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using System.Security.Claims;
 using System.Text;
-using Waterloo.Database;
 
 namespace Waterloo.Integration.Tests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private readonly string _databaseName = $"testdb_{Guid.NewGuid():N}";
-    public JourneyDbContext DbContext { get; private set; } = null!;
+    public readonly string DatabaseName = $"testdb_{Guid.NewGuid():N}";
+    public IMongoDatabase Database { get; private set; } = null!;
     public IConfiguration Configuration { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
         {
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<JourneyDbContext>));
+            var mongoDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IMongoDatabase));
+            if (mongoDescriptor != null) services.Remove(mongoDescriptor);
 
-            if (descriptor != null) {
-                services.Remove(descriptor);
-            }
+            var client = new MongoClient("mongodb://localhost:27017");
+            Database = client.GetDatabase(DatabaseName);
 
-            services.AddDbContext<JourneyDbContext>(options => {
-                options.UseNpgsql($"Host=localhost;Port=5432;Database={_databaseName};Username=waterlooUser;Password=password12345");
-            });
+            services.AddSingleton(Database);
 
             var sp = services.BuildServiceProvider();
-
             Configuration = sp.GetRequiredService<IConfiguration>();
-
-            var db = sp.GetRequiredService<JourneyDbContext>();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-            DbContext = db;
         });
+    }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await Database.Client.DropDatabaseAsync(DatabaseName);
     }
 
     public string GenerateTestJwt(Guid userId) =>

@@ -6,6 +6,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text;
+using Waterloo;
 using Waterloo.Journey;
 using Waterloo.Options;
 using Waterloo.Repository.Line;
@@ -60,6 +61,9 @@ else
 {
     builder.Logging.AddConsole();
 }
+
+builder.Services.Configure<DatabaseOptions>(
+    builder.Configuration.GetSection("Database"));
 
 builder.Services.AddScoped<LineRepository>();
 builder.Services.AddScoped<RouteRepository>();

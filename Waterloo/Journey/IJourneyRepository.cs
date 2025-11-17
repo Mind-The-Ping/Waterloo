@@ -24,5 +24,5 @@ public interface IJourneyRepository
         TimeOnly dateTime,
         DayOfWeek queryDay);
 
-    public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId)
+    public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId);
 }

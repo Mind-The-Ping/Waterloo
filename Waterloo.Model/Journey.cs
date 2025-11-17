@@ -15,8 +15,11 @@ public class Journey
     [property: BsonId]
     [property: BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; } = Guid.NewGuid();
+    [BsonRepresentation(BsonType.String)]
     public Guid UserId { get; set; }
+    [BsonRepresentation(BsonType.String)]
     public Guid LineId { get; set; }
+    [BsonRepresentation(BsonType.String)]
     public required IList<Guid> StationIds { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
