@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Waterloo.Dtos;
 using Waterloo.Journey;
 using Waterloo.Repository.Line;
@@ -77,7 +78,7 @@ public class JourneyController(LineRepository lineRepository,
 
     [Authorize]
     [HttpGet("getByUserId")]
-    public IActionResult GetJourneysByUserId()
+    public async Task<IActionResult> GetJourneysByUserId()
     {
         var subValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -89,7 +90,7 @@ public class JourneyController(LineRepository lineRepository,
 
         _logger.LogInformation("Begin getting journeys for user: {userId}.", userId);
 
-        var result = _journeyRepository.GetJourneysByUserId(userId);
+        var result = await _journeyRepository.GetJourneysByUserIdAsync(userId);
 
         if (result == null || !result.Any()) 
         {

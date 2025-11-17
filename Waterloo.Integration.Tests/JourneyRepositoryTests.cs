@@ -1,20 +1,20 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using NSubstitute;
-using Waterloo.Database;
 using Waterloo.Journey;
 using Waterloo.Model;
+using Waterloo.Options;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
 
 namespace Waterloo.Integration.Tests;
 
-public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>, IDisposable
+public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly IServiceScope _scope;
-    private readonly JourneyDbContext _dbContext;
     private readonly JourneyRepository _journeyRepository;
     private readonly LineRepository _lineRepository;
     private readonly StationRepository _stationRepository;
@@ -35,23 +35,36 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     private readonly static TimeZoneInfo _londonTimeZone =
        TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
 
+    private readonly IMongoDatabase _mongoDatabase;
+    private readonly IMongoCollection<Model.Journey> _journeyCollection;
+    private readonly CustomWebApplicationFactory _factory;
+
     public JourneyRepositoryTests(CustomWebApplicationFactory factory)
     {
-        _scope = factory.Services.CreateScope();
-        _dbContext = _scope.ServiceProvider.GetRequiredService<JourneyDbContext>();
-
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Database.EnsureCreated();
-
+        _factory = factory;
+        _ = _factory.CreateClient();
+        _mongoDatabase = factory.Database;
         _lineRepository = new LineRepository();
         _stationRepository = new StationRepository();
 
+        var databaseOptions = new DatabaseOptions()
+        {
+            Name = factory.DatabaseName,
+            Collection = "Journeys",
+            ConnectionString = "mongodb://localhost:27017"
+        };
+
+        var options = Microsoft.Extensions.Options.Options.Create(databaseOptions);
+
         _journeyRepository = new JourneyRepository(
-            _dbContext, 
+            options,
+            _mongoDatabase,
             _lineRepository,
             new RouteRepository(), 
             _stationRepository,
             _logger);
+
+        _journeyCollection = _mongoDatabase.GetCollection<Model.Journey>(databaseOptions.Collection);
 
        _defaultJourney = new Model.Journey()
         {
@@ -75,9 +88,16 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         };
     }
 
+    private async Task InitializeAsync()
+    {
+        await _factory.ResetDatabaseAsync();
+    }
+
     [Fact]
     public async Task JourneyRepository_Add_Journey_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -100,9 +120,9 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         result.IsSuccess.Should().BeTrue();
 
-        var record = _dbContext.Journeys
-            .Single(x =>
-            x.UserId == journey.UserId);
+        var record = await _journeyCollection
+            .Find(x => x.UserId == journey.UserId)
+            .SingleOrDefaultAsync();
 
         record.UserId.Should().Be(journey.UserId);
         record.LineId.Should().Be(journey.LineId);
@@ -117,6 +137,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_Remove_Journey_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -128,18 +150,19 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.RemoveJourneyAsync(journey.Id);
         result.IsSuccess.Should().BeTrue();
 
-        _dbContext.Journeys.Any(x => x.Id == journey.Id).Should().BeFalse();
+        _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeFalse();
     }
 
     [Fact]
     public async Task JourneyRepository_Remove_Journey_WrongId_Fails()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -151,18 +174,19 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid());
         result.IsSuccess.Should().BeTrue();
 
-        _dbContext.Journeys.Any(x => x.Id == journey.Id).Should().BeTrue();
+        _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeTrue();
     }
 
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Partial_Outside_Beginning_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -182,8 +206,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
@@ -205,6 +228,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Partial_Inside_Middle_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -220,8 +245,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
@@ -245,6 +269,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Partial_Outside_End_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -260,8 +286,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
@@ -283,6 +308,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Full_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -303,8 +330,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
@@ -333,6 +359,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Foward_Partial_Opposite_Fails()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -349,8 +377,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
@@ -366,6 +393,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Backwards_Partial_Opposite_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey()
         {
             UserId = Guid.NewGuid(),
@@ -382,8 +411,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
@@ -408,10 +436,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_inCorrect_Line_Fails()
     {
+        await InitializeAsync();
+
         _defaultJourney.LineId = Guid.Parse("e6d7a23e-0f5f-4a90-a1c7-4e8e48c64823");
 
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
@@ -433,11 +462,12 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         int endHour, 
         int endMinute)
     {
+        await InitializeAsync();
+
         _defaultJourney.StartTime = new TimeOnly(startHour, startMinute);
         _defaultJourney.EndTime = new TimeOnly(endHour, endMinute);
 
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
@@ -454,10 +484,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Minor_Severity_Time_Successful()
     {
+        await InitializeAsync();
+
         _defaultJourney.Serverity = Serverity.Minor;
 
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
@@ -487,10 +518,11 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetUserIdsForAffectedJourneysAsync_Day_Tuesday_Time_Fails()
     {
+        await InitializeAsync();
+
         _defaultJourney.DaysToCheck = [DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday];
 
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
@@ -504,12 +536,13 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task JourneyRepository_GetJourneysByUserId_Successful()
+    public async Task JourneyRepository_GetJourneysByUserIdAsync_Successful()
     {
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await InitializeAsync();
 
-        var result = _journeyRepository.GetJourneysByUserId(_defaultJourney.UserId);
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
+
+        var result = await _journeyRepository.GetJourneysByUserIdAsync(_defaultJourney.UserId);
 
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
@@ -525,12 +558,13 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task JourneyRepository_GetJourneysByUserId_Non_Existent_User_Fails()
+    public async Task JourneyRepository_GetJourneysByUserIdAsync_Non_Existent_User_Fails()
     {
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await InitializeAsync();
 
-        var result = _journeyRepository.GetJourneysByUserId(Guid.NewGuid());
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
+
+        var result = await _journeyRepository.GetJourneysByUserIdAsync(Guid.NewGuid());
 
         result.Count().Should().Be(0);
     }
@@ -538,6 +572,8 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyRepository_GetJourneysByUserId_Gets_Correct_Journey()
     {
+        await InitializeAsync();
+
         var startTime = new TimeOnly(10, 00);
         var endTime = new TimeOnly(12, 00);
 
@@ -557,11 +593,10 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
             CreatedAt = DateTime.UtcNow
         };
 
-        await _dbContext.Journeys.AddAsync(diffJourney);
-        await _dbContext.Journeys.AddAsync(_defaultJourney);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(diffJourney);
+        await _journeyCollection.InsertOneAsync(_defaultJourney);
 
-        var result = _journeyRepository.GetJourneysByUserId(diffJourney.UserId);
+        var result = await _journeyRepository.GetJourneysByUserIdAsync(diffJourney.UserId);
 
         result.Count().Should().Be(1);
         result.Should().BeEquivalentTo([
@@ -584,10 +619,5 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
         var utcDateTime = TimeZoneInfo.ConvertTimeToUtc(londonDateTime, _londonTimeZone);
 
         return TimeOnly.FromDateTime(utcDateTime);
-    }
-
-    public void Dispose()
-    {
-        _scope.Dispose();
     }
 }

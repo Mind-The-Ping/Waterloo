@@ -1,41 +1,55 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
+using MongoDB.Driver;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Waterloo.Database;
 using Waterloo.Dtos;
 using Waterloo.Model;
+using Waterloo.Options;
 
 namespace Waterloo.Integration.Tests.ControllerTests;
-public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>, IDisposable
+public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
     private readonly HttpClient _unauthorizedClient;
     private readonly Guid _id = Guid.NewGuid();
-    private readonly JourneyDbContext _dbContext;
+    private readonly IMongoDatabase _mongoDatabase;
+    private readonly IMongoCollection<Model.Journey> _journeyCollection;
+    private readonly CustomWebApplicationFactory _factory;
 
     public JourneyControllerTests(CustomWebApplicationFactory factory)
     {
-        _client = factory.CreateClient();
-        var token = factory.GenerateTestJwt(_id);
+        _factory = factory;
+        _client = _factory.CreateClient();
+        var token = _factory.GenerateTestJwt(_id);
         _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
         _unauthorizedClient = factory.CreateClient();
 
-        _dbContext = factory.DbContext;
+        _mongoDatabase = factory.Database;
+
+        var databaseOptions = new DatabaseOptions()
+        {
+            Name = factory.DatabaseName,
+            Collection = "Journeys",
+            ConnectionString = "mongodb://localhost:27017"
+        };
+
+        _journeyCollection = _mongoDatabase.GetCollection<Model.Journey>(databaseOptions.Collection);
     }
 
-    public void Dispose()
+    private async Task InitializeAsync()
     {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Database.EnsureCreated();
+        await _factory.ResetDatabaseAsync();
     }
 
     [Fact]
     public async Task JourneyControllers_Create_Successful()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
             Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
             Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
@@ -52,6 +66,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Create_UnAuthorized_User_Fails()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
             Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
             Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
@@ -68,6 +84,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Create_WrongLineId_Fails()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
             Guid.NewGuid(),
             Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
@@ -84,6 +102,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Create_Wrong_StartStationId_Fails()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
            Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
            Guid.NewGuid(),
@@ -100,6 +120,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Create_Wrong_EndStationId_Fails()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
            Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
            Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
@@ -116,6 +138,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Create_Wrong_StartAndEndStationId_Fails()
     {
+        await InitializeAsync();
+
         var journeyDto = new JourneyDto(
            Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
            Guid.NewGuid(),
@@ -132,6 +156,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_GetJourneysByUserId_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = _id,
@@ -145,8 +171,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             CreatedAt = DateTime.UtcNow,
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var response = await _client.GetAsync($"api/journey/getByUserId");
         response.EnsureSuccessStatusCode();
@@ -160,6 +185,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_GetJourneysByUserId_UnAuthorized_Fails()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -171,8 +198,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var response = await _unauthorizedClient.GetAsync($"api/journey/getByUserId?id={journey.UserId}");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -181,6 +207,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_GetJourneysByUserId_No_Matching_User_Fails()
     {
+        await InitializeAsync();
+
         var response = await _client.GetAsync($"api/journey/getByUserId?id={Guid.NewGuid()}");
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -188,6 +216,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Delete_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -199,8 +229,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var response = await _client.DeleteAsync($"api/journey/delete?id={journey.Id}");
         response.EnsureSuccessStatusCode();
@@ -210,6 +239,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Delete_UnAuthorized_User_Fails()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -221,8 +252,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var response = await _unauthorizedClient.DeleteAsync($"api/journey/delete?id={journey.Id}");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -231,6 +261,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Delete_WrongId_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -242,8 +274,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var response = await _client.DeleteAsync($"api/journey/delete?id={Guid.NewGuid()}");
         response.EnsureSuccessStatusCode();
@@ -253,6 +284,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Get_AffectedJourneys_Successful()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -265,8 +298,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var url = QueryHelpers.AddQueryString(
             "api/journey/affectedJourneys",
@@ -290,6 +322,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task JourneyControllers_Get_AffectedJourneys_UnAuthorized_User_Fails()
     {
+        await InitializeAsync();
+
         var journey = new Model.Journey
         {
             UserId = Guid.NewGuid(),
@@ -302,8 +336,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             Serverity = Serverity.Severe
         };
 
-        await _dbContext.Journeys.AddAsync(journey);
-        await _dbContext.SaveChangesAsync();
+        await _journeyCollection.InsertOneAsync(journey);
 
         var url = QueryHelpers.AddQueryString(
             "api/journey/affectedJourneys",
