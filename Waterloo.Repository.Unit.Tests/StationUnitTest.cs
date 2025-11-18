@@ -215,6 +215,56 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Elizabeth_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("d232ac77-6032-4658-aed8-e47f89b79353"));
+
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Contain(x => x.Name == "Abbey Wood");
+        result.Should().Contain(x => x.Name == "Acton Main Line");
+        result.Should().Contain(x => x.Name == "Bond Street");
+        result.Should().Contain(x => x.Name == "Brentwood");
+        result.Should().Contain(x => x.Name == "Burnham");
+        result.Should().Contain(x => x.Name == "Canary Wharf");
+        result.Should().Contain(x => x.Name == "Chadwell Heath");
+        result.Should().Contain(x => x.Name == "Custom House");
+        result.Should().Contain(x => x.Name == "Ealing Broadway");
+        result.Should().Contain(x => x.Name == "Farringdon");
+        result.Should().Contain(x => x.Name == "Forest Gate");
+        result.Should().Contain(x => x.Name == "Gidea Park");
+        result.Should().Contain(x => x.Name == "Goodmayes");
+        result.Should().Contain(x => x.Name == "Hanwell");
+        result.Should().Contain(x => x.Name == "Harold Wood");
+        result.Should().Contain(x => x.Name == "Hayes & Harlington");
+        result.Should().Contain(x => x.Name == "Heathrow Terminal 4");
+        result.Should().Contain(x => x.Name == "Heathrow Terminal 5");
+        result.Should().Contain(x => x.Name == "Heathrow Terminals 2 & 3");
+        result.Should().Contain(x => x.Name == "Ilford");
+        result.Should().Contain(x => x.Name == "Iver");
+        result.Should().Contain(x => x.Name == "Langley");
+        result.Should().Contain(x => x.Name == "Liverpool Street");
+        result.Should().Contain(x => x.Name == "Maidenhead");
+        result.Should().Contain(x => x.Name == "Manor Park");
+        result.Should().Contain(x => x.Name == "Maryland");
+        result.Should().Contain(x => x.Name == "Paddington");
+        result.Should().Contain(x => x.Name == "Reading");
+        result.Should().Contain(x => x.Name == "Romford");
+        result.Should().Contain(x => x.Name == "Seven Kings");
+        result.Should().Contain(x => x.Name == "Shenfield");
+        result.Should().Contain(x => x.Name == "Slough");
+        result.Should().Contain(x => x.Name == "Southall");
+        result.Should().Contain(x => x.Name == "Stratford");
+        result.Should().Contain(x => x.Name == "Taplow");
+        result.Should().Contain(x => x.Name == "Tottenham Court Road");
+        result.Should().Contain(x => x.Name == "Twyford");
+        result.Should().Contain(x => x.Name == "West Drayton");
+        result.Should().Contain(x => x.Name == "West Ealing");
+        result.Should().Contain(x => x.Name == "Whitechapel");
+        result.Should().Contain(x => x.Name == "Woolwich");
+        result.Count().Should().Be(41);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_HammersmithAndCity_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("14a64b9a-9c65-4d49-8c38-4c1782a73c0a"));

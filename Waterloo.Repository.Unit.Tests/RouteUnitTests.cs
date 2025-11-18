@@ -552,6 +552,241 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Elizabeth_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("d232ac77-6032-4658-aed8-e47f89b79353")];
+
+        result.Name.Should().Be("Elizabeth");
+        result.ValidRoutes.Count.Should().Be(9);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(18);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6b349bb9-baa3-45d7-839e-38bd6024d466"), Name = "Woolwich" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("de485292-f6bd-4ccf-9a93-1afd852017e2"), Name = "Custom House" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations = result.ValidRoutes[1];
+        resultStations.Stations.Count.Should().Be(18);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6b349bb9-baa3-45d7-839e-38bd6024d466"), Name = "Woolwich" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("de485292-f6bd-4ccf-9a93-1afd852017e2"), Name = "Custom House" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+
+        resultStations = result.ValidRoutes[2];
+        resultStations.Stations.Count.Should().Be(25);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a65fd8d9-5aee-493c-84c7-5492c092b41a"), Name = "Reading" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("732544f8-e21a-4a19-a118-01e2d25ed159"), Name = "Abbey Wood" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6b349bb9-baa3-45d7-839e-38bd6024d466"), Name = "Woolwich" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("de485292-f6bd-4ccf-9a93-1afd852017e2"), Name = "Custom House" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("e8d66c5c-fb13-4374-b2e1-3ef2c11f7424"), Name = "West Drayton" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("32b6b31c-40a2-4cb9-9855-a873b25b5cd6"), Name = "Iver" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("0357b810-e7bb-491f-961c-6f66d0aae40c"), Name = "Langley" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("cf320e21-7418-466d-a841-1d333fa45a00"), Name = "Slough" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("6695ce27-86a1-4489-82e7-de7992180505"), Name = "Burnham" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("e89b77ea-ebcc-48ec-9e14-e2ed15857d79"), Name = "Taplow" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("cbc3317b-7415-4ca8-9787-829dda92302f"), Name = "Maidenhead" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("53fd736d-6432-44b1-8957-8e3194674644"), Name = "Twyford" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("a65fd8d9-5aee-493c-84c7-5492c092b41a"), Name = "Reading" });
+
+        resultStations = result.ValidRoutes[3];
+        resultStations.Stations.Count.Should().Be(9);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations = result.ValidRoutes[4];
+        resultStations.Stations.Count.Should().Be(9);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+
+        resultStations = result.ValidRoutes[5];
+        resultStations.Stations.Count.Should().Be(16);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a65fd8d9-5aee-493c-84c7-5492c092b41a"), Name = "Reading" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("e8d66c5c-fb13-4374-b2e1-3ef2c11f7424"), Name = "West Drayton" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("32b6b31c-40a2-4cb9-9855-a873b25b5cd6"), Name = "Iver" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("0357b810-e7bb-491f-961c-6f66d0aae40c"), Name = "Langley" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("cf320e21-7418-466d-a841-1d333fa45a00"), Name = "Slough" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("6695ce27-86a1-4489-82e7-de7992180505"), Name = "Burnham" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("e89b77ea-ebcc-48ec-9e14-e2ed15857d79"), Name = "Taplow" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("cbc3317b-7415-4ca8-9787-829dda92302f"), Name = "Maidenhead" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("53fd736d-6432-44b1-8957-8e3194674644"), Name = "Twyford" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("a65fd8d9-5aee-493c-84c7-5492c092b41a"), Name = "Reading" });
+
+        resultStations = result.ValidRoutes[6];
+        resultStations.Stations.Count.Should().Be(14);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("0c1cc3c9-d62e-4d27-9925-9450988310dd"), Name = "Brentwood" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("1c1d5cb8-ed89-4eb2-b866-7d0b9968ac5f"), Name = "Harold Wood" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("ca60d6b4-8aaa-4273-9cf8-ce4c634e75f3"), Name = "Gidea Park" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9df16581-f3e7-4ab6-a615-5460e2837c1d"), Name = "Romford" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("cc9a25d6-ecab-47c4-94fb-0c9fe406b3e1"), Name = "Chadwell Heath" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("482bf23c-1c1e-4bde-be59-7a7768d3edc4"), Name = "Goodmayes" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("b58d9945-ed14-4183-a465-2fe7b8ce4ab5"), Name = "Seven Kings" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("a0d08449-9cd2-4316-9a52-497482b07150"), Name = "Ilford" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("db9fad9f-799e-46aa-a0ac-cc099a9260d5"), Name = "Manor Park" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("21534500-bdeb-4202-8e71-f2f741a42afe"), Name = "Forest Gate" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("9861edc5-b909-4a9c-b03b-50bf7627197a"), Name = "Maryland" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+
+        resultStations = result.ValidRoutes[7];
+        resultStations.Stations.Count.Should().Be(27);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("0c1cc3c9-d62e-4d27-9925-9450988310dd"), Name = "Brentwood" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("1c1d5cb8-ed89-4eb2-b866-7d0b9968ac5f"), Name = "Harold Wood" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("ca60d6b4-8aaa-4273-9cf8-ce4c634e75f3"), Name = "Gidea Park" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9df16581-f3e7-4ab6-a615-5460e2837c1d"), Name = "Romford" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("cc9a25d6-ecab-47c4-94fb-0c9fe406b3e1"), Name = "Chadwell Heath" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("482bf23c-1c1e-4bde-be59-7a7768d3edc4"), Name = "Goodmayes" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("b58d9945-ed14-4183-a465-2fe7b8ce4ab5"), Name = "Seven Kings" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("a0d08449-9cd2-4316-9a52-497482b07150"), Name = "Ilford" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("db9fad9f-799e-46aa-a0ac-cc099a9260d5"), Name = "Manor Park" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("21534500-bdeb-4202-8e71-f2f741a42afe"), Name = "Forest Gate" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("9861edc5-b909-4a9c-b03b-50bf7627197a"), Name = "Maryland" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("a7ce86a8-d1a2-4c40-a8f0-0ead55233d5d"), Name = "Heathrow Terminal 4" });
+
+        resultStations = result.ValidRoutes[8];
+        resultStations.Stations.Count.Should().Be(27);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("ae9ca6c9-96af-4333-aaeb-b54bfc4cf422"), Name = "Shenfield" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("0c1cc3c9-d62e-4d27-9925-9450988310dd"), Name = "Brentwood" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("1c1d5cb8-ed89-4eb2-b866-7d0b9968ac5f"), Name = "Harold Wood" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("ca60d6b4-8aaa-4273-9cf8-ce4c634e75f3"), Name = "Gidea Park" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("9df16581-f3e7-4ab6-a615-5460e2837c1d"), Name = "Romford" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("cc9a25d6-ecab-47c4-94fb-0c9fe406b3e1"), Name = "Chadwell Heath" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("482bf23c-1c1e-4bde-be59-7a7768d3edc4"), Name = "Goodmayes" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("b58d9945-ed14-4183-a465-2fe7b8ce4ab5"), Name = "Seven Kings" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("a0d08449-9cd2-4316-9a52-497482b07150"), Name = "Ilford" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("db9fad9f-799e-46aa-a0ac-cc099a9260d5"), Name = "Manor Park" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("21534500-bdeb-4202-8e71-f2f741a42afe"), Name = "Forest Gate" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("9861edc5-b909-4a9c-b03b-50bf7627197a"), Name = "Maryland" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("6ec53ddb-28d4-45f7-ae4b-948789c5aa8e"), Name = "Acton Main Line" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("2b96e9be-3a2b-4ef5-8cb1-5a2706bc8f50"), Name = "West Ealing" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("10422f80-4cf5-4be1-ace8-a7ee5d272f01"), Name = "Hanwell" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("0e5e8de3-1549-4b30-8c09-abe2a242df4c"), Name = "Southall" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("ed82a619-cabf-4aed-a00d-664e179f0828"), Name = "Hayes & Harlington" });
+        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("d4ecc02a-082d-4408-9f4f-2e4be6655681"), Name = "Heathrow Terminals 2 & 3" });
+        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("7c583322-8051-4e43-a533-e372bdb3f875"), Name = "Heathrow Terminal 5" });
+    }
+
+    [Fact]
     public void RouteRepository_HammersmithAndCity_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("14a64b9a-9c65-4d49-8c38-4c1782a73c0a")];
