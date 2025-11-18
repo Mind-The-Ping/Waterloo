@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
-using Waterloo.Model;
 using Waterloo.Repository.Line;
-using Waterloo.Repository.Station;
 
 namespace Waterloo.Repository.Unit.Tests;
 
@@ -15,7 +13,7 @@ public class LineUnitTests
         var result = _repository.GetAll();
 
         result.Should().NotBeNullOrEmpty();
-        result.Count().Should().Be(11);
+        result.Count().Should().Be(12);
     }
 
     [Fact]
