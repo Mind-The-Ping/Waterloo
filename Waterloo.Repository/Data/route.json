@@ -4789,6 +4789,295 @@
       }
     ]
   },
+  "e466a866-6404-4a7d-a55d-a3e21d328e52": {
+    "name": "Tram",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "1704b4d5-e5eb-4872-96d4-bd988a81802f",
+          "name": "Beckenham Junction"
+        },
+        "to": {
+          "id": "73a238b3-22e1-44f1-aa28-d0a7b41cea60",
+          "name": "Wimbledon"
+        },
+        "stations": [
+          {
+            "id": "1704b4d5-e5eb-4872-96d4-bd988a81802f",
+            "name": "Beckenham Junction"
+          },
+          {
+            "id": "cb653c05-e095-4a98-b600-f419370ba5eb",
+            "name": "Beckenham Road"
+          },
+          {
+            "id": "0af1905b-f065-4157-ac19-8d40e1568ef7",
+            "name": "Avenue Road"
+          },
+          {
+            "id": "c7c2d7d6-72fc-4bcc-9a5f-95f835f87196",
+            "name": "Birkbeck"
+          },
+          {
+            "id": "8f4707e8-d43b-4dba-8b6e-c1b7b57d1838",
+            "name": "Harrington Road"
+          },
+          {
+            "id": "817b2153-e822-40d4-b520-4a32ac934262",
+            "name": "Arena"
+          },
+          {
+            "id": "ca948ebc-f14a-431b-af5b-918016c4f461",
+            "name": "Woodside"
+          },
+          {
+            "id": "e80b2c38-0af3-4cca-8fb4-d00512b14a12",
+            "name": "Blackhorse Lane"
+          },
+          {
+            "id": "d8f22c88-e04b-4cc2-b476-99949d1cdc6e",
+            "name": "Addiscombe"
+          },
+          {
+            "id": "dda0b72c-23b2-433f-ac51-ee479f3c9093",
+            "name": "Sandilands"
+          },
+          {
+            "id": "29debfff-8a70-4db3-9322-16fa7d099c8b",
+            "name": "Lebanon Road"
+          },
+          {
+            "id": "5cf439f6-4390-465c-acc5-5d80a22f191e",
+            "name": "East Croydon"
+          },
+          {
+            "id": "a26985d8-5f23-458c-97aa-4302d619fdb5",
+            "name": "George Street"
+          },
+          {
+            "id": "1e7ac362-3cc6-414a-9dcf-47ae181eef6f",
+            "name": "Church Street"
+          },
+          {
+            "id": "71594aa7-277a-4adb-bd70-b725f8e8f294",
+            "name": "Wandle Park"
+          },
+          {
+            "id": "f48ec765-ba82-4eb4-b8d0-0c32f87cdb41",
+            "name": "Waddon Marsh"
+          },
+          {
+            "id": "000dd8b7-65f4-4e03-ba7f-b74899fea3f0",
+            "name": "Ampere Way"
+          },
+          {
+            "id": "387f45d9-59d3-431c-ae68-73d02a06cab5",
+            "name": "Therapia Lane"
+          },
+          {
+            "id": "fdbccb5a-d1ba-4f52-a5da-f1984dc34c9c",
+            "name": "Beddington Lane"
+          },
+          {
+            "id": "64475abc-54c5-46b1-a81b-4622c5d6bbea",
+            "name": "Mitcham Junction"
+          },
+          {
+            "id": "7869026b-f79a-40eb-b71d-ce1fc301b5ab",
+            "name": "Mitcham"
+          },
+          {
+            "id": "b6c40d99-cd52-4581-aa78-e7c167b20457",
+            "name": "Belgrave Walk"
+          },
+          {
+            "id": "64933a13-0805-4247-a356-0cb98c28df72",
+            "name": "Phipps Bridge"
+          },
+          {
+            "id": "13a346d3-1be0-4d5f-9b7e-e0097649da87",
+            "name": "Morden Road"
+          },
+          {
+            "id": "4c251de7-a4ed-4f6b-a17d-c5fe0a7e50d7",
+            "name": "Merton Park"
+          },
+          {
+            "id": "a4622324-dabb-4136-a0d3-b13ab28f2774",
+            "name": "Dundonald Road"
+          },
+          {
+            "id": "73a238b3-22e1-44f1-aa28-d0a7b41cea60",
+            "name": "Wimbledon"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "35cedf0f-1a2e-4d76-b946-dbdfebd2a6af",
+          "name": "Elmers End"
+        },
+        "to": {
+          "id": "73a238b3-22e1-44f1-aa28-d0a7b41cea60",
+          "name": "Wimbledon"
+        },
+        "stations": [
+          {
+            "id": "35cedf0f-1a2e-4d76-b946-dbdfebd2a6af",
+            "name": "Elmers End"
+          },
+          {
+            "id": "817b2153-e822-40d4-b520-4a32ac934262",
+            "name": "Arena"
+          },
+          {
+            "id": "ca948ebc-f14a-431b-af5b-918016c4f461",
+            "name": "Woodside"
+          },
+          {
+            "id": "e80b2c38-0af3-4cca-8fb4-d00512b14a12",
+            "name": "Blackhorse Lane"
+          },
+          {
+            "id": "d8f22c88-e04b-4cc2-b476-99949d1cdc6e",
+            "name": "Addiscombe"
+          },
+          {
+            "id": "dda0b72c-23b2-433f-ac51-ee479f3c9093",
+            "name": "Sandilands"
+          },
+          {
+            "id": "29debfff-8a70-4db3-9322-16fa7d099c8b",
+            "name": "Lebanon Road"
+          },
+          {
+            "id": "5cf439f6-4390-465c-acc5-5d80a22f191e",
+            "name": "East Croydon"
+          },
+          {
+            "id": "a26985d8-5f23-458c-97aa-4302d619fdb5",
+            "name": "George Street"
+          },
+          {
+            "id": "1e7ac362-3cc6-414a-9dcf-47ae181eef6f",
+            "name": "Church Street"
+          },
+          {
+            "id": "71594aa7-277a-4adb-bd70-b725f8e8f294",
+            "name": "Wandle Park"
+          },
+          {
+            "id": "f48ec765-ba82-4eb4-b8d0-0c32f87cdb41",
+            "name": "Waddon Marsh"
+          },
+          {
+            "id": "000dd8b7-65f4-4e03-ba7f-b74899fea3f0",
+            "name": "Ampere Way"
+          },
+          {
+            "id": "387f45d9-59d3-431c-ae68-73d02a06cab5",
+            "name": "Therapia Lane"
+          },
+          {
+            "id": "fdbccb5a-d1ba-4f52-a5da-f1984dc34c9c",
+            "name": "Beddington Lane"
+          },
+          {
+            "id": "64475abc-54c5-46b1-a81b-4622c5d6bbea",
+            "name": "Mitcham Junction"
+          },
+          {
+            "id": "7869026b-f79a-40eb-b71d-ce1fc301b5ab",
+            "name": "Mitcham"
+          },
+          {
+            "id": "b6c40d99-cd52-4581-aa78-e7c167b20457",
+            "name": "Belgrave Walk"
+          },
+          {
+            "id": "64933a13-0805-4247-a356-0cb98c28df72",
+            "name": "Phipps Bridge"
+          },
+          {
+            "id": "13a346d3-1be0-4d5f-9b7e-e0097649da87",
+            "name": "Morden Road"
+          },
+          {
+            "id": "4c251de7-a4ed-4f6b-a17d-c5fe0a7e50d7",
+            "name": "Merton Park"
+          },
+          {
+            "id": "a4622324-dabb-4136-a0d3-b13ab28f2774",
+            "name": "Dundonald Road"
+          },
+          {
+            "id": "73a238b3-22e1-44f1-aa28-d0a7b41cea60",
+            "name": "Wimbledon"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "73ad46e7-ca35-499c-8c87-526cd2fea255",
+          "name": "New Addington"
+        },
+        "to": {
+          "id": "1e7ac362-3cc6-414a-9dcf-47ae181eef6f",
+          "name": "Church Street"
+        },
+        "stations": [
+          {
+            "id": "73ad46e7-ca35-499c-8c87-526cd2fea255",
+            "name": "New Addington"
+          },
+          {
+            "id": "57a5cc2a-689d-44d9-94be-3ba62af8c1cd",
+            "name": "King Henry\u0027s Drive"
+          },
+          {
+            "id": "5f65aa7f-5c1a-4e65-ac75-c5693740e282",
+            "name": "Fieldway"
+          },
+          {
+            "id": "f6720c0d-a0d4-49a5-8e87-7efba76a5910",
+            "name": "Addington Village"
+          },
+          {
+            "id": "7466ea37-99a5-4478-8e4d-95d0bb0759e5",
+            "name": "Gravel Hill"
+          },
+          {
+            "id": "2a2e315e-eeb6-4ddd-9a1b-c687eef47856",
+            "name": "Coombe Lane"
+          },
+          {
+            "id": "232f9ba6-84a2-4b58-8bca-1770a0d1fba5",
+            "name": "Lloyd Park"
+          },
+          {
+            "id": "dda0b72c-23b2-433f-ac51-ee479f3c9093",
+            "name": "Sandilands"
+          },
+          {
+            "id": "29debfff-8a70-4db3-9322-16fa7d099c8b",
+            "name": "Lebanon Road"
+          },
+          {
+            "id": "5cf439f6-4390-465c-acc5-5d80a22f191e",
+            "name": "East Croydon"
+          },
+          {
+            "id": "a26985d8-5f23-458c-97aa-4302d619fdb5",
+            "name": "George Street"
+          },
+          {
+            "id": "1e7ac362-3cc6-414a-9dcf-47ae181eef6f",
+            "name": "Church Street"
+          }
+        ]
+      }
+    ]
+  },
   "9c834a1e-8a34-4c1e-943e-6f37b8e1e9d4": {
     "name": "Victoria",
     "validRoutes": [

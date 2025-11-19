@@ -1445,6 +1445,98 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Tram_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("e466a866-6404-4a7d-a55d-a3e21d328e52")];
+
+        result.Name.Should().Be("Tram");
+        result.ValidRoutes.Count.Should().Be(3);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(27);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("1704b4d5-e5eb-4872-96d4-bd988a81802f"), Name = "Beckenham Junction" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("73a238b3-22e1-44f1-aa28-d0a7b41cea60"), Name = "Wimbledon" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("1704b4d5-e5eb-4872-96d4-bd988a81802f"), Name = "Beckenham Junction" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("cb653c05-e095-4a98-b600-f419370ba5eb"), Name = "Beckenham Road" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("0af1905b-f065-4157-ac19-8d40e1568ef7"), Name = "Avenue Road" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("c7c2d7d6-72fc-4bcc-9a5f-95f835f87196"), Name = "Birkbeck" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("8f4707e8-d43b-4dba-8b6e-c1b7b57d1838"), Name = "Harrington Road" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("817b2153-e822-40d4-b520-4a32ac934262"), Name = "Arena" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ca948ebc-f14a-431b-af5b-918016c4f461"), Name = "Woodside" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("e80b2c38-0af3-4cca-8fb4-d00512b14a12"), Name = "Blackhorse Lane" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("d8f22c88-e04b-4cc2-b476-99949d1cdc6e"), Name = "Addiscombe" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("dda0b72c-23b2-433f-ac51-ee479f3c9093"), Name = "Sandilands" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("29debfff-8a70-4db3-9322-16fa7d099c8b"), Name = "Lebanon Road" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("5cf439f6-4390-465c-acc5-5d80a22f191e"), Name = "East Croydon" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("a26985d8-5f23-458c-97aa-4302d619fdb5"), Name = "George Street" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("1e7ac362-3cc6-414a-9dcf-47ae181eef6f"), Name = "Church Street" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("71594aa7-277a-4adb-bd70-b725f8e8f294"), Name = "Wandle Park" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("f48ec765-ba82-4eb4-b8d0-0c32f87cdb41"), Name = "Waddon Marsh" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("000dd8b7-65f4-4e03-ba7f-b74899fea3f0"), Name = "Ampere Way" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("387f45d9-59d3-431c-ae68-73d02a06cab5"), Name = "Therapia Lane" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("fdbccb5a-d1ba-4f52-a5da-f1984dc34c9c"), Name = "Beddington Lane" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("64475abc-54c5-46b1-a81b-4622c5d6bbea"), Name = "Mitcham Junction" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("7869026b-f79a-40eb-b71d-ce1fc301b5ab"), Name = "Mitcham" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("b6c40d99-cd52-4581-aa78-e7c167b20457"), Name = "Belgrave Walk" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("64933a13-0805-4247-a356-0cb98c28df72"), Name = "Phipps Bridge" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("13a346d3-1be0-4d5f-9b7e-e0097649da87"), Name = "Morden Road" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("4c251de7-a4ed-4f6b-a17d-c5fe0a7e50d7"), Name = "Merton Park" });
+        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("a4622324-dabb-4136-a0d3-b13ab28f2774"), Name = "Dundonald Road" });
+        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("73a238b3-22e1-44f1-aa28-d0a7b41cea60"), Name = "Wimbledon" });
+
+        resultStations = result.ValidRoutes[1];
+        resultStations.Stations.Count.Should().Be(23);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("35cedf0f-1a2e-4d76-b946-dbdfebd2a6af"), Name = "Elmers End" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("73a238b3-22e1-44f1-aa28-d0a7b41cea60"), Name = "Wimbledon" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("35cedf0f-1a2e-4d76-b946-dbdfebd2a6af"), Name = "Elmers End" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("817b2153-e822-40d4-b520-4a32ac934262"), Name = "Arena" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("ca948ebc-f14a-431b-af5b-918016c4f461"), Name = "Woodside" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("e80b2c38-0af3-4cca-8fb4-d00512b14a12"), Name = "Blackhorse Lane" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("d8f22c88-e04b-4cc2-b476-99949d1cdc6e"), Name = "Addiscombe" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("dda0b72c-23b2-433f-ac51-ee479f3c9093"), Name = "Sandilands" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("29debfff-8a70-4db3-9322-16fa7d099c8b"), Name = "Lebanon Road" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("5cf439f6-4390-465c-acc5-5d80a22f191e"), Name = "East Croydon" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("a26985d8-5f23-458c-97aa-4302d619fdb5"), Name = "George Street" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("1e7ac362-3cc6-414a-9dcf-47ae181eef6f"), Name = "Church Street" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("71594aa7-277a-4adb-bd70-b725f8e8f294"), Name = "Wandle Park" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("f48ec765-ba82-4eb4-b8d0-0c32f87cdb41"), Name = "Waddon Marsh" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("000dd8b7-65f4-4e03-ba7f-b74899fea3f0"), Name = "Ampere Way" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("387f45d9-59d3-431c-ae68-73d02a06cab5"), Name = "Therapia Lane" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("fdbccb5a-d1ba-4f52-a5da-f1984dc34c9c"), Name = "Beddington Lane" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("64475abc-54c5-46b1-a81b-4622c5d6bbea"), Name = "Mitcham Junction" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("7869026b-f79a-40eb-b71d-ce1fc301b5ab"), Name = "Mitcham" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("b6c40d99-cd52-4581-aa78-e7c167b20457"), Name = "Belgrave Walk" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("64933a13-0805-4247-a356-0cb98c28df72"), Name = "Phipps Bridge" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("13a346d3-1be0-4d5f-9b7e-e0097649da87"), Name = "Morden Road" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("4c251de7-a4ed-4f6b-a17d-c5fe0a7e50d7"), Name = "Merton Park" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("a4622324-dabb-4136-a0d3-b13ab28f2774"), Name = "Dundonald Road" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("73a238b3-22e1-44f1-aa28-d0a7b41cea60"), Name = "Wimbledon" });
+
+        resultStations = result.ValidRoutes[2];
+        resultStations.Stations.Count.Should().Be(12);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("73ad46e7-ca35-499c-8c87-526cd2fea255"), Name = "New Addington" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("1e7ac362-3cc6-414a-9dcf-47ae181eef6f"), Name = "Church Street" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("73ad46e7-ca35-499c-8c87-526cd2fea255"), Name = "New Addington" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("57a5cc2a-689d-44d9-94be-3ba62af8c1cd"), Name = "King Henry's Drive" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("5f65aa7f-5c1a-4e65-ac75-c5693740e282"), Name = "Fieldway" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("f6720c0d-a0d4-49a5-8e87-7efba76a5910"), Name = "Addington Village" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("7466ea37-99a5-4478-8e4d-95d0bb0759e5"), Name = "Gravel Hill" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("2a2e315e-eeb6-4ddd-9a1b-c687eef47856"), Name = "Coombe Lane" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("232f9ba6-84a2-4b58-8bca-1770a0d1fba5"), Name = "Lloyd Park" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("dda0b72c-23b2-433f-ac51-ee479f3c9093"), Name = "Sandilands" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("29debfff-8a70-4db3-9322-16fa7d099c8b"), Name = "Lebanon Road" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("5cf439f6-4390-465c-acc5-5d80a22f191e"), Name = "East Croydon" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("a26985d8-5f23-458c-97aa-4302d619fdb5"), Name = "George Street" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("1e7ac362-3cc6-414a-9dcf-47ae181eef6f"), Name = "Church Street" });
+    }
+
+    [Fact]
     public void RouteRepository_Victoria_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("9c834a1e-8a34-4c1e-943e-6f37b8e1e9d4")];
