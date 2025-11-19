@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Waterloo.Model;
 using Waterloo.Repository.Station;
 
 namespace Waterloo.Repository.Unit.Tests;
@@ -504,6 +503,54 @@ public class StationUnitTest
         result.Should().Contain(x => x.Name == "Wood Green");
 
         result.Count().Should().Be(53);
+    }
+
+    [Fact]
+    public void StationRepository_GetByLine_Tram_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("e466a866-6404-4a7d-a55d-a3e21d328e52"));
+
+        result.Should().Contain(x => x.Name == "Addington Village");
+        result.Should().Contain(x => x.Name == "Addiscombe");
+        result.Should().Contain(x => x.Name == "Ampere Way");
+        result.Should().Contain(x => x.Name == "Arena");
+        result.Should().Contain(x => x.Name == "Avenue Road");
+        result.Should().Contain(x => x.Name == "Beckenham Junction");
+        result.Should().Contain(x => x.Name == "Beckenham Road");
+        result.Should().Contain(x => x.Name == "Beddington Lane");
+        result.Should().Contain(x => x.Name == "Belgrave Walk");
+        result.Should().Contain(x => x.Name == "Birkbeck");
+        result.Should().Contain(x => x.Name == "Blackhorse Lane");
+        result.Should().Contain(x => x.Name == "Centrale");
+        result.Should().Contain(x => x.Name == "Church Street");
+        result.Should().Contain(x => x.Name == "Coombe Lane");
+        result.Should().Contain(x => x.Name == "Dundonald Road");
+        result.Should().Contain(x => x.Name == "East Croydon");
+        result.Should().Contain(x => x.Name == "Elmers End");
+        result.Should().Contain(x => x.Name == "Fieldway");
+        result.Should().Contain(x => x.Name == "George Street");
+        result.Should().Contain(x => x.Name == "Gravel Hill");
+        result.Should().Contain(x => x.Name == "Harrington Road");
+        result.Should().Contain(x => x.Name == "King Henry's Drive");
+        result.Should().Contain(x => x.Name == "Lebanon Road");
+        result.Should().Contain(x => x.Name == "Lloyd Park");
+        result.Should().Contain(x => x.Name == "Merton Park");
+        result.Should().Contain(x => x.Name == "Mitcham Junction");
+        result.Should().Contain(x => x.Name == "Mitcham");
+        result.Should().Contain(x => x.Name == "Morden Road");
+        result.Should().Contain(x => x.Name == "New Addington");
+        result.Should().Contain(x => x.Name == "Phipps Bridge");
+        result.Should().Contain(x => x.Name == "Reeves Corner");
+        result.Should().Contain(x => x.Name == "Sandilands");
+        result.Should().Contain(x => x.Name == "Therapia Lane");
+        result.Should().Contain(x => x.Name == "Waddon Marsh");
+        result.Should().Contain(x => x.Name == "Wandle Park");
+        result.Should().Contain(x => x.Name == "Wellesley Road");
+        result.Should().Contain(x => x.Name == "West Croydon");
+        result.Should().Contain(x => x.Name == "Wimbledon");
+        result.Should().Contain(x => x.Name == "Woodside");
+
+        result.Count().Should().Be(39);
     }
 
     [Fact]
