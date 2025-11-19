@@ -339,6 +339,19 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Liberty_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("1ef96e79-2dab-43b3-b931-6bf9a0495b22"));
+
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Contain(x => x.Name == "Romford");
+        result.Should().Contain(x => x.Name == "Emerson Park");
+        result.Should().Contain(x => x.Name == "Upminster");
+
+        result.Count().Should().Be(3);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_Metropolitan_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6"));
