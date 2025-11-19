@@ -352,6 +352,35 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Lioness_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("1bc14562-671e-4cb8-99c0-f77f3458a03d"));
+
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Contain(x => x.Name == "Bushey");
+        result.Should().Contain(x => x.Name == "Carpenders Park");
+        result.Should().Contain(x => x.Name == "Harlesden");
+        result.Should().Contain(x => x.Name == "Harrow & Wealdstone");
+        result.Should().Contain(x => x.Name == "Hatch End");
+        result.Should().Contain(x => x.Name == "Headstone Lane");
+        result.Should().Contain(x => x.Name == "Kensal Green");
+        result.Should().Contain(x => x.Name == "Kenton");
+        result.Should().Contain(x => x.Name == "Kilburn High Road");
+        result.Should().Contain(x => x.Name == "Euston");
+        result.Should().Contain(x => x.Name == "North Wembley");
+        result.Should().Contain(x => x.Name == "Queen's Park");
+        result.Should().Contain(x => x.Name == "South Hampstead");
+        result.Should().Contain(x => x.Name == "South Kenton");
+        result.Should().Contain(x => x.Name == "Stonebridge Park");
+        result.Should().Contain(x => x.Name == "Watford High Street");
+        result.Should().Contain(x => x.Name == "Watford Junction");
+        result.Should().Contain(x => x.Name == "Wembley Central");
+        result.Should().Contain(x => x.Name == "Willesden Junction");
+
+        result.Count().Should().Be(19);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_Metropolitan_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6"));

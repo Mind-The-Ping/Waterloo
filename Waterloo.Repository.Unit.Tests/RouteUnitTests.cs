@@ -895,6 +895,41 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Lioness_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("1bc14562-671e-4cb8-99c0-f77f3458a03d")];
+
+        result.Name.Should().Be("Lioness");
+        result.ValidRoutes.Count.Should().Be(1);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(19);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("cacbfade-1233-4922-9caa-aa8b0db9b3da"), Name = "Euston" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("455d4830-bd0d-4962-8869-6443c4c8c452"), Name = "Watford Junction" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("cacbfade-1233-4922-9caa-aa8b0db9b3da"), Name = "Euston" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("15a2bb9a-4326-4a07-82ca-8393f037ebff"), Name = "South Hampstead" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("059ef56f-b255-4c0f-9815-26233878dd92"), Name = "Kilburn High Road" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("07f797b2-82bc-44c4-babf-52ed8cae31f1"), Name = "Queen's Park" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("ac87fec7-bea8-4c87-b09d-4e2826803d0d"), Name = "Kensal Green" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("d2323699-fac3-412d-af16-c4cd9da671f2"), Name = "Willesden Junction" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("e4a9c350-d6e4-41db-8d2d-5f9512ccf0fa"), Name = "Harlesden" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("2ccab4c9-a72c-4ac2-8d23-b81c75c28771"), Name = "Stonebridge Park" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("73fdbc30-94f4-49e4-b29c-62d9a378d602"), Name = "Wembley Central" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("9ffe4518-80c1-4e1d-87d1-1d84f5a18dfd"), Name = "North Wembley" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("22202e09-4136-434c-b3b3-44748c24b936"), Name = "South Kenton" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("30a08758-735a-4539-ab0e-6070bc0c4fd5"), Name = "Kenton" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("6be3e9ed-66af-4255-8910-d4b5857ba90a"), Name = "Harrow & Wealdstone" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("35d18731-7fa3-4714-9f67-af95e459c98a"), Name = "Headstone Lane" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("493bcdb5-010c-4762-ac81-d3e98448c60c"), Name = "Hatch End" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("7510c385-d474-439c-ac84-e65491cde2d2"), Name = "Carpenders Park" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("63bb23b1-0c4f-4361-a568-31d8d849ae2b"), Name = "Bushey" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("835bc6fb-ce32-4d92-8e12-2d0476cd014f"), Name = "Watford High Street" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("455d4830-bd0d-4962-8869-6443c4c8c452"), Name = "Watford Junction" });
+    }
+
+    [Fact]
     public void RouteRepository_Metropolitan_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6")];
