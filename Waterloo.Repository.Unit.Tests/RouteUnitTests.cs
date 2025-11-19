@@ -876,6 +876,25 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Liberty_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("1ef96e79-2dab-43b3-b931-6bf9a0495b22")];
+
+        result.Name.Should().Be("Liberty");
+        result.ValidRoutes.Count.Should().Be(1);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(3);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("9df16581-f3e7-4ab6-a615-5460e2837c1d"), Name = "Romford" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("2a423032-a8ab-40dc-8b3b-44085632d1a9"), Name = "Upminster" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("9df16581-f3e7-4ab6-a615-5460e2837c1d"), Name = "Romford" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("9698c675-16a9-4c68-b027-ee4cd7f239f3"), Name = "Emerson Park" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("2a423032-a8ab-40dc-8b3b-44085632d1a9"), Name = "Upminster" });
+    }
+
+    [Fact]
     public void RouteRepository_Metropolitan_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6")];
