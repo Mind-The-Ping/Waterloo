@@ -1739,6 +1739,79 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Weaver_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("0b3d9ef1-fdd6-4db8-8d37-34e9c6ab8385")];
+
+        result.Name.Should().Be("Weaver");
+        result.ValidRoutes.Count.Should().Be(3);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(11);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("9bd86a33-3b5a-436e-9456-1660c4071e43"), Name = "Chingford" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("b7a5ae67-882b-4509-8df9-4bae2ef1dd2a"), Name = "Bethnal Green" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("aa3d16ac-eff6-455d-be62-f2cb46bab923"), Name = "Cambridge Heath" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("29960244-35b1-4cda-b7bd-a99b7144445a"), Name = "London Fields" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("1457310e-fc09-47ff-9943-ac916388c781"), Name = "Hackney Downs" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("42c4aee1-e050-4127-951a-b5a018de2754"), Name = "Clapton" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("13a656c0-e690-46e0-9a57-5857c77dfb76"), Name = "St.James Street" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("3373da0c-4111-47eb-b8aa-a2bcbcd1eca1"), Name = "Walthamstow Central" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("5588ef92-4eb0-405e-9149-36620cdaca6f"), Name = "Wood Street" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("d388f6ac-9708-4bf5-a51e-ffe0bdc6036d"), Name = "Highams Park" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("9bd86a33-3b5a-436e-9456-1660c4071e43"), Name = "Chingford" });
+
+        resultStations = result.ValidRoutes[1];
+        resultStations.Stations.Count.Should().Be(15);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("5147361f-a9b2-40ed-a52a-c300d71e1ffa"), Name = "Enfield Town" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("b7a5ae67-882b-4509-8df9-4bae2ef1dd2a"), Name = "Bethnal Green" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("aa3d16ac-eff6-455d-be62-f2cb46bab923"), Name = "Cambridge Heath" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("29960244-35b1-4cda-b7bd-a99b7144445a"), Name = "London Fields" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("1457310e-fc09-47ff-9943-ac916388c781"), Name = "Hackney Downs" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("ca44b105-ec2a-4ba2-9834-c665da804a42"), Name = "Rectory Road" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("60bbfe9c-1f17-433d-80c6-e70d56db0936"), Name = "Stoke Newington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("edf66991-e80d-42c5-9572-6618dbbf0e7d"), Name = "Stamford Hill" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("6611689e-ac78-4100-8b3a-60d6154c5cb2"), Name = "Seven Sisters" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("403a349c-41e8-456e-b588-1a1d715186ae"), Name = "Bruce Grove" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("71f891ab-0bec-4c8f-981b-9c67a05a6497"), Name = "White Hart Lane" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("0c13a71f-32f6-4e9c-a8a6-aecae68005bc"), Name = "Silver Street" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("843cf3f1-3eaa-4f4b-ad64-752489bbbfec"), Name = "Edmonton Green" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("239b3c41-1125-47a3-995c-3bd3e0c3c78b"), Name = "Bush Hill Park" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("5147361f-a9b2-40ed-a52a-c300d71e1ffa"), Name = "Enfield Town" });
+
+        resultStations = result.ValidRoutes[2];
+        resultStations.Stations.Count.Should().Be(17);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("727d8469-e708-46c9-a722-5df5f237803f"), Name = "Cheshunt" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("b7a5ae67-882b-4509-8df9-4bae2ef1dd2a"), Name = "Bethnal Green" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("aa3d16ac-eff6-455d-be62-f2cb46bab923"), Name = "Cambridge Heath" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("29960244-35b1-4cda-b7bd-a99b7144445a"), Name = "London Fields" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("1457310e-fc09-47ff-9943-ac916388c781"), Name = "Hackney Downs" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("ca44b105-ec2a-4ba2-9834-c665da804a42"), Name = "Rectory Road" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("60bbfe9c-1f17-433d-80c6-e70d56db0936"), Name = "Stoke Newington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("edf66991-e80d-42c5-9572-6618dbbf0e7d"), Name = "Stamford Hill" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("6611689e-ac78-4100-8b3a-60d6154c5cb2"), Name = "Seven Sisters" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("403a349c-41e8-456e-b588-1a1d715186ae"), Name = "Bruce Grove" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("71f891ab-0bec-4c8f-981b-9c67a05a6497"), Name = "White Hart Lane" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("0c13a71f-32f6-4e9c-a8a6-aecae68005bc"), Name = "Silver Street" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("843cf3f1-3eaa-4f4b-ad64-752489bbbfec"), Name = "Edmonton Green" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("29776bb1-cda0-4241-b2b5-a476419abf6d"), Name = "Southbury" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("f1b095c2-d2aa-400f-9c72-373f19c9c522"), Name = "Turkey Street" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("99f76a26-d064-4044-8f10-741ef2a641f4"), Name = "Theobalds Grove" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("727d8469-e708-46c9-a722-5df5f237803f"), Name = "Cheshunt" });
+    }
+
+    [Fact]
     public void RouteRepository_GetStationsBetween_InCorrectLine_CorrectOrder_CorrectStations_GetsCorrectStations()
     {
         var start = new Model.Station(Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), "Canary Wharf");

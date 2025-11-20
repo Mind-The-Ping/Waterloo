@@ -692,6 +692,40 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Weaver_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("0b3d9ef1-fdd6-4db8-8d37-34e9c6ab8385"));
+
+        result.Should().Contain(x => x.Name == "Bethnal Green");
+        result.Should().Contain(x => x.Name == "Bruce Grove");
+        result.Should().Contain(x => x.Name == "Bush Hill Park");
+        result.Should().Contain(x => x.Name == "Cambridge Heath");
+        result.Should().Contain(x => x.Name == "Cheshunt");
+        result.Should().Contain(x => x.Name == "Chingford");
+        result.Should().Contain(x => x.Name == "Clapton");
+        result.Should().Contain(x => x.Name == "Edmonton Green");
+        result.Should().Contain(x => x.Name == "Enfield Town");
+        result.Should().Contain(x => x.Name == "Hackney Downs");
+        result.Should().Contain(x => x.Name == "Highams Park");
+        result.Should().Contain(x => x.Name == "London Fields");
+        result.Should().Contain(x => x.Name == "Liverpool Street");
+        result.Should().Contain(x => x.Name == "Rectory Road");
+        result.Should().Contain(x => x.Name == "Seven Sisters");
+        result.Should().Contain(x => x.Name == "Silver Street");
+        result.Should().Contain(x => x.Name == "Southbury");
+        result.Should().Contain(x => x.Name == "St.James Street");
+        result.Should().Contain(x => x.Name == "Stamford Hill");
+        result.Should().Contain(x => x.Name == "Stoke Newington");
+        result.Should().Contain(x => x.Name == "Theobalds Grove");
+        result.Should().Contain(x => x.Name == "Turkey Street");
+        result.Should().Contain(x => x.Name == "Walthamstow Central");
+        result.Should().Contain(x => x.Name == "White Hart Lane");
+        result.Should().Contain(x => x.Name == "Wood Street");
+
+        result.Count().Should().Be(25);
+    }
+
+    [Fact]
     public void StationRepository_GetByStationId_Should_Return_Station()
     {
         var result = _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"));

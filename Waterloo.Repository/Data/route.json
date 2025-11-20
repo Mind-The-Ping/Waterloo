@@ -5482,6 +5482,244 @@
       }
     ]
   },
+  "73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50": {
+    "name": "Waterloo & City",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "8cebdb43-8d17-49a2-a06b-1f3513091845",
+          "name": "Waterloo"
+        },
+        "to": {
+          "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+          "name": "Bank"
+        },
+        "stations": [
+          {
+            "id": "8cebdb43-8d17-49a2-a06b-1f3513091845",
+            "name": "Waterloo"
+          },
+          {
+            "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+            "name": "Bank"
+          }
+        ]
+      }
+    ]
+  },
+  "0b3d9ef1-fdd6-4db8-8d37-34e9c6ab8385": {
+    "name": "Weaver",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+          "name": "Liverpool Street"
+        },
+        "to": {
+          "id": "9bd86a33-3b5a-436e-9456-1660c4071e43",
+          "name": "Chingford"
+        },
+        "stations": [
+          {
+            "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+            "name": "Liverpool Street"
+          },
+          {
+            "id": "b7a5ae67-882b-4509-8df9-4bae2ef1dd2a",
+            "name": "Bethnal Green"
+          },
+          {
+            "id": "aa3d16ac-eff6-455d-be62-f2cb46bab923",
+            "name": "Cambridge Heath"
+          },
+          {
+            "id": "29960244-35b1-4cda-b7bd-a99b7144445a",
+            "name": "London Fields"
+          },
+          {
+            "id": "1457310e-fc09-47ff-9943-ac916388c781",
+            "name": "Hackney Downs"
+          },
+          {
+            "id": "42c4aee1-e050-4127-951a-b5a018de2754",
+            "name": "Clapton"
+          },
+          {
+            "id": "13a656c0-e690-46e0-9a57-5857c77dfb76",
+            "name": "St.James Street"
+          },
+          {
+            "id": "3373da0c-4111-47eb-b8aa-a2bcbcd1eca1",
+            "name": "Walthamstow Central"
+          },
+          {
+            "id": "5588ef92-4eb0-405e-9149-36620cdaca6f",
+            "name": "Wood Street"
+          },
+          {
+            "id": "d388f6ac-9708-4bf5-a51e-ffe0bdc6036d",
+            "name": "Highams Park"
+          },
+          {
+            "id": "9bd86a33-3b5a-436e-9456-1660c4071e43",
+            "name": "Chingford"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+          "name": "Liverpool Street"
+        },
+        "to": {
+          "id": "5147361f-a9b2-40ed-a52a-c300d71e1ffa",
+          "name": "Enfield Town"
+        },
+        "stations": [
+          {
+            "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+            "name": "Liverpool Street"
+          },
+          {
+            "id": "b7a5ae67-882b-4509-8df9-4bae2ef1dd2a",
+            "name": "Bethnal Green"
+          },
+          {
+            "id": "aa3d16ac-eff6-455d-be62-f2cb46bab923",
+            "name": "Cambridge Heath"
+          },
+          {
+            "id": "29960244-35b1-4cda-b7bd-a99b7144445a",
+            "name": "London Fields"
+          },
+          {
+            "id": "1457310e-fc09-47ff-9943-ac916388c781",
+            "name": "Hackney Downs"
+          },
+          {
+            "id": "ca44b105-ec2a-4ba2-9834-c665da804a42",
+            "name": "Rectory Road"
+          },
+          {
+            "id": "60bbfe9c-1f17-433d-80c6-e70d56db0936",
+            "name": "Stoke Newington"
+          },
+          {
+            "id": "edf66991-e80d-42c5-9572-6618dbbf0e7d",
+            "name": "Stamford Hill"
+          },
+          {
+            "id": "6611689e-ac78-4100-8b3a-60d6154c5cb2",
+            "name": "Seven Sisters"
+          },
+          {
+            "id": "403a349c-41e8-456e-b588-1a1d715186ae",
+            "name": "Bruce Grove"
+          },
+          {
+            "id": "71f891ab-0bec-4c8f-981b-9c67a05a6497",
+            "name": "White Hart Lane"
+          },
+          {
+            "id": "0c13a71f-32f6-4e9c-a8a6-aecae68005bc",
+            "name": "Silver Street"
+          },
+          {
+            "id": "843cf3f1-3eaa-4f4b-ad64-752489bbbfec",
+            "name": "Edmonton Green"
+          },
+          {
+            "id": "239b3c41-1125-47a3-995c-3bd3e0c3c78b",
+            "name": "Bush Hill Park"
+          },
+          {
+            "id": "5147361f-a9b2-40ed-a52a-c300d71e1ffa",
+            "name": "Enfield Town"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+          "name": "Liverpool Street"
+        },
+        "to": {
+          "id": "727d8469-e708-46c9-a722-5df5f237803f",
+          "name": "Cheshunt"
+        },
+        "stations": [
+          {
+            "id": "db101bcd-350e-4485-b875-7ac2c8c1b6cc",
+            "name": "Liverpool Street"
+          },
+          {
+            "id": "b7a5ae67-882b-4509-8df9-4bae2ef1dd2a",
+            "name": "Bethnal Green"
+          },
+          {
+            "id": "aa3d16ac-eff6-455d-be62-f2cb46bab923",
+            "name": "Cambridge Heath"
+          },
+          {
+            "id": "29960244-35b1-4cda-b7bd-a99b7144445a",
+            "name": "London Fields"
+          },
+          {
+            "id": "1457310e-fc09-47ff-9943-ac916388c781",
+            "name": "Hackney Downs"
+          },
+          {
+            "id": "ca44b105-ec2a-4ba2-9834-c665da804a42",
+            "name": "Rectory Road"
+          },
+          {
+            "id": "60bbfe9c-1f17-433d-80c6-e70d56db0936",
+            "name": "Stoke Newington"
+          },
+          {
+            "id": "edf66991-e80d-42c5-9572-6618dbbf0e7d",
+            "name": "Stamford Hill"
+          },
+          {
+            "id": "6611689e-ac78-4100-8b3a-60d6154c5cb2",
+            "name": "Seven Sisters"
+          },
+          {
+            "id": "403a349c-41e8-456e-b588-1a1d715186ae",
+            "name": "Bruce Grove"
+          },
+          {
+            "id": "71f891ab-0bec-4c8f-981b-9c67a05a6497",
+            "name": "White Hart Lane"
+          },
+          {
+            "id": "0c13a71f-32f6-4e9c-a8a6-aecae68005bc",
+            "name": "Silver Street"
+          },
+          {
+            "id": "843cf3f1-3eaa-4f4b-ad64-752489bbbfec",
+            "name": "Edmonton Green"
+          },
+          {
+            "id": "29776bb1-cda0-4241-b2b5-a476419abf6d",
+            "name": "Southbury"
+          },
+          {
+            "id": "f1b095c2-d2aa-400f-9c72-373f19c9c522",
+            "name": "Turkey Street"
+          },
+          {
+            "id": "99f76a26-d064-4044-8f10-741ef2a641f4",
+            "name": "Theobalds Grove"
+          },
+          {
+            "id": "727d8469-e708-46c9-a722-5df5f237803f",
+            "name": "Cheshunt"
+          }
+        ]
+      }
+    ]
+  },
   "9c834a1e-8a34-4c1e-943e-6f37b8e1e9d4": {
     "name": "Victoria",
     "validRoutes": [
@@ -5558,31 +5796,6 @@
           {
             "id": "3373da0c-4111-47eb-b8aa-a2bcbcd1eca1",
             "name": "Walthamstow Central"
-          }
-        ]
-      }
-    ]
-  },
-  "73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50": {
-    "name": "Waterloo & City",
-    "validRoutes": [
-      {
-        "from": {
-          "id": "8cebdb43-8d17-49a2-a06b-1f3513091845",
-          "name": "Waterloo"
-        },
-        "to": {
-          "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
-          "name": "Bank"
-        },
-        "stations": [
-          {
-            "id": "8cebdb43-8d17-49a2-a06b-1f3513091845",
-            "name": "Waterloo"
-          },
-          {
-            "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
-            "name": "Bank"
           }
         ]
       }
