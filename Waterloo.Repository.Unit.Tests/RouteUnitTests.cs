@@ -930,6 +930,75 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Mildmay_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("73d9c9bd-fabd-49f7-9c67-dbb752f07453")];
+
+        result.Name.Should().Be("Mildmay");
+        result.ValidRoutes.Count.Should().Be(2);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(23);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("10c300fa-acc5-4701-8a3d-ba27a3327696"), Name = "Richmond" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("bd75d399-2ab3-4a0f-9f29-421853ce1f92"), Name = "Hackney Wick" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("d78c96d2-a714-4133-9362-ec1ab4f35435"), Name = "Homerton" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("aaa2565a-ba57-449b-b9b0-12bad4fb43a2"), Name = "Hackney Central" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("c88414e6-e599-42fa-be41-83ffaccc1108"), Name = "Dalston Kingsland" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("9c8db56b-4a81-4ae3-a5df-84ec7685ff82"), Name = "Canonbury" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("dd66ccf1-1f07-492f-b42f-67fd107889c2"), Name = "Highbury & Islington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("a291b339-347c-484d-b743-3c17f83f1cac"), Name = "Caledonian Road & Barnsbury" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("21257a88-e690-4ef2-8a07-ef800b0ce07b"), Name = "Camden Road" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("1c9bf957-d6e8-47fd-93fb-f80379f87e4c"), Name = "Kentish Town West" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("79efd145-7794-40a0-a37a-f838223e641b"), Name = "Gospel Oak" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("621bf8be-ea0f-49d3-abcf-6db1153ff9aa"), Name = "Hampstead Heath" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("408d7020-ff90-46ae-8d7f-f74420057c30"), Name = "Finchley Road & Frognal" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("6b2099cd-f9f5-4d37-803c-82571d4fad6b"), Name = "West Hampstead" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("d57862c0-e7a7-4c7c-8c3e-d3d1c526aeb4"), Name = "Brondesbury" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("192e2b8a-31e5-4d90-8dc9-5d337c76e4b7"), Name = "Brondesbury Park" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("5d00d79a-1a33-4c4b-abfe-1dfe1c712685"), Name = "Kensal Rise" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("d2323699-fac3-412d-af16-c4cd9da671f2"), Name = "Willesden Junction" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("d2d12111-2070-4e0a-94c7-e4359d984f41"), Name = "Acton Central" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("b3ed3fba-5b92-4787-a0fb-302244e6ec30"), Name = "South Acton" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("4a1b2adb-a70e-42d1-b7e7-a2845ca98e7c"), Name = "Gunnersbury" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("92a0ee87-b829-4669-9482-fb8620455b4b"), Name = "Kew Gardens" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("10c300fa-acc5-4701-8a3d-ba27a3327696"), Name = "Richmond" });
+
+        resultStations = result.ValidRoutes[1];
+        resultStations.Stations.Count.Should().Be(23);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("bc1a08a6-11b7-49a4-955f-ba505cf2b555"), Name = "Clapham Junction" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("bd75d399-2ab3-4a0f-9f29-421853ce1f92"), Name = "Hackney Wick" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("d78c96d2-a714-4133-9362-ec1ab4f35435"), Name = "Homerton" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("aaa2565a-ba57-449b-b9b0-12bad4fb43a2"), Name = "Hackney Central" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("c88414e6-e599-42fa-be41-83ffaccc1108"), Name = "Dalston Kingsland" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("9c8db56b-4a81-4ae3-a5df-84ec7685ff82"), Name = "Canonbury" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("dd66ccf1-1f07-492f-b42f-67fd107889c2"), Name = "Highbury & Islington" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("a291b339-347c-484d-b743-3c17f83f1cac"), Name = "Caledonian Road & Barnsbury" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("21257a88-e690-4ef2-8a07-ef800b0ce07b"), Name = "Camden Road" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("1c9bf957-d6e8-47fd-93fb-f80379f87e4c"), Name = "Kentish Town West" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("79efd145-7794-40a0-a37a-f838223e641b"), Name = "Gospel Oak" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("621bf8be-ea0f-49d3-abcf-6db1153ff9aa"), Name = "Hampstead Heath" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("408d7020-ff90-46ae-8d7f-f74420057c30"), Name = "Finchley Road & Frognal" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("6b2099cd-f9f5-4d37-803c-82571d4fad6b"), Name = "West Hampstead" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("d57862c0-e7a7-4c7c-8c3e-d3d1c526aeb4"), Name = "Brondesbury" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("192e2b8a-31e5-4d90-8dc9-5d337c76e4b7"), Name = "Brondesbury Park" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("5d00d79a-1a33-4c4b-abfe-1dfe1c712685"), Name = "Kensal Rise" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("d2323699-fac3-412d-af16-c4cd9da671f2"), Name = "Willesden Junction" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("4c4529fd-1b39-4a34-afb2-b0c815151012"), Name = "Shepherd's Bush" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("b9a55e52-dbdc-4542-9981-8afe9e9709fe"), Name = "Kensington (Olympia)" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("6a65894f-41da-47e2-bfcc-68d877d2a9b2"), Name = "West Brompton" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("ca0b3456-d350-46c9-b17b-00c335425bd5"), Name = "Imperial Wharf" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("bc1a08a6-11b7-49a4-955f-ba505cf2b555"), Name = "Clapham Junction" });
+    }
+
+    [Fact]
     public void RouteRepository_Metropolitan_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6")];

@@ -381,6 +381,44 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Mildmay_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("73d9c9bd-fabd-49f7-9c67-dbb752f07453"));
+
+        result.Should().NotBeNullOrEmpty();
+        result.Should().Contain(x => x.Name == "Acton Central");
+        result.Should().Contain(x => x.Name == "Brondesbury Park");
+        result.Should().Contain(x => x.Name == "Brondesbury");
+        result.Should().Contain(x => x.Name == "Caledonian Road & Barnsbury");
+        result.Should().Contain(x => x.Name == "Camden Road");
+        result.Should().Contain(x => x.Name == "Canonbury");
+        result.Should().Contain(x => x.Name == "Clapham Junction");
+        result.Should().Contain(x => x.Name == "Dalston Kingsland");
+        result.Should().Contain(x => x.Name == "Finchley Road & Frognal");
+        result.Should().Contain(x => x.Name == "Gospel Oak");
+        result.Should().Contain(x => x.Name == "Gunnersbury");
+        result.Should().Contain(x => x.Name == "Hackney Central");
+        result.Should().Contain(x => x.Name == "Hackney Wick");
+        result.Should().Contain(x => x.Name == "Hampstead Heath");
+        result.Should().Contain(x => x.Name == "Highbury & Islington");
+        result.Should().Contain(x => x.Name == "Homerton");
+        result.Should().Contain(x => x.Name == "Imperial Wharf");
+        result.Should().Contain(x => x.Name == "Kensal Rise");
+        result.Should().Contain(x => x.Name == "Kensington (Olympia)");
+        result.Should().Contain(x => x.Name == "Kentish Town West");
+        result.Should().Contain(x => x.Name == "Kew Gardens");
+        result.Should().Contain(x => x.Name == "Richmond");
+        result.Should().Contain(x => x.Name == "Shepherd's Bush");
+        result.Should().Contain(x => x.Name == "South Acton");
+        result.Should().Contain(x => x.Name == "Stratford");
+        result.Should().Contain(x => x.Name == "West Brompton");
+        result.Should().Contain(x => x.Name == "West Hampstead");
+        result.Should().Contain(x => x.Name == "Willesden Junction");
+
+        result.Count().Should().Be(28);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_Metropolitan_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6"));
