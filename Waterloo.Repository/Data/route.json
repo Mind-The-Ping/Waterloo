@@ -2968,6 +2968,219 @@
       }
     ]
   },
+  "73d9c9bd-fabd-49f7-9c67-dbb752f07453": {
+    "name": "Mildmay",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+          "name": "Stratford"
+        },
+        "to": {
+          "id": "10c300fa-acc5-4701-8a3d-ba27a3327696",
+          "name": "Richmond"
+        },
+        "stations": [
+          {
+            "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+            "name": "Stratford"
+          },
+          {
+            "id": "bd75d399-2ab3-4a0f-9f29-421853ce1f92",
+            "name": "Hackney Wick"
+          },
+          {
+            "id": "d78c96d2-a714-4133-9362-ec1ab4f35435",
+            "name": "Homerton"
+          },
+          {
+            "id": "aaa2565a-ba57-449b-b9b0-12bad4fb43a2",
+            "name": "Hackney Central"
+          },
+          {
+            "id": "c88414e6-e599-42fa-be41-83ffaccc1108",
+            "name": "Dalston Kingsland"
+          },
+          {
+            "id": "9c8db56b-4a81-4ae3-a5df-84ec7685ff82",
+            "name": "Canonbury"
+          },
+          {
+            "id": "dd66ccf1-1f07-492f-b42f-67fd107889c2",
+            "name": "Highbury \u0026 Islington"
+          },
+          {
+            "id": "a291b339-347c-484d-b743-3c17f83f1cac",
+            "name": "Caledonian Road \u0026 Barnsbury"
+          },
+          {
+            "id": "21257a88-e690-4ef2-8a07-ef800b0ce07b",
+            "name": "Camden Road"
+          },
+          {
+            "id": "1c9bf957-d6e8-47fd-93fb-f80379f87e4c",
+            "name": "Kentish Town West"
+          },
+          {
+            "id": "79efd145-7794-40a0-a37a-f838223e641b",
+            "name": "Gospel Oak"
+          },
+          {
+            "id": "621bf8be-ea0f-49d3-abcf-6db1153ff9aa",
+            "name": "Hampstead Heath"
+          },
+          {
+            "id": "408d7020-ff90-46ae-8d7f-f74420057c30",
+            "name": "Finchley Road \u0026 Frognal"
+          },
+          {
+            "id": "6b2099cd-f9f5-4d37-803c-82571d4fad6b",
+            "name": "West Hampstead"
+          },
+          {
+            "id": "d57862c0-e7a7-4c7c-8c3e-d3d1c526aeb4",
+            "name": "Brondesbury"
+          },
+          {
+            "id": "192e2b8a-31e5-4d90-8dc9-5d337c76e4b7",
+            "name": "Brondesbury Park"
+          },
+          {
+            "id": "5d00d79a-1a33-4c4b-abfe-1dfe1c712685",
+            "name": "Kensal Rise"
+          },
+          {
+            "id": "d2323699-fac3-412d-af16-c4cd9da671f2",
+            "name": "Willesden Junction"
+          },
+          {
+            "id": "d2d12111-2070-4e0a-94c7-e4359d984f41",
+            "name": "Acton Central"
+          },
+          {
+            "id": "b3ed3fba-5b92-4787-a0fb-302244e6ec30",
+            "name": "South Acton"
+          },
+          {
+            "id": "4a1b2adb-a70e-42d1-b7e7-a2845ca98e7c",
+            "name": "Gunnersbury"
+          },
+          {
+            "id": "92a0ee87-b829-4669-9482-fb8620455b4b",
+            "name": "Kew Gardens"
+          },
+          {
+            "id": "10c300fa-acc5-4701-8a3d-ba27a3327696",
+            "name": "Richmond"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+          "name": "Stratford"
+        },
+        "to": {
+          "id": "bc1a08a6-11b7-49a4-955f-ba505cf2b555",
+          "name": "Clapham Junction"
+        },
+        "stations": [
+          {
+            "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+            "name": "Stratford"
+          },
+          {
+            "id": "bd75d399-2ab3-4a0f-9f29-421853ce1f92",
+            "name": "Hackney Wick"
+          },
+          {
+            "id": "d78c96d2-a714-4133-9362-ec1ab4f35435",
+            "name": "Homerton"
+          },
+          {
+            "id": "aaa2565a-ba57-449b-b9b0-12bad4fb43a2",
+            "name": "Hackney Central"
+          },
+          {
+            "id": "c88414e6-e599-42fa-be41-83ffaccc1108",
+            "name": "Dalston Kingsland"
+          },
+          {
+            "id": "9c8db56b-4a81-4ae3-a5df-84ec7685ff82",
+            "name": "Canonbury"
+          },
+          {
+            "id": "dd66ccf1-1f07-492f-b42f-67fd107889c2",
+            "name": "Highbury \u0026 Islington"
+          },
+          {
+            "id": "a291b339-347c-484d-b743-3c17f83f1cac",
+            "name": "Caledonian Road \u0026 Barnsbury"
+          },
+          {
+            "id": "21257a88-e690-4ef2-8a07-ef800b0ce07b",
+            "name": "Camden Road"
+          },
+          {
+            "id": "1c9bf957-d6e8-47fd-93fb-f80379f87e4c",
+            "name": "Kentish Town West"
+          },
+          {
+            "id": "79efd145-7794-40a0-a37a-f838223e641b",
+            "name": "Gospel Oak"
+          },
+          {
+            "id": "621bf8be-ea0f-49d3-abcf-6db1153ff9aa",
+            "name": "Hampstead Heath"
+          },
+          {
+            "id": "408d7020-ff90-46ae-8d7f-f74420057c30",
+            "name": "Finchley Road \u0026 Frognal"
+          },
+          {
+            "id": "6b2099cd-f9f5-4d37-803c-82571d4fad6b",
+            "name": "West Hampstead"
+          },
+          {
+            "id": "d57862c0-e7a7-4c7c-8c3e-d3d1c526aeb4",
+            "name": "Brondesbury"
+          },
+          {
+            "id": "192e2b8a-31e5-4d90-8dc9-5d337c76e4b7",
+            "name": "Brondesbury Park"
+          },
+          {
+            "id": "5d00d79a-1a33-4c4b-abfe-1dfe1c712685",
+            "name": "Kensal Rise"
+          },
+          {
+            "id": "d2323699-fac3-412d-af16-c4cd9da671f2",
+            "name": "Willesden Junction"
+          },
+          {
+            "id": "4c4529fd-1b39-4a34-afb2-b0c815151012",
+            "name": "Shepherd\u0027s Bush"
+          },
+          {
+            "id": "b9a55e52-dbdc-4542-9981-8afe9e9709fe",
+            "name": "Kensington (Olympia)"
+          },
+          {
+            "id": "6a65894f-41da-47e2-bfcc-68d877d2a9b2",
+            "name": "West Brompton"
+          },
+          {
+            "id": "ca0b3456-d350-46c9-b17b-00c335425bd5",
+            "name": "Imperial Wharf"
+          },
+          {
+            "id": "bc1a08a6-11b7-49a4-955f-ba505cf2b555",
+            "name": "Clapham Junction"
+          }
+        ]
+      }
+    ]
+  },
   "9e3a7f43-b6c4-4f12-9a72-ffbe2d15b9e6": {
     "name": "Metropolitan",
     "validRoutes": [
