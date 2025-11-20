@@ -1568,6 +1568,35 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_Suffragette_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("2cb7f0a1-fa5f-43bd-af91-18dd83623284")];
+
+        result.Name.Should().Be("Suffragette");
+        result.ValidRoutes.Count.Should().Be(1);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(13);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("79efd145-7794-40a0-a37a-f838223e641b"), Name = "Gospel Oak" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("a47b1c8c-559b-4798-b789-fc8e196c85a6"), Name = "Barking Riverside" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("79efd145-7794-40a0-a37a-f838223e641b"), Name = "Gospel Oak" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("de30a36b-be72-4684-9a67-68a09977562e"), Name = "Upper Holloway" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("3186bd9c-ca42-472e-bfcc-89a0c90137a8"), Name = "Crouch Hill" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("eade4a73-c86d-4c9b-9232-664d981aa511"), Name = "Harringay Green Lanes" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("3bedd194-aa6d-4dad-b4df-ab5d8f3f3543"), Name = "South Tottenham" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("9fff048a-a9e3-45a9-a553-32732a174f17"), Name = "Blackhorse Road" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("45df5e32-66ab-4a93-8a67-eeb07e81d284"), Name = "Walthamstow Queens Road" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("f40cfb96-e60f-411d-a0f0-cc18671a7287"), Name = "Leyton Midland Road" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("6cfd8295-cf69-48e3-9778-99d11d724c43"), Name = "Leytonstone High Road" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("467ea272-5f13-4cf3-afe7-b319d0b8997b"), Name = "Wanstead Park" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("ac28b830-4dcc-423c-87d5-d9b306e635c3"), Name = "Woodgrange Park" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("1c5faedb-30a6-4957-a8f7-6cdc702f4f68"), Name = "Barking" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("a47b1c8c-559b-4798-b789-fc8e196c85a6"), Name = "Barking Riverside" });
+    }
+
+    [Fact]
     public void RouteRepository_Tram_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("e466a866-6404-4a7d-a55d-a3e21d328e52")];

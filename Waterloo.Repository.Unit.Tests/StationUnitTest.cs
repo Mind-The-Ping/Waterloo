@@ -586,6 +586,28 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Suffragette_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("2cb7f0a1-fa5f-43bd-af91-18dd83623284"));
+
+        result.Should().Contain(x => x.Name == "Barking");
+        result.Should().Contain(x => x.Name == "Barking Riverside");
+        result.Should().Contain(x => x.Name == "Blackhorse Road");
+        result.Should().Contain(x => x.Name == "Crouch Hill");
+        result.Should().Contain(x => x.Name == "Gospel Oak");
+        result.Should().Contain(x => x.Name == "Harringay Green Lanes");
+        result.Should().Contain(x => x.Name == "Leyton Midland Road");
+        result.Should().Contain(x => x.Name == "Leytonstone High Road");
+        result.Should().Contain(x => x.Name == "South Tottenham");
+        result.Should().Contain(x => x.Name == "Upper Holloway");
+        result.Should().Contain(x => x.Name == "Walthamstow Queens Road");
+        result.Should().Contain(x => x.Name == "Wanstead Park");
+        result.Should().Contain(x => x.Name == "Woodgrange Park");
+
+        result.Count().Should().Be(13);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_Tram_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("e466a866-6404-4a7d-a55d-a3e21d328e52"));

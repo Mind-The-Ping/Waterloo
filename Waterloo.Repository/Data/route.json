@@ -5124,6 +5124,75 @@
       }
     ]
   },
+  "2cb7f0a1-fa5f-43bd-af91-18dd83623284": {
+    "name": "Suffragette",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "79efd145-7794-40a0-a37a-f838223e641b",
+          "name": "Gospel Oak"
+        },
+        "to": {
+          "id": "a47b1c8c-559b-4798-b789-fc8e196c85a6",
+          "name": "Barking Riverside"
+        },
+        "stations": [
+          {
+            "id": "79efd145-7794-40a0-a37a-f838223e641b",
+            "name": "Gospel Oak"
+          },
+          {
+            "id": "de30a36b-be72-4684-9a67-68a09977562e",
+            "name": "Upper Holloway"
+          },
+          {
+            "id": "3186bd9c-ca42-472e-bfcc-89a0c90137a8",
+            "name": "Crouch Hill"
+          },
+          {
+            "id": "eade4a73-c86d-4c9b-9232-664d981aa511",
+            "name": "Harringay Green Lanes"
+          },
+          {
+            "id": "3bedd194-aa6d-4dad-b4df-ab5d8f3f3543",
+            "name": "South Tottenham"
+          },
+          {
+            "id": "9fff048a-a9e3-45a9-a553-32732a174f17",
+            "name": "Blackhorse Road"
+          },
+          {
+            "id": "45df5e32-66ab-4a93-8a67-eeb07e81d284",
+            "name": "Walthamstow Queens Road"
+          },
+          {
+            "id": "f40cfb96-e60f-411d-a0f0-cc18671a7287",
+            "name": "Leyton Midland Road"
+          },
+          {
+            "id": "6cfd8295-cf69-48e3-9778-99d11d724c43",
+            "name": "Leytonstone High Road"
+          },
+          {
+            "id": "467ea272-5f13-4cf3-afe7-b319d0b8997b",
+            "name": "Wanstead Park"
+          },
+          {
+            "id": "ac28b830-4dcc-423c-87d5-d9b306e635c3",
+            "name": "Woodgrange Park"
+          },
+          {
+            "id": "1c5faedb-30a6-4957-a8f7-6cdc702f4f68",
+            "name": "Barking"
+          },
+          {
+            "id": "a47b1c8c-559b-4798-b789-fc8e196c85a6",
+            "name": "Barking Riverside"
+          }
+        ]
+      }
+    ]
+  },
   "e466a866-6404-4a7d-a55d-a3e21d328e52": {
     "name": "Tram",
     "validRoutes": [
