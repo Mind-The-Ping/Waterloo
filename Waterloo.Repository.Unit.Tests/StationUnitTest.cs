@@ -726,6 +726,45 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_Windrush_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("2f9d4b4c-c001-4be2-b02f-b227c1a7d84b"));
+
+        result.Should().Contain(x => x.Name == "Anerley");
+        result.Should().Contain(x => x.Name == "Brockley");
+        result.Should().Contain(x => x.Name == "Canada Water");
+        result.Should().Contain(x => x.Name == "Canonbury");
+        result.Should().Contain(x => x.Name == "Clapham High Street");
+        result.Should().Contain(x => x.Name == "Clapham Junction");
+        result.Should().Contain(x => x.Name == "Crystal Palace");
+        result.Should().Contain(x => x.Name == "Dalston Junction");
+        result.Should().Contain(x => x.Name == "Denmark Hill");
+        result.Should().Contain(x => x.Name == "Forest Hill");
+        result.Should().Contain(x => x.Name == "Haggerston");
+        result.Should().Contain(x => x.Name == "Highbury & Islington");
+        result.Should().Contain(x => x.Name == "Honor Oak Park");
+        result.Should().Contain(x => x.Name == "Hoxton");
+        result.Should().Contain(x => x.Name == "New Cross");
+        result.Should().Contain(x => x.Name == "New Cross Gate");
+        result.Should().Contain(x => x.Name == "Norwood Junction");
+        result.Should().Contain(x => x.Name == "Peckham Rye");
+        result.Should().Contain(x => x.Name == "Penge West");
+        result.Should().Contain(x => x.Name == "Queens Road Peckham");
+        result.Should().Contain(x => x.Name == "Rotherhithe");
+        result.Should().Contain(x => x.Name == "Shadwell");
+        result.Should().Contain(x => x.Name == "Shoreditch High Street");
+        result.Should().Contain(x => x.Name == "Surrey Quays");
+        result.Should().Contain(x => x.Name == "Sydenham");
+        result.Should().Contain(x => x.Name == "Wandsworth Road");
+        result.Should().Contain(x => x.Name == "Wapping");
+        result.Should().Contain(x => x.Name == "West Croydon");
+        result.Should().Contain(x => x.Name == "Whitechapel");
+
+
+        result.Count().Should().Be(29);
+    }
+
+    [Fact]
     public void StationRepository_GetByStationId_Should_Return_Station()
     {
         var result = _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"));
