@@ -13,7 +13,7 @@ public class LineUnitTests
         var result = _repository.GetAll();
 
         result.Should().NotBeNullOrEmpty();
-        result.Count().Should().Be(19);
+        result.Count().Should().Be(20);
     }
 
     [Fact]
