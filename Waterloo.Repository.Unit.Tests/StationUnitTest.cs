@@ -214,6 +214,63 @@ public class StationUnitTest
     }
 
     [Fact]
+    public void StationRepository_GetByLine_DLR_ShouldReturnAllStationsOnLine()
+    {
+        var result = _stationRepository.GetByLine(Guid.Parse("85b9e52c-697b-4db8-876f-600423ffe176"));
+
+        result.Should().NotBeNullOrEmpty();
+
+        result.Should().Contain(x => x.Name == "Abbey Road");
+        result.Should().Contain(x => x.Name == "All Saints");
+        result.Should().Contain(x => x.Name == "Bank");
+        result.Should().Contain(x => x.Name == "Beckton");
+        result.Should().Contain(x => x.Name == "Beckton Park");
+        result.Should().Contain(x => x.Name == "Blackwall");
+        result.Should().Contain(x => x.Name == "Bow Church");
+        result.Should().Contain(x => x.Name == "Canning Town");
+        result.Should().Contain(x => x.Name == "Canary Wharf");
+        result.Should().Contain(x => x.Name == "Crossharbour");
+        result.Should().Contain(x => x.Name == "Custom House");
+        result.Should().Contain(x => x.Name == "Cutty Sark");
+        result.Should().Contain(x => x.Name == "Cyprus");
+        result.Should().Contain(x => x.Name == "Deptford Bridge");
+        result.Should().Contain(x => x.Name == "Devons Road");
+        result.Should().Contain(x => x.Name == "East India");
+        result.Should().Contain(x => x.Name == "Elverson Road");
+        result.Should().Contain(x => x.Name == "Gallions Reach");
+        result.Should().Contain(x => x.Name == "Greenwich");
+        result.Should().Contain(x => x.Name == "Heron Quays");
+        result.Should().Contain(x => x.Name == "Island Gardens");
+        result.Should().Contain(x => x.Name == "King George V");
+        result.Should().Contain(x => x.Name == "Langdon Park");
+        result.Should().Contain(x => x.Name == "Lewisham");
+        result.Should().Contain(x => x.Name == "Limehouse");
+        result.Should().Contain(x => x.Name == "London City Airport");
+        result.Should().Contain(x => x.Name == "Mudchute");
+        result.Should().Contain(x => x.Name == "Pontoon Dock");
+        result.Should().Contain(x => x.Name == "Poplar");
+        result.Should().Contain(x => x.Name == "Prince Regent");
+        result.Should().Contain(x => x.Name == "Pudding Mill Lane");
+        result.Should().Contain(x => x.Name == "Royal Albert");
+        result.Should().Contain(x => x.Name == "Royal Victoria");
+        result.Should().Contain(x => x.Name == "Shadwell");
+        result.Should().Contain(x => x.Name == "South Quay");
+        result.Should().Contain(x => x.Name == "Star Lane");
+        result.Should().Contain(x => x.Name == "Stratford");
+        result.Should().Contain(x => x.Name == "Stratford High Street");
+        result.Should().Contain(x => x.Name == "Stratford International");
+        result.Should().Contain(x => x.Name == "Tower Gateway");
+        result.Should().Contain(x => x.Name == "Westferry");
+        result.Should().Contain(x => x.Name == "West Ham");
+        result.Should().Contain(x => x.Name == "West India Quay");
+        result.Should().Contain(x => x.Name == "West Silvertown");
+        result.Should().Contain(x => x.Name == "Woolwich Arsenal");
+
+
+        result.Count().Should().Be(45);
+    }
+
+    [Fact]
     public void StationRepository_GetByLine_Elizabeth_ShouldReturnAllStationsOnLine()
     {
         var result = _stationRepository.GetByLine(Guid.Parse("d232ac77-6032-4658-aed8-e47f89b79353"));

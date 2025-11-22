@@ -1827,6 +1827,331 @@
       }
     ]
   },
+  "85b9e52c-697b-4db8-876f-600423ffe176": {
+    "name": "DLR",
+    "validRoutes": [
+      {
+        "from": {
+          "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+          "name": "Bank"
+        },
+        "to": {
+          "id": "ae8da6d3-57bc-4291-a3f2-79dd96eac775",
+          "name": "Lewisham"
+        },
+        "stations": [
+          {
+            "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+            "name": "Bank"
+          },
+          {
+            "id": "83c12f73-4e47-4aab-a10c-ff445a458a33",
+            "name": "Shadwell"
+          },
+          {
+            "id": "72555c4d-4c54-4ddf-9094-aed433b32224",
+            "name": "Limehouse"
+          },
+          {
+            "id": "25c71d0e-7103-4f7e-b40c-19447915ffe8",
+            "name": "Westferry"
+          },
+          {
+            "id": "5c15a8f5-a21d-4567-97a4-3cbc095d2298",
+            "name": "Canary Wharf"
+          },
+          {
+            "id": "ccf4fc3b-3f2d-4da7-b756-80307b278b65",
+            "name": "Heron Quays"
+          },
+          {
+            "id": "43cfa7d4-cd92-45f2-aea9-24cbae727db8",
+            "name": "South Quay"
+          },
+          {
+            "id": "739909b9-9cb9-4806-9d50-f1136edf69e7",
+            "name": "Crossharbour"
+          },
+          {
+            "id": "c2178257-3ee0-46a8-a029-afeffda629a0",
+            "name": "Mudchute"
+          },
+          {
+            "id": "7b99c143-e091-4fcc-94e2-3b161fb1f6cd",
+            "name": "Island Gardens"
+          },
+          {
+            "id": "d50173b7-e272-44e6-9b0c-0b0f0bcc0c09",
+            "name": "Cutty Sark"
+          },
+          {
+            "id": "ff2c1d03-e13a-4d1d-b0d1-9f421e5b3ff3",
+            "name": "Greenwich"
+          },
+          {
+            "id": "f4718576-9e9b-4b6a-b0ca-77bd690d27de",
+            "name": "Deptford Bridge"
+          },
+          {
+            "id": "7fa419bf-33d1-4944-92ce-020cb43c9d64",
+            "name": "Elverson Road"
+          },
+          {
+            "id": "ae8da6d3-57bc-4291-a3f2-79dd96eac775",
+            "name": "Lewisham"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+          "name": "Bank"
+        },
+        "to": {
+          "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+          "name": "Woolwich Arsenal"
+        },
+        "stations": [
+          {
+            "id": "aaedc653-e766-4d6b-87e2-4c87322971ef",
+            "name": "Bank"
+          },
+          {
+            "id": "83c12f73-4e47-4aab-a10c-ff445a458a33",
+            "name": "Shadwell"
+          },
+          {
+            "id": "72555c4d-4c54-4ddf-9094-aed433b32224",
+            "name": "Limehouse"
+          },
+          {
+            "id": "25c71d0e-7103-4f7e-b40c-19447915ffe8",
+            "name": "Westferry"
+          },
+          {
+            "id": "f90a3bb8-4060-4dc4-acb0-973561e6e0a5",
+            "name": "Poplar"
+          },
+          {
+            "id": "ac13f225-4486-4a41-ba5f-0b1de1b7fa04",
+            "name": "Blackwall"
+          },
+          {
+            "id": "ae0de89e-691e-4ad8-b3d4-b5278cfd923a",
+            "name": "East India"
+          },
+          {
+            "id": "752cd9c1-bead-404f-b12a-aa93c212f2c2",
+            "name": "Canning Town"
+          },
+          {
+            "id": "5008326b-8bd5-4cf1-935f-ab370c653354",
+            "name": "West Silvertown"
+          },
+          {
+            "id": "c130659d-1ebb-4b08-bf44-a9ad1f33936c",
+            "name": "Pontoon Dock"
+          },
+          {
+            "id": "d9a70c10-0553-4830-bb13-0292c4c104bc",
+            "name": "London City Airport"
+          },
+          {
+            "id": "58b068c2-013d-439a-977c-c072db3c7754",
+            "name": "King George V"
+          },
+          {
+            "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+            "name": "Woolwich Arsenal"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+          "name": "Stratford"
+        },
+        "to": {
+          "id": "5c15a8f5-a21d-4567-97a4-3cbc095d2298",
+          "name": "Canary Wharf"
+        },
+        "stations": [
+          {
+            "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+            "name": "Stratford"
+          },
+          {
+            "id": "75e66a83-fc1e-4d10-b48c-8bfc60cb3648",
+            "name": "Pudding Mill Lane"
+          },
+          {
+            "id": "d82d33af-3f55-46b0-b767-ff0f81128b48",
+            "name": "Bow Church"
+          },
+          {
+            "id": "0907197c-dbee-4456-a535-04dd7ac31686",
+            "name": "Devons Road"
+          },
+          {
+            "id": "18e58b30-0ed1-4c08-82a3-ee9cf97530a5",
+            "name": "Langdon Park"
+          },
+          {
+            "id": "0568a75b-348a-4def-848f-ba4ec7cd90db",
+            "name": "All Saints"
+          },
+          {
+            "id": "f90a3bb8-4060-4dc4-acb0-973561e6e0a5",
+            "name": "Poplar"
+          },
+          {
+            "id": "dee286e7-8a98-4976-82cf-9fc01651c889",
+            "name": "West India Quay"
+          },
+          {
+            "id": "5c15a8f5-a21d-4567-97a4-3cbc095d2298",
+            "name": "Canary Wharf"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "78e04c72-0243-453f-a10b-b195319b041d",
+          "name": "Stratford International"
+        },
+        "to": {
+          "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+          "name": "Woolwich Arsenal"
+        },
+        "stations": [
+          {
+            "id": "78e04c72-0243-453f-a10b-b195319b041d",
+            "name": "Stratford International"
+          },
+          {
+            "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+            "name": "Stratford"
+          },
+          {
+            "id": "3d4b5acf-14df-4257-8cd6-57a5fc521c03",
+            "name": "Stratford High Street"
+          },
+          {
+            "id": "8007602b-5372-41de-8705-f7de1d49ba7a",
+            "name": "Abbey Road"
+          },
+          {
+            "id": "968bc258-138c-45cf-83c0-599705285d25",
+            "name": "West Ham"
+          },
+          {
+            "id": "2b74aa01-253c-401e-9978-597382f3c542",
+            "name": "Star Lane"
+          },
+          {
+            "id": "752cd9c1-bead-404f-b12a-aa93c212f2c2",
+            "name": "Canning Town"
+          },
+          {
+            "id": "5008326b-8bd5-4cf1-935f-ab370c653354",
+            "name": "West Silvertown"
+          },
+          {
+            "id": "c130659d-1ebb-4b08-bf44-a9ad1f33936c",
+            "name": "Pontoon Dock"
+          },
+          {
+            "id": "d9a70c10-0553-4830-bb13-0292c4c104bc",
+            "name": "London City Airport"
+          },
+          {
+            "id": "58b068c2-013d-439a-977c-c072db3c7754",
+            "name": "King George V"
+          },
+          {
+            "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+            "name": "Woolwich Arsenal"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "7cbbd6f5-a354-45a3-9925-8b75d43bcc3c",
+          "name": "Tower Gateway"
+        },
+        "to": {
+          "id": "015f3b77-6762-45b4-943d-2a1f2016c86b",
+          "name": "Beckton"
+        },
+        "stations": [
+          {
+            "id": "7cbbd6f5-a354-45a3-9925-8b75d43bcc3c",
+            "name": "Tower Gateway"
+          },
+          {
+            "id": "83c12f73-4e47-4aab-a10c-ff445a458a33",
+            "name": "Shadwell"
+          },
+          {
+            "id": "72555c4d-4c54-4ddf-9094-aed433b32224",
+            "name": "Limehouse"
+          },
+          {
+            "id": "25c71d0e-7103-4f7e-b40c-19447915ffe8",
+            "name": "Westferry"
+          },
+          {
+            "id": "f90a3bb8-4060-4dc4-acb0-973561e6e0a5",
+            "name": "Poplar"
+          },
+          {
+            "id": "ac13f225-4486-4a41-ba5f-0b1de1b7fa04",
+            "name": "Blackwall"
+          },
+          {
+            "id": "ae0de89e-691e-4ad8-b3d4-b5278cfd923a",
+            "name": "East India"
+          },
+          {
+            "id": "752cd9c1-bead-404f-b12a-aa93c212f2c2",
+            "name": "Canning Town"
+          },
+          {
+            "id": "4b4fd8bc-7c4f-40c5-846d-df35fb591d9c",
+            "name": "Royal Victoria"
+          },
+          {
+            "id": "de485292-f6bd-4ccf-9a93-1afd852017e2",
+            "name": "Custom House"
+          },
+          {
+            "id": "dd45e6ce-6aca-4f7d-919a-9c3f715bba13",
+            "name": "Prince Regent"
+          },
+          {
+            "id": "6fdee0f4-2552-4a17-9a5a-fce850836217",
+            "name": "Royal Albert"
+          },
+          {
+            "id": "8675653e-9785-49f5-b9dc-22fc26c91e35",
+            "name": "Beckton Park"
+          },
+          {
+            "id": "f7876299-7b96-45cb-91fa-84e6684850cd",
+            "name": "Cyprus"
+          },
+          {
+            "id": "ccaf09c3-421c-4f56-98d2-15a7624fd8ea",
+            "name": "Gallions Reach"
+          },
+          {
+            "id": "015f3b77-6762-45b4-943d-2a1f2016c86b",
+            "name": "Beckton"
+          }
+        ]
+      }
+    ]
+  },
   "d232ac77-6032-4658-aed8-e47f89b79353": {
     "name": "Elizabeth",
     "validRoutes": [

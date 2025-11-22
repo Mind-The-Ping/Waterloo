@@ -552,6 +552,115 @@ public class RouteUnitTests
     }
 
     [Fact]
+    public void RouteRepository_DLR_Routes_Correct()
+    {
+        var result = _repository.Lines[Guid.Parse("85b9e52c-697b-4db8-876f-600423ffe176")];
+
+        result.Name.Should().Be("DLR");
+        result.ValidRoutes.Count.Should().Be(5);
+
+        var resultStations = result.ValidRoutes[0];
+        resultStations.Stations.Count.Should().Be(15);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), Name = "Bank" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("ae8da6d3-57bc-4291-a3f2-79dd96eac775"), Name = "Lewisham" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), Name = "Bank" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("83c12f73-4e47-4aab-a10c-ff445a458a33"), Name = "Shadwell" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("72555c4d-4c54-4ddf-9094-aed433b32224"), Name = "Limehouse" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("25c71d0e-7103-4f7e-b40c-19447915ffe8"), Name = "Westferry" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("ccf4fc3b-3f2d-4da7-b756-80307b278b65"), Name = "Heron Quays" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("43cfa7d4-cd92-45f2-aea9-24cbae727db8"), Name = "South Quay" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("739909b9-9cb9-4806-9d50-f1136edf69e7"), Name = "Crossharbour" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("c2178257-3ee0-46a8-a029-afeffda629a0"), Name = "Mudchute" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("7b99c143-e091-4fcc-94e2-3b161fb1f6cd"), Name = "Island Gardens" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("d50173b7-e272-44e6-9b0c-0b0f0bcc0c09"), Name = "Cutty Sark" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("ff2c1d03-e13a-4d1d-b0d1-9f421e5b3ff3"), Name = "Greenwich" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("f4718576-9e9b-4b6a-b0ca-77bd690d27de"), Name = "Deptford Bridge" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("7fa419bf-33d1-4944-92ce-020cb43c9d64"), Name = "Elverson Road" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("ae8da6d3-57bc-4291-a3f2-79dd96eac775"), Name = "Lewisham" });
+
+        resultStations = result.ValidRoutes[1];
+        resultStations.Stations.Count.Should().Be(13);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), Name = "Bank" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("b68d33dc-e594-439f-aaed-8446f96f8f13"), Name = "Woolwich Arsenal" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), Name = "Bank" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("83c12f73-4e47-4aab-a10c-ff445a458a33"), Name = "Shadwell" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("72555c4d-4c54-4ddf-9094-aed433b32224"), Name = "Limehouse" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("25c71d0e-7103-4f7e-b40c-19447915ffe8"), Name = "Westferry" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("f90a3bb8-4060-4dc4-acb0-973561e6e0a5"), Name = "Poplar" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("ac13f225-4486-4a41-ba5f-0b1de1b7fa04"), Name = "Blackwall" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ae0de89e-691e-4ad8-b3d4-b5278cfd923a"), Name = "East India" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("752cd9c1-bead-404f-b12a-aa93c212f2c2"), Name = "Canning Town" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("5008326b-8bd5-4cf1-935f-ab370c653354"), Name = "West Silvertown" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("c130659d-1ebb-4b08-bf44-a9ad1f33936c"), Name = "Pontoon Dock" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("d9a70c10-0553-4830-bb13-0292c4c104bc"), Name = "London City Airport" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("58b068c2-013d-439a-977c-c072db3c7754"), Name = "King George V" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("b68d33dc-e594-439f-aaed-8446f96f8f13"), Name = "Woolwich Arsenal" });
+
+        resultStations = result.ValidRoutes[2];
+        resultStations.Stations.Count.Should().Be(9);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("75e66a83-fc1e-4d10-b48c-8bfc60cb3648"), Name = "Pudding Mill Lane" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("d82d33af-3f55-46b0-b767-ff0f81128b48"), Name = "Bow Church" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("0907197c-dbee-4456-a535-04dd7ac31686"), Name = "Devons Road" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("18e58b30-0ed1-4c08-82a3-ee9cf97530a5"), Name = "Langdon Park" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("0568a75b-348a-4def-848f-ba4ec7cd90db"), Name = "All Saints" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("f90a3bb8-4060-4dc4-acb0-973561e6e0a5"), Name = "Poplar" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("dee286e7-8a98-4976-82cf-9fc01651c889"), Name = "West India Quay" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("5c15a8f5-a21d-4567-97a4-3cbc095d2298"), Name = "Canary Wharf" });
+
+        resultStations = result.ValidRoutes[3];
+        resultStations.Stations.Count.Should().Be(12);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("78e04c72-0243-453f-a10b-b195319b041d"), Name = "Stratford International" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("b68d33dc-e594-439f-aaed-8446f96f8f13"), Name = "Woolwich Arsenal" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("78e04c72-0243-453f-a10b-b195319b041d"), Name = "Stratford International" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("3d4b5acf-14df-4257-8cd6-57a5fc521c03"), Name = "Stratford High Street" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("8007602b-5372-41de-8705-f7de1d49ba7a"), Name = "Abbey Road" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("968bc258-138c-45cf-83c0-599705285d25"), Name = "West Ham" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("2b74aa01-253c-401e-9978-597382f3c542"), Name = "Star Lane" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("752cd9c1-bead-404f-b12a-aa93c212f2c2"), Name = "Canning Town" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("5008326b-8bd5-4cf1-935f-ab370c653354"), Name = "West Silvertown" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("c130659d-1ebb-4b08-bf44-a9ad1f33936c"), Name = "Pontoon Dock" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("d9a70c10-0553-4830-bb13-0292c4c104bc"), Name = "London City Airport" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("58b068c2-013d-439a-977c-c072db3c7754"), Name = "King George V" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("b68d33dc-e594-439f-aaed-8446f96f8f13"), Name = "Woolwich Arsenal" });
+
+        resultStations = result.ValidRoutes[4];
+        resultStations.Stations.Count.Should().Be(16);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("7cbbd6f5-a354-45a3-9925-8b75d43bcc3c"), Name = "Tower Gateway" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("015f3b77-6762-45b4-943d-2a1f2016c86b"), Name = "Beckton" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("7cbbd6f5-a354-45a3-9925-8b75d43bcc3c"), Name = "Tower Gateway" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("83c12f73-4e47-4aab-a10c-ff445a458a33"), Name = "Shadwell" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("72555c4d-4c54-4ddf-9094-aed433b32224"), Name = "Limehouse" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("25c71d0e-7103-4f7e-b40c-19447915ffe8"), Name = "Westferry" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("f90a3bb8-4060-4dc4-acb0-973561e6e0a5"), Name = "Poplar" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("ac13f225-4486-4a41-ba5f-0b1de1b7fa04"), Name = "Blackwall" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("ae0de89e-691e-4ad8-b3d4-b5278cfd923a"), Name = "East India" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("752cd9c1-bead-404f-b12a-aa93c212f2c2"), Name = "Canning Town" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("4b4fd8bc-7c4f-40c5-846d-df35fb591d9c"), Name = "Royal Victoria" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("de485292-f6bd-4ccf-9a93-1afd852017e2"), Name = "Custom House" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("dd45e6ce-6aca-4f7d-919a-9c3f715bba13"), Name = "Prince Regent" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("6fdee0f4-2552-4a17-9a5a-fce850836217"), Name = "Royal Albert" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("8675653e-9785-49f5-b9dc-22fc26c91e35"), Name = "Beckton Park" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("f7876299-7b96-45cb-91fa-84e6684850cd"), Name = "Cyprus" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("ccaf09c3-421c-4f56-98d2-15a7624fd8ea"), Name = "Gallions Reach" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("015f3b77-6762-45b4-943d-2a1f2016c86b"), Name = "Beckton" });
+    }
+
+    [Fact]
     public void RouteRepository_Elizabeth_Routes_Correct()
     {
         var result = _repository.Lines[Guid.Parse("d232ac77-6032-4658-aed8-e47f89b79353")];
