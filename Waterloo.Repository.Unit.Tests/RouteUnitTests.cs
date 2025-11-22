@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System.Xml.Linq;
 using Waterloo.Repository.Route;
 
 namespace Waterloo.Repository.Unit.Tests;
@@ -272,7 +271,7 @@ public class RouteUnitTests
         result.ValidRoutes.Count.Should().Be(1);
 
         var resultStations = result.ValidRoutes[0];
-        resultStations.Stations.Count.Should().Be(36);
+        resultStations.Stations.Count.Should().Be(37);
 
         resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("bdf7bc22-9e0b-4bfc-8abe-8130f5c462c8"), Name = "Hammersmith" });
         resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("afab4380-82ea-49ce-bf83-15bb3258110b"), Name = "Edgware Road" });
@@ -286,33 +285,34 @@ public class RouteUnitTests
         resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("b72c56eb-b3ec-4dba-b489-fe7418a0990c"), Name = "Westbourne Park" });
         resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("d02b6015-3e16-4f90-9421-1c5395595ec9"), Name = "Royal Oak" });
         resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
-        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("7d89b35f-9a87-49df-98ff-fd98f1f67235"), Name = "Baker Street" });
-        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("bd2ef776-2cea-49ad-80c4-a7e6587cc67b"), Name = "Great Portland Street" });
-        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("0ec876ed-6a2e-48e3-b8b0-6eb2ab13fc12"), Name = "Euston Square" });
-        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("5cf18e37-17e0-46c0-9177-6a5951df26b8"), Name = "King's Cross St.Pancras" });
-        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
-        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("10972919-8db8-4a6c-aadf-ace0e43b5d8c"), Name = "Barbican" });
-        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("9343886e-5b86-4bbc-96bf-2fefe6240060"), Name = "Moorgate" });
-        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
-        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("2c5fbeab-ba64-4c8b-b21e-2336cdad37a5"), Name = "Aldgate" });
-        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("e82d6990-68ae-43e2-a353-71135b2075e3"), Name = "Tower Hill" });
-        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("5514e4ab-7cd9-4e07-8fe6-57ecf30b69ea"), Name = "Monument" });
-        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("65d97039-79a9-41e2-9351-21ca5d866b14"), Name = "Cannon Street" });
-        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("4e490fff-0a4c-459b-9a52-c63d4bb3ceba"), Name = "Mansion House" });
-        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("dba0d82b-4618-4fb4-9b79-cf2a22c9d9c1"), Name = "Blackfriars" });
-        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("a277af62-5304-4154-86cb-344933d8c7f3"), Name = "Temple" });
-        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("ae58d763-b367-4b09-9f1d-3be50467f47f"), Name = "Embankment" });
-        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("d58a55c8-bd8d-45f7-a7a2-c0bd0096afca"), Name = "Westminster" });
-        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("3fdb5fa9-f04e-4348-97e9-a4e9d9948ca4"), Name = "St.James's Park" });
-        resultStations.Stations[27].Should().BeEquivalentTo(new { Id = Guid.Parse("9d0f8c47-3708-489a-99b3-1a6d960341e6"), Name = "Victoria" });
-        resultStations.Stations[28].Should().BeEquivalentTo(new { Id = Guid.Parse("ab3c57e2-61cb-470d-8644-7926e2896c50"), Name = "Sloane Square" });
-        resultStations.Stations[29].Should().BeEquivalentTo(new { Id = Guid.Parse("4afcf7aa-f5ee-499f-9484-38e0b0c0af0b"), Name = "South Kensington" });
-        resultStations.Stations[30].Should().BeEquivalentTo(new { Id = Guid.Parse("94b2e2cc-4150-4ab0-b387-21e2a13960e1"), Name = "Gloucester Road" });
-        resultStations.Stations[31].Should().BeEquivalentTo(new { Id = Guid.Parse("d60ce047-7589-4458-96b7-300ae3737941"), Name = "High Street Kensington" });
-        resultStations.Stations[32].Should().BeEquivalentTo(new { Id = Guid.Parse("cd981628-5257-4fd1-a657-7168613eb50d"), Name = "Notting Hill Gate" });
-        resultStations.Stations[33].Should().BeEquivalentTo(new { Id = Guid.Parse("cb25b18f-4fee-4b93-a63e-79921a6cfc62"), Name = "Bayswater" });
-        resultStations.Stations[34].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
-        resultStations.Stations[35].Should().BeEquivalentTo(new { Id = Guid.Parse("afab4380-82ea-49ce-bf83-15bb3258110b"), Name = "Edgware Road" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("afab4380-82ea-49ce-bf83-15bb3258110b"), Name = "Edgware Road" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("7d89b35f-9a87-49df-98ff-fd98f1f67235"), Name = "Baker Street" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("bd2ef776-2cea-49ad-80c4-a7e6587cc67b"), Name = "Great Portland Street" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("0ec876ed-6a2e-48e3-b8b0-6eb2ab13fc12"), Name = "Euston Square" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("5cf18e37-17e0-46c0-9177-6a5951df26b8"), Name = "King's Cross St.Pancras" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("bf6a3d1b-2af9-4b1c-b696-fc6f8c8cecde"), Name = "Farringdon" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("10972919-8db8-4a6c-aadf-ace0e43b5d8c"), Name = "Barbican" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("9343886e-5b86-4bbc-96bf-2fefe6240060"), Name = "Moorgate" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("2c5fbeab-ba64-4c8b-b21e-2336cdad37a5"), Name = "Aldgate" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("e82d6990-68ae-43e2-a353-71135b2075e3"), Name = "Tower Hill" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("5514e4ab-7cd9-4e07-8fe6-57ecf30b69ea"), Name = "Monument" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("65d97039-79a9-41e2-9351-21ca5d866b14"), Name = "Cannon Street" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("4e490fff-0a4c-459b-9a52-c63d4bb3ceba"), Name = "Mansion House" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("dba0d82b-4618-4fb4-9b79-cf2a22c9d9c1"), Name = "Blackfriars" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("a277af62-5304-4154-86cb-344933d8c7f3"), Name = "Temple" });
+        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("ae58d763-b367-4b09-9f1d-3be50467f47f"), Name = "Embankment" });
+        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("d58a55c8-bd8d-45f7-a7a2-c0bd0096afca"), Name = "Westminster" });
+        resultStations.Stations[27].Should().BeEquivalentTo(new { Id = Guid.Parse("3fdb5fa9-f04e-4348-97e9-a4e9d9948ca4"), Name = "St.James's Park" });
+        resultStations.Stations[28].Should().BeEquivalentTo(new { Id = Guid.Parse("9d0f8c47-3708-489a-99b3-1a6d960341e6"), Name = "Victoria" });
+        resultStations.Stations[29].Should().BeEquivalentTo(new { Id = Guid.Parse("ab3c57e2-61cb-470d-8644-7926e2896c50"), Name = "Sloane Square" });
+        resultStations.Stations[30].Should().BeEquivalentTo(new { Id = Guid.Parse("4afcf7aa-f5ee-499f-9484-38e0b0c0af0b"), Name = "South Kensington" });
+        resultStations.Stations[31].Should().BeEquivalentTo(new { Id = Guid.Parse("94b2e2cc-4150-4ab0-b387-21e2a13960e1"), Name = "Gloucester Road" });
+        resultStations.Stations[32].Should().BeEquivalentTo(new { Id = Guid.Parse("d60ce047-7589-4458-96b7-300ae3737941"), Name = "High Street Kensington" });
+        resultStations.Stations[33].Should().BeEquivalentTo(new { Id = Guid.Parse("cd981628-5257-4fd1-a657-7168613eb50d"), Name = "Notting Hill Gate" });
+        resultStations.Stations[34].Should().BeEquivalentTo(new { Id = Guid.Parse("cb25b18f-4fee-4b93-a63e-79921a6cfc62"), Name = "Bayswater" });
+        resultStations.Stations[35].Should().BeEquivalentTo(new { Id = Guid.Parse("6a52e0a7-0801-4f1a-85bd-a34f70955052"), Name = "Paddington" });
+        resultStations.Stations[36].Should().BeEquivalentTo(new { Id = Guid.Parse("afab4380-82ea-49ce-bf83-15bb3258110b"), Name = "Edgware Road" });
     }
 
     [Fact]
