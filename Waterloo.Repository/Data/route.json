@@ -2013,6 +2013,142 @@
             "name": "Canary Wharf"
           }
         ]
+      },
+      {
+        "from": {
+          "id": "78e04c72-0243-453f-a10b-b195319b041d",
+          "name": "Stratford International"
+        },
+        "to": {
+          "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+          "name": "Woolwich Arsenal"
+        },
+        "stations": [
+          {
+            "id": "78e04c72-0243-453f-a10b-b195319b041d",
+            "name": "Stratford International"
+          },
+          {
+            "id": "b02ebcb8-83a4-48e1-85d8-6e3fb21fa058",
+            "name": "Stratford"
+          },
+          {
+            "id": "3d4b5acf-14df-4257-8cd6-57a5fc521c03",
+            "name": "Stratford High Street"
+          },
+          {
+            "id": "8007602b-5372-41de-8705-f7de1d49ba7a",
+            "name": "Abbey Road"
+          },
+          {
+            "id": "968bc258-138c-45cf-83c0-599705285d25",
+            "name": "West Ham"
+          },
+          {
+            "id": "2b74aa01-253c-401e-9978-597382f3c542",
+            "name": "Star Lane"
+          },
+          {
+            "id": "752cd9c1-bead-404f-b12a-aa93c212f2c2",
+            "name": "Canning Town"
+          },
+          {
+            "id": "5008326b-8bd5-4cf1-935f-ab370c653354",
+            "name": "West Silvertown"
+          },
+          {
+            "id": "c130659d-1ebb-4b08-bf44-a9ad1f33936c",
+            "name": "Pontoon Dock"
+          },
+          {
+            "id": "d9a70c10-0553-4830-bb13-0292c4c104bc",
+            "name": "London City Airport"
+          },
+          {
+            "id": "58b068c2-013d-439a-977c-c072db3c7754",
+            "name": "King George V"
+          },
+          {
+            "id": "b68d33dc-e594-439f-aaed-8446f96f8f13",
+            "name": "Woolwich Arsenal"
+          }
+        ]
+      },
+      {
+        "from": {
+          "id": "7cbbd6f5-a354-45a3-9925-8b75d43bcc3c",
+          "name": "Tower Gateway"
+        },
+        "to": {
+          "id": "015f3b77-6762-45b4-943d-2a1f2016c86b",
+          "name": "Beckton"
+        },
+        "stations": [
+          {
+            "id": "7cbbd6f5-a354-45a3-9925-8b75d43bcc3c",
+            "name": "Tower Gateway"
+          },
+          {
+            "id": "83c12f73-4e47-4aab-a10c-ff445a458a33",
+            "name": "Shadwell"
+          },
+          {
+            "id": "72555c4d-4c54-4ddf-9094-aed433b32224",
+            "name": "Limehouse"
+          },
+          {
+            "id": "25c71d0e-7103-4f7e-b40c-19447915ffe8",
+            "name": "Westferry"
+          },
+          {
+            "id": "f90a3bb8-4060-4dc4-acb0-973561e6e0a5",
+            "name": "Poplar"
+          },
+          {
+            "id": "ac13f225-4486-4a41-ba5f-0b1de1b7fa04",
+            "name": "Blackwall"
+          },
+          {
+            "id": "ae0de89e-691e-4ad8-b3d4-b5278cfd923a",
+            "name": "East India"
+          },
+          {
+            "id": "752cd9c1-bead-404f-b12a-aa93c212f2c2",
+            "name": "Canning Town"
+          },
+          {
+            "id": "4b4fd8bc-7c4f-40c5-846d-df35fb591d9c",
+            "name": "Royal Victoria"
+          },
+          {
+            "id": "de485292-f6bd-4ccf-9a93-1afd852017e2",
+            "name": "Custom House"
+          },
+          {
+            "id": "dd45e6ce-6aca-4f7d-919a-9c3f715bba13",
+            "name": "Prince Regent"
+          },
+          {
+            "id": "6fdee0f4-2552-4a17-9a5a-fce850836217",
+            "name": "Royal Albert"
+          },
+          {
+            "id": "8675653e-9785-49f5-b9dc-22fc26c91e35",
+            "name": "Beckton Park"
+          },
+          {
+            "id": "f7876299-7b96-45cb-91fa-84e6684850cd",
+            "name": "Cyprus"
+          },
+          {
+            "id": "ccaf09c3-421c-4f56-98d2-15a7624fd8ea",
+            "name": "Gallions Reach"
+          },
+          {
+            "id": "015f3b77-6762-45b4-943d-2a1f2016c86b",
+            "name": "Beckton"
+          }
+        ]
       }
     ]
   },
