@@ -30,7 +30,7 @@ public class MapControllerTests : IClassFixture<CustomWebApplicationFactory>
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<IEnumerable<Model.Line>>();
-        result.Count().Should().Be(18);
+        result.Count().Should().Be(19);
     }
 
     [Fact]
