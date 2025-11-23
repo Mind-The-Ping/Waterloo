@@ -52,12 +52,19 @@ public class LineRepository
 
     private static bool AreStringEqual(string a, string b)
     {
-        a = a.ToLowerInvariant();
-        b = b.ToLowerInvariant();
+        a = Normalize(a);
+        b = Normalize(b);
 
-        a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
-        b = string.Concat(b.Where(c => !char.IsWhiteSpace(c)));
+        if (b.EndsWith("line"))
+            b = b[..^"line".Length];
 
         return string.Equals(a, b, StringComparison.Ordinal);
+    }
+
+    private static string Normalize(string s)
+    {
+        return string.Concat(
+            s.ToLowerInvariant().Where(c => !char.IsWhiteSpace(c))
+        );
     }
 }

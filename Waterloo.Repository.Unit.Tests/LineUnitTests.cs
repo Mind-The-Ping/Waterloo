@@ -39,6 +39,17 @@ public class LineUnitTests
     }
 
     [Fact]
+    public void StationRepository_GetStationByName_Ignores_Line_CorrectStation()
+    {
+
+        var name = "Elizabeth Line";
+        var result = _repository.GetLineByName(name);
+
+        result.Name.Should().Be("Elizabeth");
+        result.Id.Should().Be(Guid.Parse("d232ac77-6032-4658-aed8-e47f89b79353"));
+    }
+
+    [Fact]
     public void LineRepository_GetLinesById_Should_Return_All_Lines()
     {
         var ids = new List<Guid>()
