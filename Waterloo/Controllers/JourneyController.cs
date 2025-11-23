@@ -108,7 +108,7 @@ public class JourneyController(LineRepository lineRepository,
     {
         _logger.LogInformation("Begin deleting journey {Id}.", id);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(id);
+        var result = await _journeyRepository.RemoveJourneyAsync(id, DateTime.UtcNow);
 
         if (result.IsFailure) {
             return BadRequest(result.Error);

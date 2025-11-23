@@ -14,7 +14,7 @@ public interface IJourneyRepository
         IEnumerable<DayOfWeek> daysToCheck,
         Serverity serverity);
 
-    public Task<Result> RemoveJourneyAsync(Guid id);
+    public Task<Result> RemoveJourneyAsync(Guid id, DateTime deletedDateTime);
 
     public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,

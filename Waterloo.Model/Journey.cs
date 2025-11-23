@@ -26,4 +26,5 @@ public class Journey
     public required IList<DayOfWeek> DaysToCheck { get; set; }
     public required Serverity Serverity { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; } = null!;
 }

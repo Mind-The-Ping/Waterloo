@@ -152,7 +152,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(journey.Id);
+        var result = await _journeyRepository.RemoveJourneyAsync(journey.Id, DateTime.UtcNow);
         result.IsSuccess.Should().BeTrue();
 
         _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeFalse();
@@ -176,7 +176,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid());
+        var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid(), DateTime.UtcNow);
         result.IsSuccess.Should().BeTrue();
 
         _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeTrue();

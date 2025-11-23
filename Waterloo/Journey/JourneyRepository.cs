@@ -65,7 +65,8 @@ public class JourneyRepository(
     public async Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId)
     {
         var journeys = await _journeyCollection
-        .Find(j => j.UserId == userId)
+        .Find(j => j.UserId == userId && 
+              j.DeletedAt == null)
         .ToListAsync();
 
         var results = new List<JourneyReturn>();
@@ -92,18 +93,26 @@ public class JourneyRepository(
         return results;
     }
 
-    public async Task<Result> RemoveJourneyAsync(Guid id)
+    public async Task<Result> RemoveJourneyAsync(Guid id, DateTime deletedDateTime)
     {
         try
         {
-            var result = await _journeyCollection.DeleteOneAsync(x => x.Id == id);
+            var update = Builders<Model.Journey>.Update
+            .Set(x => x.DeletedAt, deletedDateTime);
 
-            if (result.DeletedCount == 0)
+            var updatedUser = await _journeyCollection.FindOneAndUpdateAsync(
+             x => x.Id == id,
+             update,
+             new FindOneAndUpdateOptions<Model.Journey>
+             {
+                 ReturnDocument = ReturnDocument.After
+             });
+
+            if (updatedUser == null)
             {
                 _logger.LogInformation("Could not find {id} to delete.", id);
                 return Result.Success();
             }
-
 
             return Result.Success();
         }
@@ -140,7 +149,8 @@ public class JourneyRepository(
                 queryTime >= x.StartTime &&
                 queryTime <= x.EndTime &&
                 x.DaysToCheck.Contains(queryDay) &&
-                serverity >= x.Serverity)
+                serverity >= x.Serverity
+                && x.DeletedAt == null)
             .ToListAsync();
 
         var results = new List<AffectedUser>(journeys.Count);

@@ -27,12 +27,14 @@ public class MongoIndexInitializer : IHostedService
                     .Ascending(x => x.StartTime)
                     .Ascending(x => x.EndTime)
                     .Ascending(x => x.Serverity)
-                    .Ascending(x => x.DaysToCheck),
+                    .Ascending(x => x.DaysToCheck)
+                    .Ascending(x => x.DeletedAt),
                 new CreateIndexOptions { Name = "idx_hotpath" }
             ),
             new(
                 Builders<Model.Journey>.IndexKeys
-                    .Ascending(x => x.UserId),
+                    .Ascending(x => x.UserId)
+                    .Ascending(x => x.DeletedAt),
                 new CreateIndexOptions { Name = "idx_userid" }
             )
         };
