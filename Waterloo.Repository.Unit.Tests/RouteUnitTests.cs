@@ -54,7 +54,7 @@ public class RouteUnitTests
         var result = _repository.Lines[Guid.Parse("c7f7c41a-03d2-4a79-9e8e-b55b1b5a056e")];
 
         result.Name.Should().Be("Central");
-        result.ValidRoutes.Count.Should().Be(5);
+        result.ValidRoutes.Count.Should().Be(6);
 
         var resultStations = result.ValidRoutes[0];
         resultStations.Stations.Count.Should().Be(32);
@@ -260,6 +260,42 @@ public class RouteUnitTests
         resultStations.Stations[32].Should().BeEquivalentTo(new { Id = Guid.Parse("4bcbe16a-5851-49ad-9d53-6cf2286392b4"), Name = "Barkingside" });
         resultStations.Stations[33].Should().BeEquivalentTo(new { Id = Guid.Parse("871272dd-7679-4657-b3e1-85d201e1d5b7"), Name = "Fairlop" });
         resultStations.Stations[34].Should().BeEquivalentTo(new { Id = Guid.Parse("aaa2565a-ba57-449b-b9b0-12bad4fb43a2"), Name = "Hainault" });
+
+        resultStations = result.ValidRoutes[5];
+        resultStations.Stations.Count.Should().Be(29);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("2bf9d5c4-1408-4968-bd42-c0bce7259001"), Name = "Loughton" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("2e67db42-0ae1-4406-9df5-666e8b64df28"), Name = "Ealing Broadway" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("07adcb54-fbf0-46ce-a247-1685a3068d0b"), Name = "West Acton" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("67a0d88b-008e-4613-acc1-54a515e717d9"), Name = "North Acton" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("37302af0-85e6-4417-8409-61df83d3595b"), Name = "East Acton" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("dfe2f641-17ea-4ff6-bc45-d8fbc20ef057"), Name = "White City" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("4c4529fd-1b39-4a34-afb2-b0c815151012"), Name = "Shepherd's Bush" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("12d58547-1141-49a3-971b-3b15b886baef"), Name = "Holland Park" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("cd981628-5257-4fd1-a657-7168613eb50d"), Name = "Notting Hill Gate" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("200c6d17-4155-4113-99d2-b1f83482f76b"), Name = "Queensway" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("2dac0fb5-0b0c-492e-8199-431482324128"), Name = "Lancaster Gate" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("6371b2de-c503-40d1-ac8d-4f100c18ac5e"), Name = "Marble Arch" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("d2621069-fea8-4b31-8b56-16048f6b949d"), Name = "Bond Street" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("246a422c-17d4-45ce-8cf9-0f36413d08e6"), Name = "Oxford Circus" });
+        resultStations.Stations[13].Should().BeEquivalentTo(new { Id = Guid.Parse("70f156b3-520a-46e7-a35d-3f603c6ab5b7"), Name = "Tottenham Court Road" });
+        resultStations.Stations[14].Should().BeEquivalentTo(new { Id = Guid.Parse("92fef3de-c4db-47d2-ac5c-a188c6ab604c"), Name = "Holborn" });
+        resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("44e87f5b-015d-42f8-a250-232e226de45b"), Name = "Chancery Lane" });
+        resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("299580df-c896-486f-898d-c51f4a0bd0d2"), Name = "St.Paul's" });
+        resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("aaedc653-e766-4d6b-87e2-4c87322971ef"), Name = "Bank" });
+        resultStations.Stations[18].Should().BeEquivalentTo(new { Id = Guid.Parse("db101bcd-350e-4485-b875-7ac2c8c1b6cc"), Name = "Liverpool Street" });
+        resultStations.Stations[19].Should().BeEquivalentTo(new { Id = Guid.Parse("b7a5ae67-882b-4509-8df9-4bae2ef1dd2a"), Name = "Bethnal Green" });
+        resultStations.Stations[20].Should().BeEquivalentTo(new { Id = Guid.Parse("73bce1de-143f-4903-928a-c34ceb3db42e"), Name = "Mile End" });
+        resultStations.Stations[21].Should().BeEquivalentTo(new { Id = Guid.Parse("b02ebcb8-83a4-48e1-85d8-6e3fb21fa058"), Name = "Stratford" });
+        resultStations.Stations[22].Should().BeEquivalentTo(new { Id = Guid.Parse("2cd9c6bb-4c4f-4d09-a2ca-cd84ea273ecd"), Name = "Leyton" });
+        resultStations.Stations[23].Should().BeEquivalentTo(new { Id = Guid.Parse("c1b799f3-b1d8-4bc6-adc3-28d809b8dd0b"), Name = "Leytonstone" });
+        resultStations.Stations[24].Should().BeEquivalentTo(new { Id = Guid.Parse("baa03df3-8da7-434d-94ad-eda1defde099"), Name = "Snaresbrook" });
+        resultStations.Stations[25].Should().BeEquivalentTo(new { Id = Guid.Parse("2a29dc10-8e19-410f-9567-3eea22066eda"), Name = "South Woodford" });
+        resultStations.Stations[26].Should().BeEquivalentTo(new { Id = Guid.Parse("1dd5f2ad-13c9-49f9-93ac-5b1342a55aa8"), Name = "Woodford" });
+        resultStations.Stations[27].Should().BeEquivalentTo(new { Id = Guid.Parse("2b8190bf-23fe-48f8-ad6b-4657c2ee59d4"), Name = "Buckhurst Hill" });
+        resultStations.Stations[28].Should().BeEquivalentTo(new { Id = Guid.Parse("2bf9d5c4-1408-4968-bd42-c0bce7259001"), Name = "Loughton" });
     }
 
     [Fact]
@@ -1926,7 +1962,7 @@ public class RouteUnitTests
         var result = _repository.Lines[Guid.Parse("2f9d4b4c-c001-4be2-b02f-b227c1a7d84b")];
 
         result.Name.Should().Be("Windrush");
-        result.ValidRoutes.Count.Should().Be(4);
+        result.ValidRoutes.Count.Should().Be(5);
 
         var resultStations = result.ValidRoutes[0];
         resultStations.Stations.Count.Should().Be(13);
@@ -2025,6 +2061,26 @@ public class RouteUnitTests
         resultStations.Stations[15].Should().BeEquivalentTo(new { Id = Guid.Parse("b97b96c8-73d4-43fa-9844-ad4847184bdc"), Name = "Clapham High Street" });
         resultStations.Stations[16].Should().BeEquivalentTo(new { Id = Guid.Parse("cf272634-57a5-49ad-b8ab-81bacca04076"), Name = "Wandsworth Road" });
         resultStations.Stations[17].Should().BeEquivalentTo(new { Id = Guid.Parse("bc1a08a6-11b7-49a4-955f-ba505cf2b555"), Name = "Clapham Junction" });
+
+        resultStations = result.ValidRoutes[4];
+        resultStations.Stations.Count.Should().Be(13);
+
+        resultStations.From.Should().BeEquivalentTo(new { Id = Guid.Parse("854973df-ab4a-4a46-a987-e97d2305cf0c"), Name = "New Cross Gate" });
+        resultStations.To.Should().BeEquivalentTo(new { Id = Guid.Parse("dd66ccf1-1f07-492f-b42f-67fd107889c2"), Name = "Highbury & Islington" });
+
+        resultStations.Stations[0].Should().BeEquivalentTo(new { Id = Guid.Parse("854973df-ab4a-4a46-a987-e97d2305cf0c"), Name = "New Cross Gate" });
+        resultStations.Stations[1].Should().BeEquivalentTo(new { Id = Guid.Parse("81da3785-9867-41d1-a990-9b2097dfbbab"), Name = "Surrey Quays" });
+        resultStations.Stations[2].Should().BeEquivalentTo(new { Id = Guid.Parse("28cee11a-267d-4170-9cdc-2e7ef7b6ca40"), Name = "Canada Water" });
+        resultStations.Stations[3].Should().BeEquivalentTo(new { Id = Guid.Parse("7946ceaf-2505-44d5-97bc-d140184abd55"), Name = "Rotherhithe" });
+        resultStations.Stations[4].Should().BeEquivalentTo(new { Id = Guid.Parse("3a382272-b641-41b2-987e-c1afcae4d31e"), Name = "Wapping" });
+        resultStations.Stations[5].Should().BeEquivalentTo(new { Id = Guid.Parse("83c12f73-4e47-4aab-a10c-ff445a458a33"), Name = "Shadwell" });
+        resultStations.Stations[6].Should().BeEquivalentTo(new { Id = Guid.Parse("9787df93-f917-4890-9e0b-8b36e795bf9b"), Name = "Whitechapel" });
+        resultStations.Stations[7].Should().BeEquivalentTo(new { Id = Guid.Parse("af51f10d-feaf-40d7-924b-878557446278"), Name = "Shoreditch High Street" });
+        resultStations.Stations[8].Should().BeEquivalentTo(new { Id = Guid.Parse("71a9939d-7bf7-4147-8e4e-6c862e14bad1"), Name = "Hoxton" });
+        resultStations.Stations[9].Should().BeEquivalentTo(new { Id = Guid.Parse("a3eb25a3-1dd8-4e4d-9eda-13a3efd307a0"), Name = "Haggerston" });
+        resultStations.Stations[10].Should().BeEquivalentTo(new { Id = Guid.Parse("06611752-2c51-4cd2-ad49-6bffe078b729"), Name = "Dalston Junction" });
+        resultStations.Stations[11].Should().BeEquivalentTo(new { Id = Guid.Parse("9c8db56b-4a81-4ae3-a5df-84ec7685ff82"), Name = "Canonbury" });
+        resultStations.Stations[12].Should().BeEquivalentTo(new { Id = Guid.Parse("dd66ccf1-1f07-492f-b42f-67fd107889c2"), Name = "Highbury & Islington" });
     }
 
     [Fact]
