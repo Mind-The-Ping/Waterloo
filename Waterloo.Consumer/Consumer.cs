@@ -42,11 +42,11 @@ public class Consumer
             if(result.IsFailure) {
                 _logger.LogError(result.Error);
             }
-
-            await messageActions.CompleteMessageAsync(message);
         }
         catch (Exception ex) {
             _logger.LogError(ex, "Could not deserialize deleted user.");
         }
+
+        await messageActions.CompleteMessageAsync(message);
     }
 }
