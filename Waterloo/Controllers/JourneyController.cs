@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Waterloo.Dtos;
-using Waterloo.Journey;
+using Waterloo.Repository.Journey;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 
