@@ -19,6 +19,8 @@ public class MongoIndexInitializer : IHostedService
     {
         var collection = _db.GetCollection<Model.Journey>(_options.Value.Collection);
 
+        await collection.Indexes.DropAllAsync(cancellationToken);
+
         var indexes = new List<CreateIndexModel<Model.Journey>>
         {
             new(
