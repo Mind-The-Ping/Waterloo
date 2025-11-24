@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Waterloo.Model;
 
-namespace Waterloo.Journey;
+namespace Waterloo.Repository.Journey;
 
 public interface IJourneyRepository
 {
@@ -14,7 +14,9 @@ public interface IJourneyRepository
         IEnumerable<DayOfWeek> daysToCheck,
         Serverity serverity);
 
-    public Task<Result> RemoveJourneyAsync(Guid id, DateTime deletedDateTime);
+    public Task<Result> RemoveJourneyAsync(Guid id);
+
+    public Task<Result> RemoveJourneyByUserIdAsync(Guid userId, DateTime deletedAt);
 
     public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,

@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Waterloo.Model;
@@ -7,7 +8,7 @@ using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
 
-namespace Waterloo.Journey;
+namespace Waterloo.Repository.Journey;
 
 public class JourneyRepository(
     IOptions<DatabaseOptions> databaseOptions,
@@ -93,12 +94,12 @@ public class JourneyRepository(
         return results;
     }
 
-    public async Task<Result> RemoveJourneyAsync(Guid id, DateTime deletedDateTime)
+    public async Task<Result> RemoveJourneyAsync(Guid id)
     {
         try
         {
             var update = Builders<Model.Journey>.Update
-            .Set(x => x.DeletedAt, deletedDateTime);
+            .Set(x => x.DeletedAt, DateTime.UtcNow);
 
             var updatedUser = await _journeyCollection.FindOneAndUpdateAsync(
              x => x.Id == id,
@@ -119,6 +120,32 @@ public class JourneyRepository(
         catch(Exception ex)
         {
             var message = $"Could not delete journey {id}.";
+
+            _logger.LogError(ex, message);
+            return Result.Failure(message);
+        }
+    }
+
+    public async Task<Result> RemoveJourneyByUserIdAsync(Guid userId, DateTime deletedAt)
+    {
+        try
+        {
+            var update = Builders<Model.Journey>.Update
+            .Set(x => x.DeletedAt, deletedAt);
+
+            var result = await _journeyCollection.UpdateManyAsync(
+              j => j.UserId == userId,
+              update
+            );
+
+            _logger.LogInformation("Marked {count} journeys as deleted for user {userId}.",
+             result.ModifiedCount, userId);
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            var message = $"Could not delete journeys for user {userId}.";
 
             _logger.LogError(ex, message);
             return Result.Failure(message);

@@ -1,20 +1,18 @@
 ﻿using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NSubstitute;
-using Waterloo.Journey;
 using Waterloo.Model;
 using Waterloo.Options;
+using Waterloo.Repository.Journey;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 using Waterloo.Repository.Station;
 
-namespace Waterloo.Integration.Tests;
+namespace Waterloo.Repository.Integration.Tests;
 
-public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
+public class JourneyRepositoryTests
 {
-    private readonly IServiceScope _scope;
     private readonly JourneyRepository _journeyRepository;
     private readonly LineRepository _lineRepository;
     private readonly StationRepository _stationRepository;
@@ -37,19 +35,20 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
     private readonly IMongoDatabase _mongoDatabase;
     private readonly IMongoCollection<Model.Journey> _journeyCollection;
-    private readonly CustomWebApplicationFactory _factory;
 
-    public JourneyRepositoryTests(CustomWebApplicationFactory factory)
+    private readonly string _databaseName = $"testdb_{Guid.NewGuid():N}";
+
+    public JourneyRepositoryTests()
     {
-        _factory = factory;
-        _ = _factory.CreateClient();
-        _mongoDatabase = factory.Database;
+        var client = new MongoClient("mongodb://localhost:27017");
+
+        _mongoDatabase = client.GetDatabase(_databaseName);
         _lineRepository = new LineRepository();
         _stationRepository = new StationRepository();
 
         var databaseOptions = new DatabaseOptions()
         {
-            Name = factory.DatabaseName,
+            Name = "Waterloo",
             Collection = "Journeys",
             ConnectionString = "mongodb://localhost:27017"
         };
@@ -90,7 +89,7 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
     private async Task InitializeAsync()
     {
-        await _factory.ResetDatabaseAsync();
+        await _mongoDatabase.Client.DropDatabaseAsync(_databaseName);
     }
 
     [Fact]
@@ -152,10 +151,20 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(journey.Id, DateTime.UtcNow);
+        var result = await _journeyRepository.RemoveJourneyAsync(journey.Id);
         result.IsSuccess.Should().BeTrue();
 
-        _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeFalse();
+        var deletedUser = await _journeyCollection.Find(x => x.Id == journey.Id).FirstOrDefaultAsync();
+
+        deletedUser.Should().NotBeNull();
+        deletedUser.UserId.Should().Be(journey.UserId);
+        deletedUser.LineId.Should().Be(journey.LineId);
+        deletedUser.StationIds.Should().BeEquivalentTo(journey.StationIds);
+        deletedUser.StartTime.Should().Be(journey.StartTime);
+        deletedUser.EndTime.Should().Be(journey.EndTime);
+        deletedUser.DaysToCheck.Should().BeEquivalentTo(journey.DaysToCheck);
+        deletedUser.Serverity.Should().Be(journey.Serverity);
+        deletedUser.DeletedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
     }
 
     [Fact]
@@ -176,10 +185,88 @@ public class JourneyRepositoryTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid(), DateTime.UtcNow);
+        var result = await _journeyRepository.RemoveJourneyAsync(Guid.NewGuid());
         result.IsSuccess.Should().BeTrue();
 
         _journeyCollection.Find(x => x.Id == journey.Id).Any().Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task JourneyRepository_Remove_Journey_UserId_Successful()
+    {
+        await InitializeAsync();
+
+        var journey1 = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe
+        };
+
+        var journey2 = new Model.Journey()
+        {
+            UserId = journey1.UserId,
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Wednesday],
+            Serverity = Serverity.Minor
+        };
+
+        var journey3 = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe
+        };
+
+        await _journeyCollection.InsertManyAsync(
+            [journey1, journey2, journey3]);
+
+        var deletedAt = DateTime.UtcNow;
+        var result = await _journeyRepository.RemoveJourneyByUserIdAsync(journey1.UserId, deletedAt);
+
+        var deletedUsers = await _journeyCollection.Find(x => x.UserId == journey1.UserId).ToListAsync();
+        deletedUsers.Count.Should().Be(2);
+
+        deletedUsers.First().UserId.Should().Be(journey1.UserId);
+        deletedUsers.First().LineId.Should().Be(journey1.LineId);
+        deletedUsers.First().StationIds.Should().BeEquivalentTo(journey1.StationIds);
+        deletedUsers.First().StartTime.Should().Be(journey1.StartTime);
+        deletedUsers.First().EndTime.Should().Be(journey1.EndTime);
+        deletedUsers.First().DaysToCheck.Should().BeEquivalentTo(journey1.DaysToCheck);
+        deletedUsers.First().Serverity.Should().Be(journey1.Serverity);
+        deletedUsers.First().DeletedAt.Should().BeCloseTo(deletedAt, TimeSpan.FromSeconds(30));
+
+        deletedUsers.Last().UserId.Should().Be(journey2.UserId);
+        deletedUsers.Last().LineId.Should().Be(journey2.LineId);
+        deletedUsers.Last().StationIds.Should().BeEquivalentTo(journey2.StationIds);
+        deletedUsers.Last().StartTime.Should().Be(journey2.StartTime);
+        deletedUsers.Last().EndTime.Should().Be(journey2.EndTime);
+        deletedUsers.Last().DaysToCheck.Should().BeEquivalentTo(journey2.DaysToCheck);
+        deletedUsers.Last().Serverity.Should().Be(journey2.Serverity);
+        deletedUsers.Last().DeletedAt.Should().BeCloseTo(deletedAt, TimeSpan.FromSeconds(30));
+
+        var leftAloneUser = await _journeyCollection.Find(x => x.UserId == journey3.UserId).FirstOrDefaultAsync();
+
+        leftAloneUser.Should().NotBeNull();
+        leftAloneUser.UserId.Should().Be(journey3.UserId);
+        leftAloneUser.LineId.Should().Be(journey3.LineId);
+        leftAloneUser.StationIds.Should().BeEquivalentTo(journey3.StationIds);
+        leftAloneUser.StartTime.Should().Be(journey3.StartTime);
+        leftAloneUser.EndTime.Should().Be(journey3.EndTime);
+        leftAloneUser.DaysToCheck.Should().BeEquivalentTo(journey3.DaysToCheck);
+        leftAloneUser.Serverity.Should().Be(journey3.Serverity);
+        leftAloneUser.DeletedAt.Should().BeNull();
     }
 
     [Fact]

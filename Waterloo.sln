@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36301.6
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waterloo", "Waterloo\Waterloo.csproj", "{076DC979-8660-BA3D-3DEE-8CB49D858AB7}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waterloo.Repository", "Waterloo.Repository\Waterloo.Repository.csproj", "{FF2C8A35-81BC-4D56-4B35-7A84104D1007}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waterloo.Repository.Unit.Tests", "Waterloo.Repository.Unit.Tests\Waterloo.Repository.Unit.Tests.csproj", "{D4357641-05C7-9D79-6599-A2FA9D183326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waterloo.Consumer", "Waterloo.Consumer\Waterloo.Consumer.csproj", "{3A4E88DB-25A5-43E5-99EE-3FF7CF5B2B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waterloo.Repository.Integration.Tests", "Waterloo.Repository.Integration.Tests\Waterloo.Repository.Integration.Tests.csproj", "{381E05B9-5874-4303-A538-09E8E7DE8AD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{D4357641-05C7-9D79-6599-A2FA9D183326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4357641-05C7-9D79-6599-A2FA9D183326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4357641-05C7-9D79-6599-A2FA9D183326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4E88DB-25A5-43E5-99EE-3FF7CF5B2B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4E88DB-25A5-43E5-99EE-3FF7CF5B2B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4E88DB-25A5-43E5-99EE-3FF7CF5B2B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4E88DB-25A5-43E5-99EE-3FF7CF5B2B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381E05B9-5874-4303-A538-09E8E7DE8AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381E05B9-5874-4303-A538-09E8E7DE8AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381E05B9-5874-4303-A538-09E8E7DE8AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381E05B9-5874-4303-A538-09E8E7DE8AD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

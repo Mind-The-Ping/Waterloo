@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Waterloo.Dtos;
-using Waterloo.Journey;
+using Waterloo.Repository.Journey;
 using Waterloo.Repository.Line;
 using Waterloo.Repository.Route;
 
@@ -108,7 +108,7 @@ public class JourneyController(LineRepository lineRepository,
     {
         _logger.LogInformation("Begin deleting journey {Id}.", id);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(id, DateTime.UtcNow);
+        var result = await _journeyRepository.RemoveJourneyAsync(id);
 
         if (result.IsFailure) {
             return BadRequest(result.Error);
