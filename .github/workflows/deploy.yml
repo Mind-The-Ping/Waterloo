@@ -67,7 +67,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'waterloo-consumer'
+          app-name: 'waterloo-consumer-ping'
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
 
@@ -98,6 +98,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'waterloo'
+          app-name: 'waterloo-ping'
           slot-name: 'Production'
           package: ./output/API
