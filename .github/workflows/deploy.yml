@@ -70,6 +70,8 @@ jobs:
           app-name: 'waterloo-consumer-ping'
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          enable-oryx-build: true
+          build-preset: 'functions'
 
   deploy:
     name: Deploy to Azure
