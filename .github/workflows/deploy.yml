@@ -34,8 +34,8 @@ jobs:
         path: ./output/API
   
   build-and-deploy-consumer:
-    name: Build Consumer (Windows)
-    runs-on: windows-latest
+    name: Build Consumer
+    runs-on: ubuntu-latest
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
@@ -50,7 +50,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: 'Resolve Project Dependencies Using Dotnet'
-        shell: pwsh
+        shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
@@ -59,9 +59,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_758118A4F62742769D0877A2997FB2AE }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_83FD417CCE7E4AF78ED091BE86D7F367 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CD093012B3A54940AAF206D65932E4AA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4321AC17EA6C4BEC9195B870271EF803 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8B099ED176054B82A8592DFDB8631F60 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_321E033950F948098839465233AFF470 }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -90,9 +90,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_953830641908440E9CDBB34495FCE15B }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_35044AD4F4124CD09889FC18364F31C7 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D3EA4D341C77481EA8CEAE97E4D37DE8 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E4AE3DC18E7341BBBD1C8F376BF14073 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A203C6D3812F4FABA252821AAC688860 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_80547AAC20D2412D8AA5F3C1A1B3E4D3 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
