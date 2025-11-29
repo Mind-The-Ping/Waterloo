@@ -5,6 +5,14 @@ using Waterloo.Repository.Route;
 namespace Waterloo.Repository.Station;
 public class StationRepository
 {
+    private static readonly string[] SuffixesToRemove =
+    [
+        "undergroundstation",
+        "railstation",
+        "dlrstation",
+        "tramstop"
+    ];
+
     public Station[] Stations { get; init; }
 
     public LineData Lines { get; set; }
@@ -92,10 +100,10 @@ public class StationRepository
 
     private static bool StationNameMatch(string query, string stationName)
     {
-        query = NormalizeString(query);
+        query = NormalizeStringWithSuffixes(query);
         stationName = NormalizeString(stationName);
 
-        return query.Contains(stationName);
+        return query == stationName;
     }
 
     private static string NormalizeString(string input)
@@ -109,5 +117,21 @@ public class StationRepository
             .ToArray())
             .ToLowerInvariant()
             .Trim();
+    }
+
+    private static string NormalizeStringWithSuffixes(string input)
+    {
+        var normalized = NormalizeString(input);
+
+        foreach (var suffix in SuffixesToRemove)
+        {
+            if (normalized.EndsWith(suffix))
+            {
+                normalized = normalized[..^suffix.Length];
+                break;
+            }
+        }
+
+        return normalized;
     }
 }
