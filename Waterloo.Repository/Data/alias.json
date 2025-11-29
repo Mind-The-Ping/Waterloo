@@ -1,0 +1,19 @@
+{
+  "Burnham": [ "Burnham (Berks)" ],
+  "Custom House": [ "Custom House (for ExCel)" ],
+  "Cutty Sark": [ "Cutty Sark (for Maritime Greenwich)" ],
+  "Cambridge Heath": [ "Cambridge Heath (London)" ],
+  "Edgware Road": [ "Edgware Road (Circle Line)", "Edgware Road (Bakerloo)" ],
+  "Euston": [ "London Euston" ],
+  "Langley": [ "Langley (Berks)" ],
+  "Liverpool Street": [ "London Liverpool Street" ],
+  "Hammersmith": [ "Hammersmith (H&C Line)", "Hammersmith (Dist&Picc Line)" ],
+  "Kensington": [ "Kensington (Olympia)" ],
+  "New Cross": [ "New Cross ELL" ],
+  "Paddington": [ "Paddington (H&C Line)" ],
+  "Richmond": [ "Richmond (London)" ],
+  "Shepherd's Bush": [ "Shepherd's Bush (Central)" ],
+  "Stratford": [ "Stratford (London)" ],
+  "St.James Street": [ "St James Street (London)" ],
+  "Queen's Park": [ "Queens Park (London)" ]
+}

@@ -176,7 +176,7 @@ public class StationUnitTest
         result.Should().Contain(x => x.Name == "Hammersmith");
         result.Should().Contain(x => x.Name == "High Street Kensington");
         result.Should().Contain(x => x.Name == "Hornchurch");
-        result.Should().Contain(x => x.Name == "Kensington (Olympia)");
+        result.Should().Contain(x => x.Name == "Kensington");
         result.Should().Contain(x => x.Name == "Kew Gardens");
         result.Should().Contain(x => x.Name == "Mansion House");
         result.Should().Contain(x => x.Name == "Mile End");
@@ -461,7 +461,7 @@ public class StationUnitTest
         result.Should().Contain(x => x.Name == "Homerton");
         result.Should().Contain(x => x.Name == "Imperial Wharf");
         result.Should().Contain(x => x.Name == "Kensal Rise");
-        result.Should().Contain(x => x.Name == "Kensington (Olympia)");
+        result.Should().Contain(x => x.Name == "Kensington");
         result.Should().Contain(x => x.Name == "Kentish Town West");
         result.Should().Contain(x => x.Name == "Kew Gardens");
         result.Should().Contain(x => x.Name == "Richmond");
@@ -901,6 +901,15 @@ public class StationUnitTest
 
         result.Name.Should().Be("Watford Junction");
         result.Id.Should().Be(Guid.Parse("455d4830-bd0d-4962-8869-6443c4c8c452"));
+    }
+
+    [Fact]
+    public void StationRepository_GetStationByName_Alias_CorrectStation()
+    {
+        var result = _stationRepository.GetStationByName("Custom House (for ExCel)");
+
+        result.Name.Should().Be("Custom House");
+        result.Id.Should().Be(Guid.Parse("de485292-f6bd-4ccf-9a93-1afd852017e2"));
     }
 
     [Fact]
