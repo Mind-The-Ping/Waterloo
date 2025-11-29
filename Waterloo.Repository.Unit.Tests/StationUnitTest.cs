@@ -891,16 +891,16 @@ public class StationUnitTest
     }
 
     [Theory]
-    [InlineData("St.John's Wood")]
-    [InlineData("St. John's Wood")]
-    [InlineData("st.jOhn's wooD")]
-    [InlineData("st.jOhn's wooD UnderGround Station")]
+    [InlineData("Watford Junction")]
+    [InlineData("Watford Junction Rail Station")]
+    [InlineData("watford jUnction")]
+    [InlineData("watford jUnction Rail Station")]
     public void StationRepository_GetStationByName_CorrectStation(string name)
     {
         var result = _stationRepository.GetStationByName(name);
 
-        result.Name.Should().Be("St.John's Wood");
-        result.Id.Should().Be(Guid.Parse("02da1648-25ed-41cf-b99b-a2eb9d448380"));
+        result.Name.Should().Be("Watford Junction");
+        result.Id.Should().Be(Guid.Parse("455d4830-bd0d-4962-8869-6443c4c8c452"));
     }
 
     [Fact]

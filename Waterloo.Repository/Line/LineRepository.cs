@@ -45,6 +45,8 @@ public class LineRepository
 
     public Model.Line? GetLineByName(string name)
     {
+        var normalizedName = Normalize(name);
+
         var line = Lines.FirstOrDefault(x => AreStringEqual(x.Name, name));
         return line == null ?
             null : new Model.Line(line.Id, line.Name);
@@ -63,8 +65,9 @@ public class LineRepository
 
     private static string Normalize(string s)
     {
-        return string.Concat(
-            s.ToLowerInvariant().Where(c => !char.IsWhiteSpace(c))
+         return string.Concat(
+        s.ToLowerInvariant()
+         .Where(c => !char.IsWhiteSpace(c) && !char.IsPunctuation(c))
         );
     }
 }
