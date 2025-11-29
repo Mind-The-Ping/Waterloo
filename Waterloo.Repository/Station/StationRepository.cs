@@ -5,13 +5,15 @@ using Waterloo.Repository.Route;
 namespace Waterloo.Repository.Station;
 public class StationRepository
 {
-    private static readonly string[] SuffixesToRemove =
+    private static readonly string[] _suffixesToRemove =
     [
         "undergroundstation",
         "railstation",
         "dlrstation",
         "tramstop"
     ];
+
+    private static Dictionary<string, string[]> _stationAliases;
 
     public Station[] Stations { get; init; }
 
@@ -28,6 +30,11 @@ public class StationRepository
         json = r2.ReadToEnd();
         Lines = JsonSerializer.Deserialize<LineData>(json)
            ?? throw new Exception("route.json file not found");
+
+        using StreamReader r3 = new(Path.Combine(AppContext.BaseDirectory, "Data", "alias.json"));
+        json = r3.ReadToEnd();
+        _stationAliases = JsonSerializer.Deserialize<Dictionary<string, string[]>>(json)
+           ?? throw new Exception("alias.json file not found");
     }
 
     public IEnumerable<Model.Station> GetByLine(Guid id) 
@@ -40,9 +47,28 @@ public class StationRepository
 
     public Model.Station? GetStationByName(string name)
     {
-       var station = Stations.FirstOrDefault(x => StationNameMatch(name, x.Name));
-        return station == null ?
-            null : new Model.Station(station.Id, station.Name);
+        var normalizedQuery = NormalizeStringWithSuffixes(name);
+
+        var result = FindStationByName(normalizedQuery);
+
+        if(result != null) {
+            return result;
+        }
+
+        foreach (var aliasDic in _stationAliases)
+        {
+            var actualName = NormalizeString(aliasDic.Key);
+            var aliases = aliasDic.Value;
+
+            foreach (var alias in aliases)
+            {
+                if (NormalizeString(alias) == normalizedQuery) {
+                    return FindStationByName(actualName);
+                }
+            }
+        }
+
+        return null;
     }
 
     public Model.Station? GetStationById(Guid id)
@@ -98,12 +124,10 @@ public class StationRepository
             .OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase);
     }
 
-    private static bool StationNameMatch(string query, string stationName)
+    private Model.Station? FindStationByName(string name)
     {
-        query = NormalizeStringWithSuffixes(query);
-        stationName = NormalizeString(stationName);
-
-        return query == stationName;
+        var station = Stations.FirstOrDefault(x => NormalizeString(x.Name) == name);
+        return station == null ? null : new Model.Station(station.Id, station.Name);
     }
 
     private static string NormalizeString(string input)
@@ -123,7 +147,7 @@ public class StationRepository
     {
         var normalized = NormalizeString(input);
 
-        foreach (var suffix in SuffixesToRemove)
+        foreach (var suffix in _suffixesToRemove)
         {
             if (normalized.EndsWith(suffix))
             {
