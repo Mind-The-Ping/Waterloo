@@ -202,6 +202,7 @@ public class JourneyRepository(
                .ToList();
 
             results.Add(new AffectedUser(
+                journey.Id,
                 journey.UserId,
                 _stationRepository.GetStationById(journey.StationIds.First())!,
                 _stationRepository.GetStationById(journey.StationIds.Last())!,

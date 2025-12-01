@@ -316,7 +316,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<List<AffectedUser>>();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().UserId.Should().Be(journey.UserId);
     }
 
     [Fact]

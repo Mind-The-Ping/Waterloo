@@ -304,7 +304,8 @@ public class JourneyRepositoryTests
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.Id);
+        result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -343,7 +344,8 @@ public class JourneyRepositoryTests
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.Id);
+        result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -384,7 +386,8 @@ public class JourneyRepositoryTests
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.Id);
+        result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -428,7 +431,8 @@ public class JourneyRepositoryTests
             _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.Id);
+        result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -509,7 +513,8 @@ public class JourneyRepositoryTests
           _affectedDay);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.UserId);
+        result.First().Id.Should().Be(journey.Id);
+        result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -587,7 +592,8 @@ public class JourneyRepositoryTests
 
         result.Should().NotBeEmpty();
 
-        result.First().Id.Should().Be(_defaultJourney.UserId);
+        result.First().Id.Should().Be(_defaultJourney.Id);
+        result.First().UserId.Should().Be(_defaultJourney.UserId);
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(_defaultJourney.EndTime);
