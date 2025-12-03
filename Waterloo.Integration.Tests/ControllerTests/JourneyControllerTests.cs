@@ -7,6 +7,8 @@ using System.Net.Http.Json;
 using Waterloo.Dtos;
 using Waterloo.Model;
 using Waterloo.Options;
+using Waterloo.Repository.Line;
+using Waterloo.Repository.Station;
 
 namespace Waterloo.Integration.Tests.ControllerTests;
 public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
@@ -17,6 +19,9 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     private readonly IMongoDatabase _mongoDatabase;
     private readonly IMongoCollection<Model.Journey> _journeyCollection;
     private readonly CustomWebApplicationFactory _factory;
+
+    private readonly LineRepository _lineRepository;
+    private readonly StationRepository _stationRepository;
 
     public JourneyControllerTests(CustomWebApplicationFactory factory)
     {
@@ -38,6 +43,9 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         };
 
         _journeyCollection = _mongoDatabase.GetCollection<Model.Journey>(databaseOptions.Collection);
+
+        _lineRepository = new LineRepository();
+        _stationRepository = new StationRepository();
     }
 
     private async Task InitializeAsync()
@@ -158,7 +166,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = _id,
             LineId = Guid.Parse("73c2b92d-ef29-4bbf-9f60-57a1f8ab7f50"),
@@ -187,7 +195,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.NewGuid(),
@@ -218,7 +226,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.NewGuid(),
@@ -241,7 +249,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.NewGuid(),
@@ -263,7 +271,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.NewGuid(),
@@ -286,7 +294,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.Parse("2f0c75a5-8149-49b7-9cc6-32e4a5246d7f"),
@@ -324,7 +332,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         await InitializeAsync();
 
-        var journey = new Model.Journey
+        var journey = new Journey
         {
             UserId = Guid.NewGuid(),
             LineId = Guid.Parse("2f0c75a5-8149-49b7-9cc6-32e4a5246d7f"),
@@ -352,5 +360,40 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         var response = await _unauthorizedClient.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task JourneyControllers_SegmentDisruptions_Successful()
+    {
+        await InitializeAsync();
+
+        var line = _lineRepository.GetLineById(Guid.Parse("62e93d5d-cc67-4c42-8ff5-24582f89d624"));
+        var disruptions = new List<Disruption>()
+        {
+            new(
+            Guid.NewGuid(),
+            line!,
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("843a1e32-7aea-49e0-8e51-e57dfb0d13ce"))!, // Clapham Common
+            "This is a serious issue going on a bird got onto the tracks.",
+            Serverity.Severe,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow),
+
+           new(
+           Guid.NewGuid(),
+           line!,
+           _stationRepository.GetStationById(Guid.Parse("e0f260e2-0cf7-40dd-ba35-21aff58b721a"))!, // Old Street
+           _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
+           "Something seems weird, I can see a monster !!",
+           Serverity.Closed,
+           Guid.NewGuid(),
+           Guid.NewGuid(),
+           DateTime.UtcNow)
+        };
+
+        var response = await _client.PostAsJsonAsync("api/journey/segmentDisruption", disruptions);
+        response.EnsureSuccessStatusCode();
     }
 }
