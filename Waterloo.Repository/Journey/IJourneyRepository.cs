@@ -27,4 +27,6 @@ public interface IJourneyRepository
         DayOfWeek queryDay);
 
     public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId);
+
+    public Task<IEnumerable<Disruption>> SegmentDisruptionsAsync(IEnumerable<Disruption> disruptions);
 }

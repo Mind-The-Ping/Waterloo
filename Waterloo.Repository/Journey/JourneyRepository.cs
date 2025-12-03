@@ -216,6 +216,107 @@ public class JourneyRepository(
             .Select(g => g.First());
     }
 
+    public async Task<IEnumerable<Disruption>> SegmentDisruptionsAsync(IEnumerable<Disruption> disruptions)
+    {
+        var disruptionList = disruptions?.ToList() ?? new List<Disruption>();
+        if (disruptionList.Count == 0)
+            return disruptionList;
+
+        var lineId = disruptionList.First().Line.Id;
+
+        if (!_routeRepository.Lines.TryGetValue(lineId, out var lineData) || lineData == null)
+            return disruptionList;
+
+        var first = disruptionList.First();
+
+        var masterRouteStations = _routeRepository
+            .GetRoute(lineId, first.StartStation.Id, first.EndStation.Id)
+            .Select(s => s.Id)
+            .ToList();
+
+        if (masterRouteStations.Count == 0)
+            return disruptionList;
+
+        var forward = new List<Disruption>();
+        var reverse = new List<Disruption>();
+        var passthrough = new List<Disruption>();
+
+        foreach (var d in disruptionList)
+        {
+            int si = masterRouteStations.IndexOf(d.StartStation.Id);
+            int ei = masterRouteStations.IndexOf(d.EndStation.Id);
+
+            if (si == -1 || ei == -1)
+            {
+                passthrough.Add(d);
+                continue;
+            }
+
+            if (si <= ei) {
+                forward.Add(d);
+            }
+            else
+            {
+                reverse.Add(d);
+            }
+        }
+
+        var result = new List<Disruption>();
+        if (forward.Count > 0)
+        {
+            result.AddRange(SegmentCore(forward, masterRouteStations));
+        }
+
+        if (reverse.Count > 0)
+        {
+            var mappedToForward = reverse
+                .Select(d => new Disruption(
+                    id: d.Id,
+                    line: d.Line,
+                    startStation: d.EndStation,    // SWAP
+                    endStation: d.StartStation,    // SWAP
+                    description: d.Description,
+                    severity: d.Severity,
+                    severityId: d.SeverityId,
+                    descriptionId: d.DescriptionId,
+                    lastUpdatedUtc: d.LastUpdatedUtc
+                ))
+                .ToList();
+
+            var segmentedForward = SegmentCore(mappedToForward, masterRouteStations);
+
+            foreach (var seg in segmentedForward)
+            {
+                var flipped = new Disruption(
+                    id: Guid.NewGuid(),
+                    line: seg.Line,
+                    startStation: seg.EndStation,
+                    endStation: seg.StartStation,
+                    description: seg.Description,
+                    severity: seg.Severity,
+                    severityId: seg.SeverityId,
+                    descriptionId: seg.DescriptionId,
+                    lastUpdatedUtc: seg.LastUpdatedUtc
+                );
+
+                result.Add(flipped);
+            }
+        }
+
+        result.AddRange(passthrough);
+
+        result = [.. result
+            .OrderBy(d =>
+            {
+                var ix = masterRouteStations.IndexOf(d.StartStation.Id);
+                return ix == -1 ? int.MaxValue : ix;
+            })];
+
+        return result;
+    }
+
+
+
     private static int GetDirection(List<Guid> master, List<Guid> partial)
     {
         var indexes = partial.Select(station => master.IndexOf(station)).ToList();
@@ -244,6 +345,8 @@ public class JourneyRepository(
         return 0;
     }
 
+   
+
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
         var londonDateTime = DateTime.SpecifyKind(
@@ -254,5 +357,137 @@ public class JourneyRepository(
         var utcDateTime = TimeZoneInfo.ConvertTimeToUtc(londonDateTime, _londonTimeZone);
 
         return TimeOnly.FromDateTime(utcDateTime);
+    }
+
+    private IEnumerable<Disruption> SegmentCore(
+    List<Disruption> disruptions,
+    List<Guid> masterRouteStations)
+    {
+        var result = new List<Disruption>();
+        var intervals = new List<Interval>();
+
+        foreach (var d in disruptions)
+        {
+            int startIndex = masterRouteStations.IndexOf(d.StartStation.Id);
+            int endIndex = masterRouteStations.IndexOf(d.EndStation.Id);
+
+            if (startIndex == -1 || endIndex == -1)
+            {
+                result.Add(d);
+                continue;
+            }
+
+            if (startIndex > endIndex) {
+                (startIndex, endIndex) = (endIndex, startIndex);
+            }
+
+            intervals.Add(new Interval(startIndex, endIndex, d));
+        }
+
+        if (intervals.Count == 0)
+            return result;
+
+        int minIndex = intervals.Min(i => i.Start);
+        int maxIndex = intervals.Max(i => i.End);
+
+        var winning = new Interval?[masterRouteStations.Count];
+
+        for (int idx = minIndex; idx <= maxIndex; idx++)
+        {
+            var covering = intervals
+                .Where(i => i.Start <= idx && i.End >= idx)
+                .ToList();
+
+            if (covering.Count == 0)
+                continue;
+
+            var chosen = covering
+                .OrderByDescending(i => (int)i.Source.Severity)
+                .ThenBy(i => i.End - i.Start)
+                .First();
+
+            winning[idx] = chosen;
+        }
+
+        Interval? current = null;
+        int currentStart = -1;
+
+        for (int idx = minIndex; idx <= maxIndex; idx++)
+        {
+            var chosen = winning[idx];
+
+            if (chosen is null)
+            {
+                if (current != null)
+                {
+                    AddSegment(current, currentStart, idx - 1, masterRouteStations, result);
+                    current = null;
+                }
+
+                continue;
+            }
+
+            if (!ReferenceEquals(current, chosen))
+            {
+                if (current != null) {
+                    AddSegment(current, currentStart, idx - 1, masterRouteStations, result);
+                }
+
+                current = chosen;
+                currentStart = idx;
+            }
+        }
+
+        if (current != null) {
+            AddSegment(current, currentStart, maxIndex, masterRouteStations, result);
+        }
+
+        return result;
+    }
+
+    private sealed class Interval
+    {
+        public int Start { get; }
+        public int End { get; }
+        public Disruption Source { get; }
+
+        public Interval(int start, int end, Disruption source)
+        {
+            Start = start;
+            End = end;
+            Source = source;
+        }
+    }
+
+    private void AddSegment(
+        Interval interval,
+        int fromIndex,
+        int toIndex,
+        List<Guid> routeStations,
+        List<Disruption> result)
+    {
+        var startStationId = routeStations[fromIndex];
+        var endStationId = routeStations[toIndex];
+
+        var startStation = _stationRepository.GetStationById(startStationId)
+            ?? throw new Exception($"Station not found: {startStationId}");
+        var endStation = _stationRepository.GetStationById(endStationId)
+            ?? throw new Exception($"Station not found: {endStationId}");
+
+        var s = interval.Source;
+
+        var segment = new Disruption(
+            id: Guid.NewGuid(),
+            line: s.Line,
+            startStation: startStation,
+            endStation: endStation,
+            description: s.Description,
+            severity: s.Severity,
+            severityId: s.SeverityId,
+            descriptionId: s.DescriptionId,
+            lastUpdatedUtc: s.LastUpdatedUtc
+        );
+
+        result.Add(segment);
     }
 }
