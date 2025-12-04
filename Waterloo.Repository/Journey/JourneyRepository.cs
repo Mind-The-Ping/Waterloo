@@ -476,14 +476,15 @@ public class JourneyRepository(
 
         var s = interval.Source;
 
+        var id = Guid.NewGuid();
         var segment = new Disruption(
-            id: Guid.NewGuid(),
+            id: id,
             line: s.Line,
             startStation: startStation,
             endStation: endStation,
             description: s.Description,
             severity: s.Severity,
-            severityId: s.SeverityId,
+            severityId: GuidHelper.GuidFromString($"{id}-{s.Severity}"),
             descriptionId: s.DescriptionId,
             lastUpdatedUtc: s.LastUpdatedUtc
         );

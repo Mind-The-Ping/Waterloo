@@ -743,7 +743,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.EndStation.Id &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
-                r.SeverityId == d.SeverityId &&
                 r.DescriptionId == d.DescriptionId
             );
         }
@@ -813,7 +812,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.EndStation.Id &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
-                r.SeverityId == d.SeverityId &&
                 r.DescriptionId == d.DescriptionId
             );
         }
@@ -894,7 +892,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.EndStation.Id &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
-                r.SeverityId == d.SeverityId &&
                 r.DescriptionId == d.DescriptionId
             );
         }
@@ -964,7 +961,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.EndStation.Id &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
-                r.SeverityId == d.SeverityId &&
                 r.DescriptionId == d.DescriptionId
             );
         }
@@ -1009,7 +1005,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.EndStation.Id &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
-                r.SeverityId == d.SeverityId &&
                 r.DescriptionId == d.DescriptionId
             );
         }
@@ -1122,7 +1117,6 @@ public class JourneyRepositoryTests
                 r.EndStation.Id == d.end &&
                 r.Severity == d.severity &&
                 r.Description == d.desc &&
-                r.SeverityId == d.sevId &&
                 r.DescriptionId == d.descId
             );
         }
