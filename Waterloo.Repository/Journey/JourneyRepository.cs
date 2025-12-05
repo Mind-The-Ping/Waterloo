@@ -153,12 +153,12 @@ public class JourneyRepository(
     }
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
-    Guid line,
-    Guid startStation,
-    Guid endStation,
-    Serverity serverity,
-    TimeOnly queryTime,
-    DayOfWeek queryDay)
+        Guid line,
+        Guid startStation,
+        Guid endStation,
+        Serverity serverity,
+        TimeOnly queryTime,
+        DayOfWeek queryDay)
     {
         var queryStations = _routeRepository
            .GetStationsBetween(line, startStation, endStation)
@@ -218,104 +218,182 @@ public class JourneyRepository(
 
     public async Task<IEnumerable<Disruption>> SegmentDisruptionsAsync(IEnumerable<Disruption> disruptions)
     {
-        var disruptionList = disruptions?.ToList() ?? new List<Disruption>();
-        if (disruptionList.Count == 0)
-            return disruptionList;
+        var stationRanges = new Dictionary<Guid, List<Model.Station>>();
+        foreach (var disruption in disruptions)
+        {
+            var stations = _routeRepository.GetStationsBetween(
+                disruption.Line.Id,
+                disruption.StartStation.Id,
+                disruption.EndStation.Id);
 
-        var lineId = disruptionList.First().Line.Id;
+            stationRanges[disruption.Id] = [.. stations];
+        }
 
-        if (!_routeRepository.Lines.TryGetValue(lineId, out var lineData) || lineData == null)
-            return disruptionList;
+        var seen = new HashSet<string>();
+        var overlaps = new List<List<Model.Station>>();
 
-        var first = disruptionList.First();
+        foreach (var a in disruptions)
+        {
+            var aStations = stationRanges[a.Id];
 
-        var masterRouteStations = _routeRepository
-            .GetRoute(lineId, first.StartStation.Id, first.EndStation.Id)
-            .Select(s => s.Id)
+            foreach (var b in disruptions)
+            {
+                if (a.Id == b.Id) {
+                    continue;
+                }
+
+                var bStations = stationRanges[b.Id];
+                var overlap = GetOrderedOverlap(aStations, bStations);
+
+                if (overlap.Count == 0) {
+                    continue;
+                }
+
+                var key = string.Join(",", overlap.Select(s => s.Id));
+
+                if (seen.Add(key)) {
+                    overlaps.Add(overlap);
+                }
+            }
+        }
+
+        if(overlaps.Count == 0) {
+            return disruptions;
+        }
+
+        var finalDisruptions = new List<Disruption>();
+        foreach (var overlap in overlaps)
+        {
+            var first = overlap.First();
+            var last = overlap.Last();
+
+            var candidates = disruptions
+            .Where(d =>
+            {
+                var range = stationRanges[d.Id];
+                var startIndex = range.FindIndex(s => s.Id == first.Id);
+                var endIndex = range.FindIndex(s => s.Id == last.Id);
+
+                return startIndex != -1 && endIndex != -1 && startIndex <= endIndex;
+            })
             .ToList();
 
-        if (masterRouteStations.Count == 0)
-            return disruptionList;
+            var worst = candidates
+            .OrderByDescending(d => d.Severity)
+            .First();
 
-        var forward = new List<Disruption>();
-        var reverse = new List<Disruption>();
-        var passthrough = new List<Disruption>();
+            var id = Guid.NewGuid();
+            var newDisruption = new Disruption(
+               id,
+               worst.Line,
+               first,
+               last,
+               worst.Description,
+               worst.Severity,
+               GuidHelper.GuidFromString($"{id}-{worst.Severity}"),
+               worst.DescriptionId,
+               worst.LastUpdatedUtc
+           );
 
-        foreach (var d in disruptionList)
+            finalDisruptions.Add(newDisruption);
+        }
+
+        var cleaned = new List<Disruption>();
+        foreach (var original in disruptions)
         {
-            int si = masterRouteStations.IndexOf(d.StartStation.Id);
-            int ei = masterRouteStations.IndexOf(d.EndStation.Id);
+            var range = stationRanges[original.Id];
+            var overlapIds = overlaps
+               .SelectMany(o => o.Select(s => s.Id))
+               .ToHashSet();
 
-            if (si == -1 || ei == -1)
-            {
-                passthrough.Add(d);
+            var remaining = range
+               .Where(s => !overlapIds.Contains(s.Id))
+               .ToList();
+
+            if (remaining.Count == 0) {
                 continue;
             }
 
-            if (si <= ei) {
-                forward.Add(d);
-            }
-            else
+            var segments = new List<List<Model.Station>>();
+            var current = new List<Model.Station>();
+
+            foreach (var station in remaining)
             {
-                reverse.Add(d);
+                if (current.Count == 0) {
+                    current.Add(station);
+                }
+                else
+                {
+                    var prevIndex = range.FindIndex(s => s.Id == current.Last().Id);
+                    var thisIndex = range.FindIndex(s => s.Id == station.Id);
+
+                    if (thisIndex == prevIndex + 1) {
+                        current.Add(station);
+                    }
+                    else {
+                        segments.Add(current);
+                        current = [station];
+                    }
+                }
+            }
+
+            if (current.Count > 0) {
+                segments.Add(current);
+            }
+
+            foreach (var segment in segments)
+            {
+                var id = Guid.NewGuid();
+
+                cleaned.Add(new Disruption(
+                    id,
+                    original.Line,
+                    segment.First(),
+                    segment.Last(),
+                    original.Description,
+                    original.Severity,
+                    GuidHelper.GuidFromString($"{id}-{original.Severity}"),
+                    original.DescriptionId,
+                    original.LastUpdatedUtc
+                ));
             }
         }
 
-        var result = new List<Disruption>();
-        if (forward.Count > 0)
+        return finalDisruptions.Concat(cleaned);
+    }
+
+    private static List<Model.Station> GetOrderedOverlap(List<Model.Station> a, List<Model.Station> b)
+    {
+        List<Model.Station> result = [];
+
+        for (int i = 0; i < a.Count; i++)
         {
-            result.AddRange(SegmentCore(forward, masterRouteStations));
-        }
+            int bi = b.FindIndex(s => s.Id == a[i].Id);
+            if (bi == -1)
+                continue;
 
-        if (reverse.Count > 0)
-        {
-            var mappedToForward = reverse
-                .Select(d => new Disruption(
-                    id: d.Id,
-                    line: d.Line,
-                    startStation: d.EndStation,    // SWAP
-                    endStation: d.StartStation,    // SWAP
-                    description: d.Description,
-                    severity: d.Severity,
-                    severityId: d.SeverityId,
-                    descriptionId: d.DescriptionId,
-                    lastUpdatedUtc: d.LastUpdatedUtc
-                ))
-                .ToList();
+            List<Model.Station> temp = [];
+            int ia = i;
+            int ib = bi;
 
-            var segmentedForward = SegmentCore(mappedToForward, masterRouteStations);
-
-            foreach (var seg in segmentedForward)
+            while (ia < a.Count && ib < b.Count && a[ia].Id == b[ib].Id)
             {
-                var flipped = new Disruption(
-                    id: Guid.NewGuid(),
-                    line: seg.Line,
-                    startStation: seg.EndStation,
-                    endStation: seg.StartStation,
-                    description: seg.Description,
-                    severity: seg.Severity,
-                    severityId: seg.SeverityId,
-                    descriptionId: seg.DescriptionId,
-                    lastUpdatedUtc: seg.LastUpdatedUtc
-                );
+                temp.Add(a[ia]);
+                ia++;
+                ib++;
+            }
 
-                result.Add(flipped);
+            if (temp.Count <= 1) {
+                continue;
+            }
+
+            if (temp.Count > result.Count) {
+                result = temp;
             }
         }
-
-        result.AddRange(passthrough);
-
-        result = [.. result
-            .OrderBy(d =>
-            {
-                var ix = masterRouteStations.IndexOf(d.StartStation.Id);
-                return ix == -1 ? int.MaxValue : ix;
-            })];
 
         return result;
     }
-
-
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
     {
@@ -357,138 +435,5 @@ public class JourneyRepository(
         var utcDateTime = TimeZoneInfo.ConvertTimeToUtc(londonDateTime, _londonTimeZone);
 
         return TimeOnly.FromDateTime(utcDateTime);
-    }
-
-    private IEnumerable<Disruption> SegmentCore(
-    List<Disruption> disruptions,
-    List<Guid> masterRouteStations)
-    {
-        var result = new List<Disruption>();
-        var intervals = new List<Interval>();
-
-        foreach (var d in disruptions)
-        {
-            int startIndex = masterRouteStations.IndexOf(d.StartStation.Id);
-            int endIndex = masterRouteStations.IndexOf(d.EndStation.Id);
-
-            if (startIndex == -1 || endIndex == -1)
-            {
-                result.Add(d);
-                continue;
-            }
-
-            if (startIndex > endIndex) {
-                (startIndex, endIndex) = (endIndex, startIndex);
-            }
-
-            intervals.Add(new Interval(startIndex, endIndex, d));
-        }
-
-        if (intervals.Count == 0)
-            return result;
-
-        int minIndex = intervals.Min(i => i.Start);
-        int maxIndex = intervals.Max(i => i.End);
-
-        var winning = new Interval?[masterRouteStations.Count];
-
-        for (int idx = minIndex; idx <= maxIndex; idx++)
-        {
-            var covering = intervals
-                .Where(i => i.Start <= idx && i.End >= idx)
-                .ToList();
-
-            if (covering.Count == 0)
-                continue;
-
-            var chosen = covering
-                .OrderByDescending(i => (int)i.Source.Severity)
-                .ThenBy(i => i.End - i.Start)
-                .First();
-
-            winning[idx] = chosen;
-        }
-
-        Interval? current = null;
-        int currentStart = -1;
-
-        for (int idx = minIndex; idx <= maxIndex; idx++)
-        {
-            var chosen = winning[idx];
-
-            if (chosen is null)
-            {
-                if (current != null)
-                {
-                    AddSegment(current, currentStart, idx - 1, masterRouteStations, result);
-                    current = null;
-                }
-
-                continue;
-            }
-
-            if (!ReferenceEquals(current, chosen))
-            {
-                if (current != null) {
-                    AddSegment(current, currentStart, idx - 1, masterRouteStations, result);
-                }
-
-                current = chosen;
-                currentStart = idx;
-            }
-        }
-
-        if (current != null) {
-            AddSegment(current, currentStart, maxIndex, masterRouteStations, result);
-        }
-
-        return result;
-    }
-
-    private sealed class Interval
-    {
-        public int Start { get; }
-        public int End { get; }
-        public Disruption Source { get; }
-
-        public Interval(int start, int end, Disruption source)
-        {
-            Start = start;
-            End = end;
-            Source = source;
-        }
-    }
-
-    private void AddSegment(
-        Interval interval,
-        int fromIndex,
-        int toIndex,
-        List<Guid> routeStations,
-        List<Disruption> result)
-    {
-        var startStationId = routeStations[fromIndex];
-        var endStationId = routeStations[toIndex];
-
-        var startStation = _stationRepository.GetStationById(startStationId)
-            ?? throw new Exception($"Station not found: {startStationId}");
-        var endStation = _stationRepository.GetStationById(endStationId)
-            ?? throw new Exception($"Station not found: {endStationId}");
-
-        var s = interval.Source;
-
-        var id = Guid.NewGuid();
-        var segment = new Disruption(
-            id: id,
-            line: s.Line,
-            startStation: startStation,
-            endStation: endStation,
-            description: s.Description,
-            severity: s.Severity,
-            severityId: GuidHelper.GuidFromString($"{id}-{s.Severity}"),
-            descriptionId: s.DescriptionId,
-            lastUpdatedUtc: s.LastUpdatedUtc
-        );
-
-        result.Add(segment);
     }
 }
