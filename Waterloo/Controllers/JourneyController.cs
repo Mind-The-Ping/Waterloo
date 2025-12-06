@@ -154,32 +154,4 @@ public class JourneyController(LineRepository lineRepository,
 
         return Ok(result);
     }
-
-    [Authorize]
-    [HttpPost("segmentDisruption")]
-    public async Task<IActionResult> SegmentDisruptions([FromBody] IEnumerable<Disruption> disruptions)
-    {
-        var list = disruptions.ToList();
-        var lineId = list.First().Line.Id;
-
-        var disruptionIds = string.Join(", ", list.Select(d => d.Id));
-
-        _logger.LogInformation(
-            "Begin segmenting disruptions for line {lineId}. Incoming disruption IDs: {ids}",
-            lineId,
-            disruptionIds
-        );
-
-        var result = await _journeyRepository.SegmentDisruptionsAsync(list);
-
-        var resultIds = string.Join(", ", result.Select(d => d.Id));
-
-        _logger.LogInformation(
-            "Finished segmenting disruptions for line {lineId}. Output disruption IDs: {ids}",
-            lineId,
-            resultIds
-        );
-
-        return Ok(result);
-    }
 }
