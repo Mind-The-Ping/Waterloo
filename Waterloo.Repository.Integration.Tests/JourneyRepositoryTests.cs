@@ -716,6 +716,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("843a1e32-7aea-49e0-8e51-e57dfb0d13ce"))!, // Clapham Common
+             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("843a1e32-7aea-49e0-8e51-e57dfb0d13ce"))!, // Clapham Common
             "This is a serious issue going on a bird got onto the tracks.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -725,6 +727,8 @@ public class JourneyRepositoryTests
            new(
            Guid.NewGuid(),
            line!,
+           _stationRepository.GetStationById(Guid.Parse("e0f260e2-0cf7-40dd-ba35-21aff58b721a"))!, // Old Street
+           _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town,
            _stationRepository.GetStationById(Guid.Parse("e0f260e2-0cf7-40dd-ba35-21aff58b721a"))!, // Old Street
            _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
            "Something seems weird, I can see a monster !!",
@@ -742,6 +746,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -760,6 +766,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
             "This is a severe issue please take me seriously.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -770,6 +778,8 @@ public class JourneyRepositoryTests
            Guid.NewGuid(),
            line!,
            _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
+           _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
            "The station is closed nerd go somewhere else ??",
            Serverity.Closed,
@@ -785,6 +795,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+            disruptions.First().OriginalStartStation,
+            disruptions.First().OriginalEndStation,
             disruptions.First().Description,
             disruptions.First().Severity,
             disruptions.First().SeverityId,
@@ -796,10 +808,12 @@ public class JourneyRepositoryTests
            line!,
            _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
-            disruptions.Last().Description,
-            disruptions.Last().Severity,
-            disruptions.Last().SeverityId,
-            disruptions.Last().DescriptionId,
+           disruptions.Last().OriginalStartStation,
+           disruptions.Last().OriginalEndStation,
+           disruptions.Last().Description,
+           disruptions.Last().Severity,
+           disruptions.Last().SeverityId,
+           disruptions.Last().DescriptionId,
            disruptions.Last().LastUpdatedUtc)
         };
 
@@ -811,6 +825,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -829,6 +845,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
             "This is a severe issue please take me seriously.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -839,7 +857,9 @@ public class JourneyRepositoryTests
            Guid.NewGuid(),
            line!,
            _stationRepository.GetStationById(Guid.Parse("091e449a-b0d9-45fe-a2c6-c15eaa8dbd52"))!, // Oval
-           _stationRepository.GetStationById(Guid.Parse("57fd1550-4c55-434e-8e96-041207c1ac63"))!, // Angel
+           _stationRepository.GetStationById(Guid.Parse("57fd1550-4c55-434e-8e96-041207c1ac63"))!, // Angel,
+           _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
            "The station is closed nerd go somewhere else ??",
            Serverity.Closed,
            Guid.NewGuid(),
@@ -853,7 +873,9 @@ public class JourneyRepositoryTests
             Guid.NewGuid(),
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
-            _stationRepository.GetStationById(Guid.Parse("e7beb5c1-a574-421f-b92e-ea66acddc230"))!, // Stockwell
+            _stationRepository.GetStationById(Guid.Parse("e7beb5c1-a574-421f-b92e-ea66acddc230"))!, // Stockwell,
+            disruptions.First().OriginalStartStation,
+            disruptions.First().OriginalEndStation, 
             disruptions.First().Description,
             disruptions.First().Severity,
             disruptions.First().SeverityId,
@@ -865,6 +887,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("091e449a-b0d9-45fe-a2c6-c15eaa8dbd52"))!, // Oval
             _stationRepository.GetStationById(Guid.Parse("57fd1550-4c55-434e-8e96-041207c1ac63"))!, // Angel
+            disruptions.Last().OriginalStartStation,
+            disruptions.Last().OriginalEndStation,
             disruptions.Last().Description,
             disruptions.Last().Severity,
             disruptions.Last().SeverityId,
@@ -876,6 +900,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("5cf18e37-17e0-46c0-9177-6a5951df26b8"))!, // King's Cross St.Pancras
             _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            disruptions.First()!.OriginalStartStation,
+            disruptions.First()!.OriginalEndStation,
             disruptions.First().Description,
             disruptions.First().Severity,
             disruptions.First().SeverityId,
@@ -891,6 +917,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -908,6 +936,8 @@ public class JourneyRepositoryTests
             Guid.NewGuid(),
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware,
+             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
             "This is a minor take a load off your feet my dude.",
             Serverity.Minor,
@@ -919,6 +949,8 @@ public class JourneyRepositoryTests
            Guid.NewGuid(),
            line!,
            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+           _stationRepository.GetStationById(Guid.Parse("846225f8-371b-4523-bcbb-fa12a4359d3b"))!, // Kennington,
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
            _stationRepository.GetStationById(Guid.Parse("846225f8-371b-4523-bcbb-fa12a4359d3b"))!, // Kennington
            "The station has severe delays nerd, do you really wanna wait ??",
            Serverity.Severe,
@@ -934,6 +966,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("a3c4de46-14f3-420c-8f55-c94e44f3b079"))!, // Elephant & Castle
             _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
+            disruptions.First().OriginalStartStation,
+            disruptions.First().OriginalEndStation,
             disruptions.First().Description,
             disruptions.First().Severity,
             disruptions.First().SeverityId,
@@ -945,6 +979,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("846225f8-371b-4523-bcbb-fa12a4359d3b"))!, // Kennington
+            disruptions.Last().OriginalStartStation,
+            disruptions.Last().OriginalEndStation,
             disruptions.Last().Description,
             disruptions.Last().Severity,
             disruptions.Last().SeverityId,
@@ -960,6 +996,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -977,6 +1015,8 @@ public class JourneyRepositoryTests
             Guid.NewGuid(),
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware,
+             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
             "This is a minor take a load off your feet my dude.",
             Serverity.Minor,
@@ -988,6 +1028,8 @@ public class JourneyRepositoryTests
            Guid.NewGuid(),
            line!,
             _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden,
+             _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
            "The station has severe delays nerd, do you really wanna wait ??",
            Serverity.Severe,
@@ -1004,6 +1046,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -1022,6 +1066,8 @@ public class JourneyRepositoryTests
                 line!,
                 _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
                 _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
                 "This is a severe issue please take me seriously.",
                 Serverity.Severe,
                 Guid.NewGuid(),
@@ -1031,6 +1077,8 @@ public class JourneyRepositoryTests
             new(
                 Guid.NewGuid(),
                 line!,
+                _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
                 _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
                 _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
                 "The station is closed nerd go somewhere else ??",
@@ -1044,6 +1092,8 @@ public class JourneyRepositoryTests
                 line!,
                 _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
                 _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
                 "This is a severe issue please take me seriously.",
                 Serverity.Severe,
                 Guid.NewGuid(),
@@ -1055,6 +1105,8 @@ public class JourneyRepositoryTests
                 line!,
                 _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
                 _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"))!, // Highgate
                 "The station is closed nerd go somewhere else ??",
                 Serverity.Closed,
                 Guid.NewGuid(),
@@ -1062,11 +1114,13 @@ public class JourneyRepositoryTests
                 DateTime.UtcNow)
         };
 
-        var expectedForward = new List<(Guid start, Guid end, Serverity severity, string desc, Guid sevId, Guid descId, DateTime ts)>
+        var expectedForward = new List<(Guid start, Guid end, Guid originalStart, Guid originalEnd, Serverity severity, string desc, Guid sevId, Guid descId, DateTime ts)>
         {
             (
                 Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"), // Morden
                 Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"), // Archway
+                disruptions[0].OriginalStartStation.Id,
+                disruptions[0].OriginalEndStation.Id,
                 disruptions[0].Severity,
                 disruptions[0].Description,
                 disruptions[0].SeverityId,
@@ -1075,7 +1129,9 @@ public class JourneyRepositoryTests
             ),
             (
                 Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"), // Highgate
-                Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"), // High Barnet
+                Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"), // High Barnet,
+                disruptions[1].OriginalStartStation.Id,
+                disruptions[1].OriginalEndStation.Id,
                 disruptions[1].Severity,
                 disruptions[1].Description,
                 disruptions[1].SeverityId,
@@ -1084,11 +1140,13 @@ public class JourneyRepositoryTests
             )
         };
 
-        var expectedReverse = new List<(Guid start, Guid end, Serverity severity, string desc, Guid sevId, Guid descId, DateTime ts)>
+        var expectedReverse = new List<(Guid start, Guid end, Guid originalStart, Guid originalEnd, Serverity severity, string desc, Guid sevId, Guid descId, DateTime ts)>
         {
             (
                 Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"), // Archway
                 Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"), // Morden
+                disruptions[2].OriginalStartStation.Id,
+                disruptions[2].OriginalEndStation.Id,
                 disruptions[2].Severity,
                 disruptions[2].Description,
                 disruptions[2].SeverityId,
@@ -1098,6 +1156,8 @@ public class JourneyRepositoryTests
             (
                 Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"), // High Barnet
                 Guid.Parse("b8804bd7-0f43-4130-9726-9e146a7fa4b8"), // Highgate
+                disruptions[3].OriginalStartStation.Id,
+                disruptions[3].OriginalEndStation.Id,
                 disruptions[3].Severity,
                 disruptions[3].Description,
                 disruptions[3].SeverityId,
@@ -1116,6 +1176,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.start &&
                 r.EndStation.Id == d.end &&
+                r.OriginalStartStation.Id == d.originalStart &&
+                r.OriginalEndStation.Id == d.originalEnd &&
                 r.Severity == d.severity &&
                 r.Description == d.desc &&
                 r.DescriptionId == d.descId
@@ -1135,6 +1197,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
             "This is a serious issue going on a bird got onto the tracks.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -1144,6 +1208,8 @@ public class JourneyRepositoryTests
            new(
            Guid.NewGuid(),
            line!,
+           _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+           _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
            _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
            "This is a serious issue going on a bird got onto the tracks.",
@@ -1156,37 +1222,43 @@ public class JourneyRepositoryTests
         var expectedDisruptions = new List<Disruption>()
         {
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
-            _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow),
 
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("c2691b4b-373f-459e-8349-4e9b67a60c16"))!, // Kentish Town
-            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("c2691b4b-373f-459e-8349-4e9b67a60c16"))!, // Kentish Town
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow),
 
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("2b968966-119d-4ff2-97d2-77688b79aecb"))!, // Chalk Farm
-            _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("2b968966-119d-4ff2-97d2-77688b79aecb"))!, // Chalk Farm
+                _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
+                _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+                _stationRepository.GetStationById(Guid.Parse("bf7fcc36-2427-411c-81df-310175a4fbd1"))!, // Edgware
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow),
         };
 
         var result = await _journeyRepository.SegmentDisruptionsAsync(disruptions);
@@ -1197,6 +1269,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId
@@ -1216,6 +1290,8 @@ public class JourneyRepositoryTests
             line!,
             _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
             _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
             "This is a serious issue going on a bird got onto the tracks.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -1225,6 +1301,8 @@ public class JourneyRepositoryTests
            new(
            Guid.NewGuid(),
            line!,
+           _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+           _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
            _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
            _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
            "This is a serious issue going on a bird got onto the tracks.",
@@ -1237,37 +1315,43 @@ public class JourneyRepositoryTests
         var expectedDisruptions = new List<Disruption>()
         {
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
-            _stationRepository.GetStationById(Guid.Parse("65b35caa-27b8-4c23-9cd2-d1854084da8a"))!, // West Finchley
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // HB
+                _stationRepository.GetStationById(Guid.Parse("65b35caa-27b8-4c23-9cd2-d1854084da8a"))!, // West Finchley
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow),
 
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("0be00e52-5c55-4419-bf9c-912b9c06c773"))!, // Finchley Central
-            _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("0be00e52-5c55-4419-bf9c-912b9c06c773"))!, // Finchley Central
+                _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+                _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+                _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow),
 
             new(
-            Guid.NewGuid(),
-            line!,
-            _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
-            _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
-            "This is a serious issue going on a bird got onto the tracks.",
-            Serverity.Severe,
-            Guid.NewGuid(),
-            descriptionId,
-            DateTime.UtcNow),
+                Guid.NewGuid(),
+                line!,
+                _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+                _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+                _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+                _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+                "This is a serious issue going on a bird got onto the tracks.",
+                Serverity.Severe,
+                Guid.NewGuid(),
+                descriptionId,
+                DateTime.UtcNow)
         };
 
         var result = await _journeyRepository.SegmentDisruptionsAsync(disruptions);
@@ -1278,6 +1362,8 @@ public class JourneyRepositoryTests
             result.Should().ContainSingle(r =>
                 r.StartStation.Id == d.StartStation.Id &&
                 r.EndStation.Id == d.EndStation.Id &&
+                r.OriginalStartStation == d.OriginalStartStation &&
+                r.OriginalEndStation == d.OriginalEndStation &&
                 r.Severity == d.Severity &&
                 r.Description == d.Description &&
                 r.DescriptionId == d.DescriptionId

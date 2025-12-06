@@ -375,6 +375,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             line!,
             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
             _stationRepository.GetStationById(Guid.Parse("843a1e32-7aea-49e0-8e51-e57dfb0d13ce"))!, // Clapham Common
+             _stationRepository.GetStationById(Guid.Parse("215f94f9-f023-499b-a4e0-be95e4e0640b"))!, // Morden
+            _stationRepository.GetStationById(Guid.Parse("843a1e32-7aea-49e0-8e51-e57dfb0d13ce"))!, // Clapham Common
             "This is a serious issue going on a bird got onto the tracks.",
             Serverity.Severe,
             Guid.NewGuid(),
@@ -384,6 +386,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
            new(
            Guid.NewGuid(),
            line!,
+           _stationRepository.GetStationById(Guid.Parse("e0f260e2-0cf7-40dd-ba35-21aff58b721a"))!, // Old Street
+           _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
            _stationRepository.GetStationById(Guid.Parse("e0f260e2-0cf7-40dd-ba35-21aff58b721a"))!, // Old Street
            _stationRepository.GetStationById(Guid.Parse("a359263f-448b-42dd-a05f-660aa6ef53ec"))!, // Camden Town
            "Something seems weird, I can see a monster !!",
