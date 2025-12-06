@@ -5,6 +5,8 @@ public readonly struct Disruption(
     Line line,
     Station startStation,
     Station endStation,
+    Station originalStartStation,
+    Station originalEndStation,
     string description,
     Serverity severity,
     Guid severityId,
@@ -15,6 +17,8 @@ public readonly struct Disruption(
     public Line Line { init; get; } = line;
     public Station StartStation { init; get; } = startStation;
     public Station EndStation { init; get; } = endStation;
+    public Station OriginalStartStation { init; get; } = originalStartStation;
+    public Station OriginalEndStation { init; get; } = originalEndStation;
     public string Description { init; get; } = description;
     public Serverity Severity { init; get; } = severity;
     public Guid SeverityId { init; get; } = severityId;
