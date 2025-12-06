@@ -249,6 +249,14 @@ public class JourneyRepository(
                     continue;
                 }
 
+                bool sameDirection =
+                    aStations.IndexOf(overlap.First()) < aStations.IndexOf(overlap.Last()) &&
+                    bStations.IndexOf(overlap.First()) < bStations.IndexOf(overlap.Last());
+
+                if(!sameDirection) {
+                    continue;
+                }
+
                 var key = string.Join(",", overlap.Select(s => s.Id));
 
                 if (seen.Add(key)) {
@@ -383,7 +391,7 @@ public class JourneyRepository(
                 ib++;
             }
 
-            if (temp.Count <= 1) {
+            if (temp.Count == 0) {
                 continue;
             }
 
