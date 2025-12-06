@@ -1203,6 +1203,88 @@ public class JourneyRepositoryTests
             );
         }
     }
+
+    [Fact]
+    public async Task JourneyRepository_SegmentDisruptions_Orpahned_Station()
+    {
+        var line = _lineRepository.GetLineById(Guid.Parse("62e93d5d-cc67-4c42-8ff5-24582f89d624"));
+        var descriptionId = Guid.NewGuid();
+        var disruptions = new List<Disruption>()
+        {
+            new(
+            Guid.NewGuid(),
+            line!,
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+            "This is a serious issue going on a bird got onto the tracks.",
+            Serverity.Severe,
+            Guid.NewGuid(),
+            descriptionId,
+            DateTime.UtcNow),
+
+           new(
+           Guid.NewGuid(),
+           line!,
+           _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+           _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+           "This is a serious issue going on a bird got onto the tracks.",
+           Serverity.Severe,
+           Guid.NewGuid(),
+           descriptionId,
+           DateTime.UtcNow)
+        };
+
+        var expectedDisruptions = new List<Disruption>()
+        {
+            new(
+            Guid.NewGuid(),
+            line!,
+            _stationRepository.GetStationById(Guid.Parse("a5e36b10-8d22-4a44-a0e2-e2f0a57e3c8b"))!, // High Barnet
+            _stationRepository.GetStationById(Guid.Parse("65b35caa-27b8-4c23-9cd2-d1854084da8a"))!, // West Finchley
+            "This is a serious issue going on a bird got onto the tracks.",
+            Serverity.Severe,
+            Guid.NewGuid(),
+            descriptionId,
+            DateTime.UtcNow),
+
+            new(
+            Guid.NewGuid(),
+            line!,
+            _stationRepository.GetStationById(Guid.Parse("0be00e52-5c55-4419-bf9c-912b9c06c773"))!, // Finchley Central
+            _stationRepository.GetStationById(Guid.Parse("386b3580-ea8b-4aed-a84b-a7aa205e24f1"))!, // Archway
+            "This is a serious issue going on a bird got onto the tracks.",
+            Serverity.Severe,
+            Guid.NewGuid(),
+            descriptionId,
+            DateTime.UtcNow),
+
+            new(
+            Guid.NewGuid(),
+            line!,
+            _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+            _stationRepository.GetStationById(Guid.Parse("38c3603c-2eb6-4916-9fbd-c01d91a50259"))!, // Mill Hill East
+            "This is a serious issue going on a bird got onto the tracks.",
+            Serverity.Severe,
+            Guid.NewGuid(),
+            descriptionId,
+            DateTime.UtcNow),
+        };
+
+        var result = await _journeyRepository.SegmentDisruptionsAsync(disruptions);
+        result.Count().Should().Be(3);
+
+        foreach (var d in expectedDisruptions)
+        {
+            result.Should().ContainSingle(r =>
+                r.StartStation.Id == d.StartStation.Id &&
+                r.EndStation.Id == d.EndStation.Id &&
+                r.Severity == d.Severity &&
+                r.Description == d.Description &&
+                r.DescriptionId == d.DescriptionId
+            );
+        }
+    }
+
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
         var londonToday = TimeZoneInfo.ConvertTime(DateTime.Today, _londonTimeZone);
