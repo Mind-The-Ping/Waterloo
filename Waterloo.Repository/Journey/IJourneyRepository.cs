@@ -20,11 +20,9 @@ public interface IJourneyRepository
 
     public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
-        Guid startStation,
-        Guid endStation,
-        Serverity serverity,
         TimeOnly dateTime,
-        DayOfWeek queryDay);
+        DayOfWeek queryDay,
+        IEnumerable<Disruption> disruptions);
 
     public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId);
 }

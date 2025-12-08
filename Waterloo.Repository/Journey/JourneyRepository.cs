@@ -154,61 +154,64 @@ public class JourneyRepository(
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
-        Guid startStation,
-        Guid endStation,
-        Serverity serverity,
         TimeOnly queryTime,
-        DayOfWeek queryDay)
+        DayOfWeek queryDay,
+        IEnumerable<Disruption> disruptions)
     {
-        var queryStations = _routeRepository
-           .GetStationsBetween(line, startStation, endStation)
-           .Select(s => s.Id)
-           .ToList();
 
-        var masterRoute = _routeRepository
-           .GetRoute(line, startStation, endStation)
-           .Select(s => s.Id)
-           .ToList();
+        var results = new List<AffectedUser>();
 
-        var journeys = await _journeyCollection
-            .Find(x =>
-                x.LineId == line &&
-                queryTime >= x.StartTime &&
-                queryTime <= x.EndTime &&
-                x.DaysToCheck.Contains(queryDay) &&
-                serverity >= x.Serverity
-                && x.DeletedAt == null)
-            .ToListAsync();
-
-        var results = new List<AffectedUser>(journeys.Count);
-
-        foreach (var journey in journeys)
+        foreach (var disruption in disruptions)
         {
-            if (!journey.StationIds.Any(queryStations.Contains)) {
-                continue;
-            }
+            var queryStations = _routeRepository
+              .GetStationsBetween(line, disruption.StartStationId, disruption.EndStationId)
+              .Select(s => s.Id)
+              .ToList();
 
-            int jDir = GetDirection(masterRoute, [.. journey.StationIds]);
-            int segDir = GetDirection(masterRoute, queryStations);
-
-            if (jDir == 0 || jDir != segDir) {
-                continue;
-            }
-
-            var overlapStations = journey.StationIds
-               .Where(queryStations.Contains)
-               .OrderBy(id => masterRoute.IndexOf(id))
-               .Select(id => _stationRepository.GetStationById(id)!)
+            var masterRoute = _routeRepository
+               .GetRoute(line, disruption.StartStationId, disruption.EndStationId)
+               .Select(s => s.Id)
                .ToList();
 
-            results.Add(new AffectedUser(
-                journey.Id,
-                journey.UserId,
-                _stationRepository.GetStationById(journey.StationIds.First())!,
-                _stationRepository.GetStationById(journey.StationIds.Last())!,
-                overlapStations,
-                journey.EndTime
-            ));
+            var journeys = await _journeyCollection
+               .Find(x =>
+                   x.LineId == line &&
+                   queryTime >= x.StartTime &&
+                   queryTime <= x.EndTime &&
+                   x.DaysToCheck.Contains(queryDay) &&
+                   disruption.Serverity >= x.Serverity
+                   && x.DeletedAt == null)
+               .ToListAsync();
+
+            foreach (var journey in journeys)
+            {
+                if (!journey.StationIds.Any(queryStations.Contains)) {
+                    continue;
+                }
+
+                int jDir = GetDirection(masterRoute, [.. journey.StationIds]);
+                int segDir = GetDirection(masterRoute, queryStations);
+
+                if (jDir == 0 || jDir != segDir) {
+                    continue;
+                }
+
+                var overlapStations = journey.StationIds
+                 .Where(queryStations.Contains)
+                 .OrderBy(id => masterRoute.IndexOf(id))
+                 .Select(id => _stationRepository.GetStationById(id)!)
+                 .ToList();
+
+                results.Add(new AffectedUser(
+                   journey.Id,
+                   journey.UserId,
+                   disruption.Id,
+                   _stationRepository.GetStationById(journey.StationIds.First())!,
+                   _stationRepository.GetStationById(journey.StationIds.Last())!,
+                   overlapStations,
+                   journey.EndTime
+                 ));
+            }
         }
 
         return results
@@ -243,8 +246,6 @@ public class JourneyRepository(
 
         return 0;
     }
-
-   
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {

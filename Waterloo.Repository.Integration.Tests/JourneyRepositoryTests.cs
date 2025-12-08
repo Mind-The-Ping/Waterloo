@@ -1,5 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NSubstitute;
@@ -38,6 +37,8 @@ public class JourneyRepositoryTests
     private readonly IMongoCollection<Model.Journey> _journeyCollection;
 
     private readonly string _databaseName = $"testdb_{Guid.NewGuid():N}";
+
+    private readonly IEnumerable<Disruption> _disruptions = [];
 
     public JourneyRepositoryTests()
     {
@@ -86,6 +87,12 @@ public class JourneyRepositoryTests
             Serverity = Serverity.Severe,
             CreatedAt = DateTime.UtcNow,
         };
+
+        _disruptions = [new Disruption(
+            Guid.NewGuid(),
+            _affectedStationStart.Id,
+            _affectedStationEnd.Id,
+            _affectedSeverity)];
     }
 
     private async Task InitializeAsync()
@@ -298,14 +305,13 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
-            _affectedStationStart.Id,
-            _affectedStationEnd.Id,
-            _affectedSeverity,
             _affectedTime,
-            _affectedDay);
+            _affectedDay,
+            _disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
@@ -338,15 +344,14 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
-            _affectedStationStart.Id,
-            _affectedStationEnd.Id,
-            _affectedSeverity,
             _affectedTime,
-            _affectedDay);
+            _affectedDay,
+            _disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -380,15 +385,14 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
-            _affectedStationStart.Id,
-            _affectedStationEnd.Id,
-            _affectedSeverity,
             _affectedTime,
-            _affectedDay);
+            _affectedDay,
+            _disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -425,15 +429,14 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
-            _affectedStationStart.Id,
-            _affectedStationEnd.Id,
-            _affectedSeverity,
             _affectedTime,
-            _affectedDay);
+            _affectedDay,
+            _disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -473,11 +476,9 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             _affectedLine.Id,
-            _affectedStationStart.Id,
-            _affectedStationEnd.Id,
-            _affectedSeverity,
             _affectedTime,
-            _affectedDay);
+            _affectedDay,
+            _disruptions);
 
         result.Should().BeEmpty();
     }
@@ -507,15 +508,14 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-          _affectedStationEnd.Id,
-          _affectedStationStart.Id,
-          _affectedSeverity,
           _affectedTime,
-          _affectedDay);
+          _affectedDay,
+          _disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
@@ -537,11 +537,9 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-          _affectedStationStart.Id,
-          _affectedStationEnd.Id,
-          _affectedSeverity,
           _affectedTime,
-          _affectedDay);
+          _affectedDay,
+          _disruptions);
 
         result.Should().BeEmpty();
     }
@@ -564,11 +562,9 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-           _affectedStationStart.Id,
-          _affectedStationEnd.Id,
-          _affectedSeverity,
           _affectedTime,
-          _affectedDay);
+          _affectedDay,
+          _disruptions);
 
         result.Should().BeEmpty();
     }
@@ -585,16 +581,15 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-          _affectedStationStart.Id,
-          _affectedStationEnd.Id,
-          _affectedSeverity,
           _affectedTime,
-          _affectedDay);
+          _affectedDay,
+          _disruptions);
 
         result.Should().NotBeEmpty();
 
         result.First().Id.Should().Be(_defaultJourney.Id);
         result.First().UserId.Should().Be(_defaultJourney.UserId);
+        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_affectedStationStart);
         result.First().EndStation.Should().Be(_affectedStationEnd);
         result.First().EndTime.Should().Be(_defaultJourney.EndTime);
@@ -620,11 +615,9 @@ public class JourneyRepositoryTests
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
-          _affectedStationEnd.Id,
-          _affectedStationStart.Id,
-          _affectedSeverity,
           _affectedTime,
-          _affectedDay);
+          _affectedDay,
+          _disruptions);
 
         result.Should().BeEmpty();
     }
