@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using DnsClient;
+using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using MongoDB.Driver;
 using System.Net;
@@ -308,19 +309,17 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var url = QueryHelpers.AddQueryString(
-            "api/journey/affectedJourneys",
-            new Dictionary<string, string?>
-            {
-                ["LineId"] = journey.LineId.ToString(),
-                ["StartStationId"] = "5059c39d-2492-49a0-9eaa-0a2c6cdfa605",
-                ["EndStationId"] = "3686c2bf-12bd-43cf-8975-6891896189ba",
-                ["QueryTime"] = new TimeOnly(5, 30).ToString("HH:mm"),
-                ["QueryDay"] = journey.DaysToCheck.First().ToString(),
-                ["Serverity"] = Serverity.Closed.ToString()
-            });
+        var affectedJourneysDto = new AffectedJourneysDto(
+             journey.LineId,
+             new TimeOnly(5, 30),
+             journey.DaysToCheck.First(),
+             [new DisruptionDto(
+                Guid.NewGuid(),
+                Guid.Parse("5059c39d-2492-49a0-9eaa-0a2c6cdfa605"),
+                Guid.Parse("3686c2bf-12bd-43cf-8975-6891896189ba"),
+                Serverity.Closed)]);
 
-        var response = await _client.GetAsync(url);
+        var response = await _client.PostAsJsonAsync("api/journey/affectedJourneys", affectedJourneysDto);
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<List<AffectedUser>>();
@@ -346,19 +345,17 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         await _journeyCollection.InsertOneAsync(journey);
 
-        var url = QueryHelpers.AddQueryString(
-            "api/journey/affectedJourneys",
-            new Dictionary<string, string?>
-            {
-                ["LineId"] = journey.LineId.ToString(),
-                ["StartStationId"] = "5059c39d-2492-49a0-9eaa-0a2c6cdfa605",
-                ["EndStationId"] = "3686c2bf-12bd-43cf-8975-6891896189ba",
-                ["QueryTime"] = new TimeOnly(5, 30).ToString("HH:mm"),
-                ["QueryDay"] = journey.DaysToCheck.First().ToString(),
-                ["Serverity"] = Serverity.Closed.ToString()
-            });
+        var affectedJourneysDto = new AffectedJourneysDto(
+              journey.LineId,
+              new TimeOnly(5, 30),
+              journey.DaysToCheck.First(),
+              [new DisruptionDto(
+                Guid.NewGuid(),
+                Guid.Parse("5059c39d-2492-49a0-9eaa-0a2c6cdfa605"),
+                Guid.Parse("3686c2bf-12bd-43cf-8975-6891896189ba"),
+                Serverity.Closed)]);
 
-        var response = await _unauthorizedClient.GetAsync(url);
+        var response = await _unauthorizedClient.PostAsJsonAsync("api/journey/affectedJourneys", affectedJourneysDto);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }

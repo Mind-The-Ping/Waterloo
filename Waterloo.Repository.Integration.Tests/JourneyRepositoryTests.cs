@@ -506,16 +506,25 @@ public class JourneyRepositoryTests
 
         await _journeyCollection.InsertOneAsync(journey);
 
+        var disruptions = new List<Disruption>()
+        {
+            new(
+            Guid.NewGuid(),
+            _affectedStationEnd.Id,
+            _affectedStationStart.Id,
+            _affectedSeverity)
+        };
+
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
           _affectedLine.Id,
           _affectedTime,
           _affectedDay,
-          _disruptions);
+          disruptions);
 
         result.Should().NotBeEmpty();
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
-        result.First().DisruptionId.Should().Be(_disruptions.First().Id);
+        result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
         result.First().EndStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.Last()));
         result.First().EndTime.Should().Be(journey.EndTime);
