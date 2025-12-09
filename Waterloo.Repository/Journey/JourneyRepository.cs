@@ -159,9 +159,10 @@ public class JourneyRepository(
         IEnumerable<Disruption> disruptions)
     {
 
+        var unmasked = ApplyDisruptionMasking(line, disruptions);
         var results = new List<AffectedUser>();
 
-        foreach (var disruption in disruptions)
+        foreach (var disruption in unmasked)
         {
             var queryStations = _routeRepository
               .GetStationsBetween(line, disruption.StartStationId, disruption.EndStationId)
@@ -210,13 +211,96 @@ public class JourneyRepository(
                    _stationRepository.GetStationById(journey.StationIds.Last())!,
                    overlapStations,
                    journey.EndTime
-                 ));
+                 )
+                {
+                    Severity = disruption.Serverity,
+                    DisruptionSpanLength = queryStations.Count,
+                    TotalJourneyStations = journey.StationIds.Count
+                });
             }
         }
 
-        return results
+        return SelectBestPerJourney(results);
+    }
+
+    private IEnumerable<AffectedUser> SelectBestPerJourney(IEnumerable<AffectedUser> all)
+    {
+        return all
             .GroupBy(x => x.Id)
-            .Select(g => g.First());
+            .SelectMany(g => SelectBestForSingleJourney(g));
+    }
+
+    private IEnumerable<AffectedUser> SelectBestForSingleJourney(IEnumerable<AffectedUser> disruptionsForJourney)
+    {
+        var list = disruptionsForJourney.ToList();
+
+        var full = list
+            .Where(d => d.OverlapCount == d.TotalJourneyStations)
+            .ToList();
+
+        if (full.Count != 0) {
+            return PickBest(full);
+        }
+
+        var groups = list.GroupBy(d =>
+           string.Join(",", d.AffectedStations.Select(s => s.Id)));
+
+        var result = new List<AffectedUser>();
+
+        foreach (var g in groups) {
+          result.AddRange(PickBest(g));
+        }
+
+        return result;
+    }
+
+    private IEnumerable<AffectedUser> PickBest(IEnumerable<AffectedUser> group) 
+    {
+        return group
+            .GroupBy(x => x.Severity)
+            .OrderByDescending(g => g.Key)
+            .First()
+            .OrderByDescending(x => x.OverlapCount)
+            .ThenByDescending(x => x.DisruptionSpanLength)
+            .Take(1);
+    }
+
+    private IEnumerable<Disruption> ApplyDisruptionMasking(
+        Guid lineId,
+        IEnumerable<Disruption> disruptions)
+    {
+        var list = disruptions.ToList();
+        var toRemove = new HashSet<Disruption>();
+
+        foreach (var a in list)
+        {
+            foreach (var b in list)
+            {
+                if(a == b) {
+                    continue;
+                }
+
+                if(b.Serverity <= a.Serverity) {
+                    continue;
+                }
+
+                var aStations = _routeRepository
+                    .GetStationsBetween(lineId, a.StartStationId, a.EndStationId)
+                    .Select(s => s.Id)
+                    .ToHashSet();
+
+                var bStations = _routeRepository
+                    .GetStationsBetween(lineId, b.StartStationId, b.EndStationId)
+                    .Select(s => s.Id)
+                    .ToHashSet();
+
+                if (aStations.All(st => bStations.Contains(st))) {
+                    toRemove.Add(a);
+                }
+            }
+        }
+
+        return list.Where(d => !toRemove.Contains(d));
     }
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
@@ -241,8 +325,13 @@ public class JourneyRepository(
             }
         }
 
-        if (increasing) return +1;
-        if (decreasing) return -1;
+        if (increasing) {
+            return +1;
+        }
+
+        if (decreasing) {
+            return -1;
+        } 
 
         return 0;
     }

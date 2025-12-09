@@ -1,4 +1,5 @@
 ﻿namespace Waterloo.Model;
+
 public record AffectedUser(
     Guid Id,
     Guid UserId,
@@ -6,4 +7,13 @@ public record AffectedUser(
     Station StartStation, 
     Station EndStation, 
     IEnumerable<Station> AffectedStations,
-    TimeOnly EndTime);
+    TimeOnly EndTime)
+{
+    public Serverity Severity { get; init; }
+    public int DisruptionSpanLength { get; init; }
+    public int TotalJourneyStations { get; init; }
+    public bool IsFullJourneyCoverage =>
+        AffectedStations.Count() == TotalJourneyStations;
+    public int OverlapCount =>
+        AffectedStations.Count();
+}
