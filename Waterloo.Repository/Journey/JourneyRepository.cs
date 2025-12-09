@@ -234,24 +234,27 @@ public class JourneyRepository(
     {
         var list = disruptionsForJourney.ToList();
 
-        var full = list
-            .Where(d => d.OverlapCount == d.TotalJourneyStations)
-            .ToList();
+        var segmentGroups = list
+           .GroupBy(d => string.Join(",", d.AffectedStations.Select(s => s.Id)))
+           .ToList();
 
-        if (full.Count != 0) {
-            return PickBest(full);
+        if(segmentGroups.Count == 1)
+        {
+            var group = segmentGroups.First();
+            var full = group.Where(d => d.OverlapCount == d.TotalJourneyStations).ToList();
+
+            if (full.Count > 0) {
+                return PickBest(full);
+            }
+
+            return PickBest(group);
         }
 
-        var groups = list.GroupBy(d =>
-           string.Join(",", d.AffectedStations.Select(s => s.Id)));
+        var selected = segmentGroups
+           .SelectMany(g => PickBest(g))
+           .ToList();
 
-        var result = new List<AffectedUser>();
-
-        foreach (var g in groups) {
-          result.AddRange(PickBest(g));
-        }
-
-        return result;
+        return ApplyPerSegmentStationMasking(selected);
     }
 
     private IEnumerable<AffectedUser> PickBest(IEnumerable<AffectedUser> group) 
@@ -301,6 +304,32 @@ public class JourneyRepository(
         }
 
         return list.Where(d => !toRemove.Contains(d));
+    }
+
+    private IEnumerable<AffectedUser> ApplyPerSegmentStationMasking(List<AffectedUser> selected)
+    {
+        var ordered = selected.OrderByDescending(s => s.Severity).ToList();
+
+        var seenStations = new HashSet<Guid>();
+        var result = new List<AffectedUser>();
+
+        foreach (var disruption in ordered)
+        {
+            var maskedStations = disruption.AffectedStations
+            .Where(st => !seenStations.Contains(st.Id))
+            .ToList();
+
+            foreach (var st in maskedStations) {
+                seenStations.Add(st.Id);
+            }
+
+            result.Add(disruption with
+            {
+                AffectedStations = maskedStations
+            });
+        }
+
+        return result.OrderByDescending(x => x.Severity);
     }
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
