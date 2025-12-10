@@ -775,7 +775,6 @@ public class JourneyRepositoryTests
          disruptions);
 
         result.Count().Should().Be(2);
-        result = result.OrderByDescending(x => x.Severity);
 
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
@@ -859,7 +858,6 @@ public class JourneyRepositoryTests
           disruptions);
 
         result.Count().Should().Be(2);
-        result = result.OrderByDescending(x => x.Severity);
 
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
@@ -956,7 +954,6 @@ public class JourneyRepositoryTests
             disruptions);
 
         result.Count().Should().Be(2);
-        result = result.OrderByDescending(x => x.Severity);
 
         result.First().Id.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
