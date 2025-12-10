@@ -119,38 +119,37 @@ public class JourneyController(LineRepository lineRepository,
     }
 
     [Authorize]
-    [HttpGet("affectedJourneys")]
-    public async Task<IActionResult> AffectedJourneys([FromQuery] AffectedJourneysDto affectedJourneysDto)
+    [HttpPost("affectedJourneys")]
+    public async Task<IActionResult> AffectedJourneys(AffectedJourneysDto affectedJourneysDto)
     {
-        _logger.LogInformation(
-            "Begin getting affected journeys for line {lineId} From " +
-            "{startStationId} to {endStationId} on {day} at time {windowTime}", 
-            affectedJourneysDto.LineId,
-            affectedJourneysDto.StartStationId,
-            affectedJourneysDto.EndStationId,
-            affectedJourneysDto.QueryDay,
-            affectedJourneysDto.QueryTime);
+        //_logger.LogInformation(
+        //    "Begin getting affected journeys for line {lineId} From " +
+        //    "{startStationId} to {endStationId} on {day} at time {windowTime}", 
+        //    affectedJourneysDto.LineId,
+        //    affectedJourneysDto.QueryDay,
+        //    affectedJourneysDto.QueryTime);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             affectedJourneysDto.LineId,
-            affectedJourneysDto.StartStationId,
-            affectedJourneysDto.EndStationId,
-            affectedJourneysDto.Serverity,
             affectedJourneysDto.QueryTime,
-            affectedJourneysDto.QueryDay);
+            affectedJourneysDto.QueryDay,
+            affectedJourneysDto.Disruptions
+            .Select(x => new Disruption(
+                x.Id,
+                x.StartStationId,
+                x.EndStationId,
+                x.Serverity)));
 
 
-        if(result.Any())
-        {
-            _logger.LogInformation(
-              "Successfully got affected journeys for line {lineId} From " +
-              "{startStationId} to {endStationId} on {day} at time {windowTime}",
-              affectedJourneysDto.LineId,
-              affectedJourneysDto.StartStationId,
-              affectedJourneysDto.EndStationId,
-              affectedJourneysDto.QueryDay,
-              affectedJourneysDto.QueryTime);
-        }
+        //if(result.Any())
+        //{
+        //    _logger.LogInformation(
+        //      "Successfully got affected journeys for line {lineId} From " +
+        //      "{startStationId} to {endStationId} on {day} at time {windowTime}",
+        //      affectedJourneysDto.LineId,
+        //      affectedJourneysDto.QueryDay,
+        //      affectedJourneysDto.QueryTime);
+        //}
 
         return Ok(result);
     }

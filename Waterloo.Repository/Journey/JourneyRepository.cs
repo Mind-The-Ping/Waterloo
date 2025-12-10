@@ -154,66 +154,211 @@ public class JourneyRepository(
 
     public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
-        Guid startStation,
-        Guid endStation,
-        Serverity serverity,
         TimeOnly queryTime,
-        DayOfWeek queryDay)
+        DayOfWeek queryDay,
+        IEnumerable<Disruption> disruptions)
     {
-        var queryStations = _routeRepository
-           .GetStationsBetween(line, startStation, endStation)
-           .Select(s => s.Id)
-           .ToList();
 
-        var masterRoute = _routeRepository
-           .GetRoute(line, startStation, endStation)
-           .Select(s => s.Id)
-           .ToList();
+        var unmasked = ApplyDisruptionMasking(line, disruptions);
+        var results = new List<AffectedUser>();
 
-        var journeys = await _journeyCollection
-            .Find(x =>
-                x.LineId == line &&
-                queryTime >= x.StartTime &&
-                queryTime <= x.EndTime &&
-                x.DaysToCheck.Contains(queryDay) &&
-                serverity >= x.Serverity
-                && x.DeletedAt == null)
-            .ToListAsync();
-
-        var results = new List<AffectedUser>(journeys.Count);
-
-        foreach (var journey in journeys)
+        foreach (var disruption in unmasked)
         {
-            if (!journey.StationIds.Any(queryStations.Contains)) {
-                continue;
-            }
+            var queryStations = _routeRepository
+              .GetStationsBetween(line, disruption.StartStationId, disruption.EndStationId)
+              .Select(s => s.Id)
+              .ToList();
 
-            int jDir = GetDirection(masterRoute, [.. journey.StationIds]);
-            int segDir = GetDirection(masterRoute, queryStations);
-
-            if (jDir == 0 || jDir != segDir) {
-                continue;
-            }
-
-            var overlapStations = journey.StationIds
-               .Where(queryStations.Contains)
-               .OrderBy(id => masterRoute.IndexOf(id))
-               .Select(id => _stationRepository.GetStationById(id)!)
+            var masterRoute = _routeRepository
+               .GetRoute(line, disruption.StartStationId, disruption.EndStationId)
+               .Select(s => s.Id)
                .ToList();
 
-            results.Add(new AffectedUser(
-                journey.Id,
-                journey.UserId,
-                _stationRepository.GetStationById(journey.StationIds.First())!,
-                _stationRepository.GetStationById(journey.StationIds.Last())!,
-                overlapStations,
-                journey.EndTime
-            ));
+            var journeys = await _journeyCollection
+               .Find(x =>
+                   x.LineId == line &&
+                   queryTime >= x.StartTime &&
+                   queryTime <= x.EndTime &&
+                   x.DaysToCheck.Contains(queryDay) &&
+                   disruption.Serverity >= x.Serverity
+                   && x.DeletedAt == null)
+               .ToListAsync();
+
+            foreach (var journey in journeys)
+            {
+                if (!journey.StationIds.Any(queryStations.Contains)) {
+                    continue;
+                }
+
+                int jDir = GetDirection(masterRoute, [.. journey.StationIds]);
+                int segDir = GetDirection(masterRoute, queryStations);
+
+                if (jDir == 0 || jDir != segDir) {
+                    continue;
+                }
+
+                var overlapStations = journey.StationIds
+                 .Where(queryStations.Contains)
+                 .OrderBy(id => masterRoute.IndexOf(id))
+                 .Select(id => _stationRepository.GetStationById(id)!)
+                 .ToList();
+
+                results.Add(new AffectedUser(
+                   journey.Id,
+                   journey.UserId,
+                   disruption.Id,
+                   _stationRepository.GetStationById(journey.StationIds.First())!,
+                   _stationRepository.GetStationById(journey.StationIds.Last())!,
+                   overlapStations,
+                   journey.EndTime
+                 )
+                {
+                    Severity = disruption.Serverity,
+                    DisruptionSpanLength = queryStations.Count,
+                    TotalJourneyStations = journey.StationIds.Count
+                });
+            }
         }
 
-        return results
+        return SelectBestPerJourney(results);
+    }
+
+    private IEnumerable<AffectedUser> SelectBestPerJourney(IEnumerable<AffectedUser> all)
+    {
+        return all
             .GroupBy(x => x.Id)
-            .Select(g => g.First());
+            .SelectMany(g => SelectBestForSingleJourney(g));
+    }
+
+    private IEnumerable<AffectedUser> SelectBestForSingleJourney(IEnumerable<AffectedUser> disruptionsForJourney)
+    {
+        var list = disruptionsForJourney.ToList();
+
+        var segmentGroups = list
+           .GroupBy(d => string.Join(",", d.AffectedStations.Select(s => s.Id)))
+           .ToList();
+
+        if(segmentGroups.Count == 1)
+        {
+            var group = segmentGroups.First();
+            var full = group.Where(d => d.OverlapCount == d.TotalJourneyStations).ToList();
+
+            if (full.Count > 0) {
+                return PickBest(full);
+            }
+
+            return PickBest(group);
+        }
+
+        var selected = segmentGroups
+           .SelectMany(g => PickBest(g))
+           .ToList();
+
+        return ApplyPerSegmentStationMasking(selected);
+    }
+
+    private IEnumerable<AffectedUser> PickBest(IEnumerable<AffectedUser> group) 
+    {
+        return group
+            .GroupBy(x => x.Severity)
+            .OrderByDescending(g => g.Key)
+            .First()
+            .OrderByDescending(x => x.OverlapCount)
+            .ThenByDescending(x => x.DisruptionSpanLength)
+            .Take(1);
+    }
+
+    private IEnumerable<Disruption> ApplyDisruptionMasking(
+     Guid lineId,
+     IEnumerable<Disruption> disruptions)
+    {
+        var list = disruptions.ToList();
+        var toRemove = new HashSet<Disruption>();
+
+        var allStationIds = new HashSet<Guid>();
+
+        foreach (var d in list)
+        {
+            var seg = _routeRepository
+                .GetStationsBetween(lineId, d.StartStationId, d.EndStationId)
+                .Select(s => s.Id);
+
+            foreach (var id in seg)
+                allStationIds.Add(id);
+        }
+
+        var first = list.First();
+        var referenceRoute = _routeRepository
+            .GetRoute(lineId, first.StartStationId, first.EndStationId)
+            .Select(s => s.Id)
+            .ToList();
+
+        var fullRoute = allStationIds
+            .OrderBy(id => referenceRoute.IndexOf(id))
+            .ToList();
+
+        foreach (var a in list)
+        {
+            var aRange = _routeRepository
+                .GetStationsBetween(lineId, a.StartStationId, a.EndStationId)
+                .Select(s => s.Id)
+                .ToList();
+
+            int aDir = GetDirection(fullRoute, aRange);
+
+            foreach (var b in list)
+            {
+                if (a == b)
+                    continue;
+
+                if (b.Serverity <= a.Serverity)
+                    continue;
+
+                var bRange = _routeRepository
+                    .GetStationsBetween(lineId, b.StartStationId, b.EndStationId)
+                    .Select(s => s.Id)
+                    .ToList();
+
+                int bDir = GetDirection(fullRoute, bRange);
+
+                if (aDir == 0 || bDir == 0 || aDir != bDir)
+                    continue;
+
+                if (aRange.All(st => bRange.Contains(st)))
+                {
+                    toRemove.Add(a);
+                }
+            }
+        }
+
+        return list.Where(d => !toRemove.Contains(d));
+    }
+
+
+    private IEnumerable<AffectedUser> ApplyPerSegmentStationMasking(List<AffectedUser> selected)
+    {
+        var ordered = selected.OrderByDescending(s => s.Severity).ToList();
+
+        var seenStations = new HashSet<Guid>();
+        var result = new List<AffectedUser>();
+
+        foreach (var disruption in ordered)
+        {
+            var maskedStations = disruption.AffectedStations
+            .Where(st => !seenStations.Contains(st.Id))
+            .ToList();
+
+            foreach (var st in maskedStations) {
+                seenStations.Add(st.Id);
+            }
+
+            result.Add(disruption with
+            {
+                AffectedStations = maskedStations
+            });
+        }
+
+        return result.OrderByDescending(x => x.Severity);
     }
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
@@ -238,13 +383,16 @@ public class JourneyRepository(
             }
         }
 
-        if (increasing) return +1;
-        if (decreasing) return -1;
+        if (increasing) {
+            return +1;
+        }
+
+        if (decreasing) {
+            return -1;
+        } 
 
         return 0;
     }
-
-   
 
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
