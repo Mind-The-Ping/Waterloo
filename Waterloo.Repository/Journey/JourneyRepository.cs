@@ -269,35 +269,63 @@ public class JourneyRepository(
     }
 
     private IEnumerable<Disruption> ApplyDisruptionMasking(
-        Guid lineId,
-        IEnumerable<Disruption> disruptions)
+     Guid lineId,
+     IEnumerable<Disruption> disruptions)
     {
         var list = disruptions.ToList();
         var toRemove = new HashSet<Disruption>();
 
+        var allStationIds = new HashSet<Guid>();
+
+        foreach (var d in list)
+        {
+            var seg = _routeRepository
+                .GetStationsBetween(lineId, d.StartStationId, d.EndStationId)
+                .Select(s => s.Id);
+
+            foreach (var id in seg)
+                allStationIds.Add(id);
+        }
+
+        var first = list.First();
+        var referenceRoute = _routeRepository
+            .GetRoute(lineId, first.StartStationId, first.EndStationId)
+            .Select(s => s.Id)
+            .ToList();
+
+        var fullRoute = allStationIds
+            .OrderBy(id => referenceRoute.IndexOf(id))
+            .ToList();
+
         foreach (var a in list)
         {
+            var aRange = _routeRepository
+                .GetStationsBetween(lineId, a.StartStationId, a.EndStationId)
+                .Select(s => s.Id)
+                .ToList();
+
+            int aDir = GetDirection(fullRoute, aRange);
+
             foreach (var b in list)
             {
-                if(a == b) {
+                if (a == b)
                     continue;
-                }
 
-                if(b.Serverity <= a.Serverity) {
+                if (b.Serverity <= a.Serverity)
                     continue;
-                }
 
-                var aStations = _routeRepository
-                    .GetStationsBetween(lineId, a.StartStationId, a.EndStationId)
-                    .Select(s => s.Id)
-                    .ToHashSet();
-
-                var bStations = _routeRepository
+                var bRange = _routeRepository
                     .GetStationsBetween(lineId, b.StartStationId, b.EndStationId)
                     .Select(s => s.Id)
-                    .ToHashSet();
+                    .ToList();
 
-                if (aStations.All(st => bStations.Contains(st))) {
+                int bDir = GetDirection(fullRoute, bRange);
+
+                if (aDir == 0 || bDir == 0 || aDir != bDir)
+                    continue;
+
+                if (aRange.All(st => bRange.Contains(st)))
+                {
                     toRemove.Add(a);
                 }
             }
@@ -305,6 +333,7 @@ public class JourneyRepository(
 
         return list.Where(d => !toRemove.Contains(d));
     }
+
 
     private IEnumerable<AffectedUser> ApplyPerSegmentStationMasking(List<AffectedUser> selected)
     {
