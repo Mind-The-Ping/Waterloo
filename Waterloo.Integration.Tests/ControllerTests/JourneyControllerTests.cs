@@ -322,7 +322,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
         var response = await _client.PostAsJsonAsync("api/journey/affectedJourneys", affectedJourneysDto);
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<List<AffectedUser>>();
+        var result = await response.Content.ReadFromJsonAsync<List<AffectedUserDto>>();
         result.First().UserId.Should().Be(journey.UserId);
     }
 

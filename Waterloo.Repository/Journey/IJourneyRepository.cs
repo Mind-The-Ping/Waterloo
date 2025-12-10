@@ -18,7 +18,7 @@ public interface IJourneyRepository
 
     public Task<Result> RemoveJourneyByUserIdAsync(Guid userId, DateTime deletedAt);
 
-    public Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
+    public Task<IEnumerable<AffectedUserDto>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
         TimeOnly dateTime,
         DayOfWeek queryDay,

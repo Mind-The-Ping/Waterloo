@@ -152,7 +152,7 @@ public class JourneyRepository(
         }
     }
 
-    public async Task<IEnumerable<AffectedUser>> GetUserIdsForAffectedJourneysAsync(
+    public async Task<IEnumerable<AffectedUserDto>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
         TimeOnly queryTime,
         DayOfWeek queryDay,
@@ -220,7 +220,15 @@ public class JourneyRepository(
             }
         }
 
-        return SelectBestPerJourney(results);
+        return SelectBestPerJourney(results).Select(x => 
+        new AffectedUserDto(
+            x.Id,
+            x.UserId,
+            x.DisruptionId,
+            x.StartStation,
+            x.EndStation,
+            x.AffectedStations,
+            x.EndTime));
     }
 
     private IEnumerable<AffectedUser> SelectBestPerJourney(IEnumerable<AffectedUser> all)
@@ -308,11 +316,13 @@ public class JourneyRepository(
 
             foreach (var b in list)
             {
-                if (a == b)
+                if (a == b) {
                     continue;
+                }
 
-                if (b.Serverity <= a.Serverity)
+                if (b.Serverity <= a.Serverity) {
                     continue;
+                }
 
                 var bRange = _routeRepository
                     .GetStationsBetween(lineId, b.StartStationId, b.EndStationId)
@@ -321,11 +331,11 @@ public class JourneyRepository(
 
                 int bDir = GetDirection(fullRoute, bRange);
 
-                if (aDir == 0 || bDir == 0 || aDir != bDir)
+                if (aDir == 0 || bDir == 0 || aDir != bDir) {
                     continue;
+                }
 
-                if (aRange.All(st => bRange.Contains(st)))
-                {
+                if (aRange.All(st => bRange.Contains(st))) {
                     toRemove.Add(a);
                 }
             }
