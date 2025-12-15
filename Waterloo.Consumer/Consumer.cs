@@ -20,8 +20,8 @@ public class Consumer
             throw new ArgumentNullException(nameof(journeyRepository));
     }
 
-    [Function(nameof(Consumer))]
-    public async Task Run(
+    [Function("DeletedUserConsumer")]
+    public async Task DeletedUserHandler(
         [ServiceBusTrigger("%TopicDeletedUser%", "TopicDeletedUserSubscription%", Connection = "ServiceBusConnection")]
         ServiceBusReceivedMessage message,
         ServiceBusMessageActions messageActions)
