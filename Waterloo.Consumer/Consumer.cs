@@ -22,7 +22,7 @@ public class Consumer
 
     [Function("DeletedUserConsumer")]
     public async Task DeletedUserHandler(
-        [ServiceBusTrigger("%TopicDeletedUser%", "TopicDeletedUserSubscription%", Connection = "ServiceBusConnection")]
+        [ServiceBusTrigger("%TopicDeletedUser%", "%TopicDeletedUserSubscription%", Connection = "ServiceBusConnection")]
         ServiceBusReceivedMessage message,
         ServiceBusMessageActions messageActions)
     {
