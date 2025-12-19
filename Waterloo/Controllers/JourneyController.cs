@@ -92,12 +92,6 @@ public class JourneyController(LineRepository lineRepository,
 
         var result = await _journeyRepository.GetJourneysByUserIdAsync(userId);
 
-        if (result == null || !result.Any()) 
-        {
-            _logger.LogError("Could not get journeys for user: {userId}.", userId);
-            return NotFound();
-        }
-
         _logger.LogInformation("Successfully got journeys for user: {userId}", userId);
         return Ok(result);
     }
@@ -122,12 +116,11 @@ public class JourneyController(LineRepository lineRepository,
     [HttpPost("affectedJourneys")]
     public async Task<IActionResult> AffectedJourneys(AffectedJourneysDto affectedJourneysDto)
     {
-        //_logger.LogInformation(
-        //    "Begin getting affected journeys for line {lineId} From " +
-        //    "{startStationId} to {endStationId} on {day} at time {windowTime}", 
-        //    affectedJourneysDto.LineId,
-        //    affectedJourneysDto.QueryDay,
-        //    affectedJourneysDto.QueryTime);
+        _logger.LogInformation(
+            "Begin getting affected journeys for line {lineId} on {day} at time {windowTime}",
+            affectedJourneysDto.LineId,
+            affectedJourneysDto.QueryDay,
+            affectedJourneysDto.QueryTime);
 
         var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
             affectedJourneysDto.LineId,
@@ -141,15 +134,14 @@ public class JourneyController(LineRepository lineRepository,
                 x.Serverity)));
 
 
-        //if(result.Any())
-        //{
-        //    _logger.LogInformation(
-        //      "Successfully got affected journeys for line {lineId} From " +
-        //      "{startStationId} to {endStationId} on {day} at time {windowTime}",
-        //      affectedJourneysDto.LineId,
-        //      affectedJourneysDto.QueryDay,
-        //      affectedJourneysDto.QueryTime);
-        //}
+        if (result.Any())
+        {
+            _logger.LogInformation(
+              "Successfully got affected journeys for line {lineId} on {day} at time {windowTime}",
+              affectedJourneysDto.LineId,
+              affectedJourneysDto.QueryDay,
+              affectedJourneysDto.QueryTime);
+        }
 
         return Ok(result);
     }
