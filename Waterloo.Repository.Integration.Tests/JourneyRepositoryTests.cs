@@ -310,7 +310,7 @@ public class JourneyRepositoryTests
             _disruptions);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
@@ -349,7 +349,7 @@ public class JourneyRepositoryTests
             _disruptions);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
@@ -390,7 +390,7 @@ public class JourneyRepositoryTests
             _disruptions);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
@@ -434,7 +434,7 @@ public class JourneyRepositoryTests
             _disruptions);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_affectedStationStart);
@@ -522,7 +522,7 @@ public class JourneyRepositoryTests
           disruptions);
 
         result.Should().NotBeEmpty();
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Should().Be(_stationRepository.GetStationById(journey.StationIds.First()));
@@ -596,7 +596,7 @@ public class JourneyRepositoryTests
 
         result.Should().NotBeEmpty();
 
-        result.First().Id.Should().Be(_defaultJourney.Id);
+        result.First().JourneyId.Should().Be(_defaultJourney.Id);
         result.First().UserId.Should().Be(_defaultJourney.UserId);
         result.First().DisruptionId.Should().Be(_disruptions.First().Id);
         result.First().StartStation.Should().Be(_affectedStationStart);
@@ -685,7 +685,7 @@ public class JourneyRepositoryTests
 
         result.Count().Should().Be(2);
 
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -701,7 +701,7 @@ public class JourneyRepositoryTests
         result.First().AffectedStations.ElementAt(6).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(6)));
         result.First().AffectedStations.ElementAt(7).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(7)));
 
-        result.Last().Id.Should().Be(journey.Id);
+        result.Last().JourneyId.Should().Be(journey.Id);
         result.Last().UserId.Should().Be(journey.UserId);
         result.Last().DisruptionId.Should().Be(disruptions.Last().Id);
         result.Last().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -776,7 +776,7 @@ public class JourneyRepositoryTests
 
         result.Count().Should().Be(2);
 
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -789,7 +789,7 @@ public class JourneyRepositoryTests
         result.First().AffectedStations.ElementAt(3).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(3)));
         result.First().AffectedStations.ElementAt(4).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(4)));
 
-        result.Last().Id.Should().Be(journey.Id);
+        result.Last().JourneyId.Should().Be(journey.Id);
         result.Last().UserId.Should().Be(journey.UserId);
         result.Last().DisruptionId.Should().Be(disruptions.Last().Id);
         result.Last().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -859,7 +859,7 @@ public class JourneyRepositoryTests
 
         result.Count().Should().Be(2);
 
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.Last().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -875,7 +875,7 @@ public class JourneyRepositoryTests
         result.First().AffectedStations.ElementAt(6).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(6)));
         result.First().AffectedStations.ElementAt(7).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(7)));
 
-        result.Last().Id.Should().Be(journey.Id);
+        result.Last().JourneyId.Should().Be(journey.Id);
         result.Last().UserId.Should().Be(journey.UserId);
         result.Last().DisruptionId.Should().Be(disruptions.First().Id);
         result.Last().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -955,7 +955,7 @@ public class JourneyRepositoryTests
 
         result.Count().Should().Be(2);
 
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.Last().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -972,7 +972,7 @@ public class JourneyRepositoryTests
         result.First().AffectedStations.ElementAt(7).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(15)));
         result.First().AffectedStations.ElementAt(8).Should().Be(_stationRepository.GetStationById(journey.StationIds.ElementAt(16)));
 
-        result.Last().Id.Should().Be(journey.Id);
+        result.Last().JourneyId.Should().Be(journey.Id);
         result.Last().UserId.Should().Be(journey.UserId);
         result.Last().DisruptionId.Should().Be(disruptions.First().Id);
         result.Last().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -1043,7 +1043,7 @@ public class JourneyRepositoryTests
             disruptions);
 
         result.Count().Should().Be(1);
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -1109,7 +1109,7 @@ public class JourneyRepositoryTests
             disruptions);
 
         result.Count().Should().Be(1);
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -1179,7 +1179,7 @@ public class JourneyRepositoryTests
            disruptions);
 
         result.Count().Should().Be(1);
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.First().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
@@ -1256,7 +1256,7 @@ public class JourneyRepositoryTests
            disruptions);
 
         result.Count().Should().Be(1);
-        result.First().Id.Should().Be(journey.Id);
+        result.First().JourneyId.Should().Be(journey.Id);
         result.First().UserId.Should().Be(journey.UserId);
         result.First().DisruptionId.Should().Be(disruptions.Last().Id);
         result.First().StartStation.Id.Should().Be(journey.StationIds.First());
