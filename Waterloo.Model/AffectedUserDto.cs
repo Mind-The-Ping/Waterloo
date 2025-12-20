@@ -1,7 +1,7 @@
 ﻿namespace Waterloo.Model;
 
 public record AffectedUserDto(
-    Guid Id,
+    Guid JourneyId,
     Guid UserId,
     Guid DisruptionId,
     Station StartStation,

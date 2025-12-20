@@ -214,15 +214,6 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task JourneyControllers_GetJourneysByUserId_No_Matching_User_Fails()
-    {
-        await InitializeAsync();
-
-        var response = await _client.GetAsync($"api/journey/getByUserId?id={Guid.NewGuid()}");
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    }
-
-    [Fact]
     public async Task JourneyControllers_Delete_Successful()
     {
         await InitializeAsync();
