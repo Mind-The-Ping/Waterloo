@@ -56,8 +56,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
              ]),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationInMinutes")),
             SigningCredentials = credentials,
-            Issuer = configuration["Jwt:Issuer"],
-            Audience = configuration["Jwt:Audience"]
+            Issuer = "stratford",
+            Audience = "waterloo"
         };
 
         var handler = new JsonWebTokenHandler();

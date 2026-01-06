@@ -7,6 +7,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text;
 using Waterloo;
+using Waterloo.Clients.StanmoreClient;
 using Waterloo.Options;
 using Waterloo.Repository.Journey;
 using Waterloo.Repository.Line;
@@ -65,6 +66,15 @@ else
 builder.Services.Configure<DatabaseOptions>(
     builder.Configuration.GetSection("Database"));
 
+builder.Services.Configure<StanmoreOptions>(
+    builder.Configuration.GetSection("Stanmore"));
+
+builder.Services.Configure<JwtOptions>(
+     builder.Configuration.GetSection("Jwt"));
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<IStanmoreClient, StanmoreClient>();
 builder.Services.AddScoped<LineRepository>();
 builder.Services.AddScoped<RouteRepository>();
 builder.Services.AddScoped<StationRepository>();
