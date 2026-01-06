@@ -25,4 +25,6 @@ public interface IJourneyRepository
         IEnumerable<Disruption> disruptions);
 
     public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId);
+
+    public Task<Result<int>> GetUserJourneyCountAsync(Guid userId);
 }

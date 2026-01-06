@@ -1373,6 +1373,67 @@ public class JourneyRepositoryTests
                 diffJourney.Serverity)]);
     }
 
+    [Fact]
+    public async Task JourneyRepository_GetUserJourneyCountAsync_Journey_Added_Successful()
+    {
+        await InitializeAsync();
+
+        var journey = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe,
+           
+        };
+
+        await _journeyCollection.InsertOneAsync(journey);
+
+        var result = await _journeyRepository.GetUserJourneyCountAsync(journey.UserId);
+        
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_GetUserJourneyCountAsync_No_Journey_Added_Successful()
+    {
+        await InitializeAsync();
+
+        var result = await _journeyRepository.GetUserJourneyCountAsync(Guid.NewGuid());
+
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_GetUserJourneyCountAsync_Journey_Added_Deleted_Successful()
+    {
+        await InitializeAsync();
+
+        var journey = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe,
+            DeletedAt = DateTime.UtcNow
+        };
+
+        await _journeyCollection.InsertOneAsync(journey);
+
+        var result = await _journeyRepository.GetUserJourneyCountAsync(journey.UserId);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(0);
+    }
+
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
         var londonToday = TimeZoneInfo.ConvertTime(DateTime.Today, _londonTimeZone);

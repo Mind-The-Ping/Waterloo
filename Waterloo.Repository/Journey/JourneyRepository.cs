@@ -152,6 +152,26 @@ public class JourneyRepository(
         }
     }
 
+    public async Task<Result<int>> GetUserJourneyCountAsync(Guid userId)
+    {
+        try
+        {
+            var count = (int)await _journeyCollection
+            .CountDocumentsAsync(j =>
+                j.UserId == userId &&
+                j.DeletedAt == null);
+
+            return Result.Success(count);
+        }
+        catch (Exception ex)
+        {
+            var message = $"Could get the count of journeys for user {userId}.";
+
+            _logger.LogError(ex, message);
+            return Result.Failure<int>(message);
+        }
+    }
+
     public async Task<IEnumerable<AffectedUserDto>> GetUserIdsForAffectedJourneysAsync(
         Guid line,
         TimeOnly queryTime,
@@ -344,6 +364,7 @@ public class JourneyRepository(
         return list.Where(d => !toRemove.Contains(d));
     }
 
+  
 
     private IEnumerable<AffectedUser> ApplyPerSegmentStationMasking(List<AffectedUser> selected)
     {
