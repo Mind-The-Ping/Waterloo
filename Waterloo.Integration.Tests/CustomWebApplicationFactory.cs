@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using System.Security.Claims;
 using System.Text;
+using Waterloo.Clients.StanmoreClient;
 
 namespace Waterloo.Integration.Tests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
@@ -20,12 +21,24 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             var mongoDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IMongoDatabase));
-            if (mongoDescriptor != null) services.Remove(mongoDescriptor);
+            if (mongoDescriptor != null) {
+                services.Remove(mongoDescriptor);
+            }
 
             var client = new MongoClient("mongodb://localhost:27017");
             Database = client.GetDatabase(DatabaseName);
 
             services.AddSingleton(Database);
+
+            var stanmoreDescriptor = services.SingleOrDefault(
+            d => d.ServiceType == typeof(IStanmoreClient));
+
+            if (stanmoreDescriptor != null) {
+                services.Remove(stanmoreDescriptor);
+            }
+
+            services.AddSingleton<IStanmoreClient>(
+                 new FakeStanmoreClient());
 
             var sp = services.BuildServiceProvider();
             Configuration = sp.GetRequiredService<IConfiguration>();

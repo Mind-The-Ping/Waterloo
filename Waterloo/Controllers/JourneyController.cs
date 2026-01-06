@@ -3,22 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Waterloo.Dtos;
 using Waterloo.Model;
-using Waterloo.Repository.Journey;
-using Waterloo.Repository.Line;
-using Waterloo.Repository.Route;
 
 namespace Waterloo.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class JourneyController(LineRepository lineRepository,
-                               RouteRepository routeRepository,
-                               ILogger<JourneyController> logger,
-                               IJourneyRepository journeyRepository) : ControllerBase
+public class JourneyController : ControllerBase
 {
-    private readonly LineRepository _lineRepository = lineRepository;
-    private readonly RouteRepository _routeRepository = routeRepository;
-    private readonly IJourneyRepository _journeyRepository = journeyRepository;
-    private readonly ILogger<JourneyController> _logger = logger;
+    private readonly ILogger<JourneyController> _logger;
+    private readonly JourneyOrchestrator _orchestrator;
+
+    public JourneyController(
+        JourneyOrchestrator orchestrator, 
+        ILogger<JourneyController> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _orchestrator = orchestrator ?? throw new ArgumentNullException(nameof(orchestrator));
+    }
+
 
     [Authorize]
     [HttpPost("create")]
@@ -34,41 +35,11 @@ public class JourneyController(LineRepository lineRepository,
 
         _logger.LogInformation("Begin create journey for {userId}", userId);
 
-        var line = _lineRepository.GetLineById(journeyDto.LineId);
-        
-        if (line == null) 
-        {
-            var message = $"Line Id is Invalid {journeyDto.LineId}.";
-
-            _logger.LogError(message);
-            return BadRequest(message);
-        }
-
-        var stations = _routeRepository.GetStationsBetween(
-            line.Id, 
-            journeyDto.StartStationId, 
-            journeyDto.EndStationId);
-
-        if (stations == null || !stations.Any()) 
-        {
-            var message = $"Either your start station id is invalid {journeyDto.StartStationId} " +
-                          $"or end station id is {journeyDto.EndStationId}.";
-
-            _logger.LogError(message);
-            return BadRequest(message);
-        }
-
-        var result = await _journeyRepository.AddJourneyAsync(
-            userId, 
-            line.Id, 
-            stations.Select(x => x.Id), 
-            journeyDto.StartTime, 
-            journeyDto.EndTime,
-            journeyDto.DaysToCheck,
-            journeyDto.Serverity);
+       
+        var result = await _orchestrator.CreateJourneyAsync(userId, journeyDto);
 
         if(result.IsFailure) {
-            return Problem(result.Error);
+            return BadRequest(result.Error);
         }
 
         _logger.LogInformation("Successfully created journey for {userId}", userId);
@@ -90,7 +61,7 @@ public class JourneyController(LineRepository lineRepository,
 
         _logger.LogInformation("Begin getting journeys for user: {userId}.", userId);
 
-        var result = await _journeyRepository.GetJourneysByUserIdAsync(userId);
+        var result = await _orchestrator.GetJourneysByUserIdAsync(userId);
 
         _logger.LogInformation("Successfully got journeys for user: {userId}", userId);
         return Ok(result);
@@ -102,7 +73,7 @@ public class JourneyController(LineRepository lineRepository,
     {
         _logger.LogInformation("Begin deleting journey {Id}.", id);
 
-        var result = await _journeyRepository.RemoveJourneyAsync(id);
+        var result = await _orchestrator.RemoveJourneyAsync(id);
 
         if (result.IsFailure) {
             return BadRequest(result.Error);
@@ -122,7 +93,7 @@ public class JourneyController(LineRepository lineRepository,
             affectedJourneysDto.QueryDay,
             affectedJourneysDto.QueryTime);
 
-        var result = await _journeyRepository.GetUserIdsForAffectedJourneysAsync(
+        var result = await _orchestrator.GetUserIdsForAffectedJourneysAsync(
             affectedJourneysDto.LineId,
             affectedJourneysDto.QueryTime,
             affectedJourneysDto.QueryDay,
