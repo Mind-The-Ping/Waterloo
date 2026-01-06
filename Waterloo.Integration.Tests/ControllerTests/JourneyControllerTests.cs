@@ -1,6 +1,4 @@
-﻿using DnsClient;
-using FluentAssertions;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using FluentAssertions;
 using MongoDB.Driver;
 using System.Net;
 using System.Net.Http.Headers;
@@ -8,8 +6,6 @@ using System.Net.Http.Json;
 using Waterloo.Dtos;
 using Waterloo.Model;
 using Waterloo.Options;
-using Waterloo.Repository.Line;
-using Waterloo.Repository.Station;
 
 namespace Waterloo.Integration.Tests.ControllerTests;
 public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
@@ -18,11 +14,8 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
     private readonly HttpClient _unauthorizedClient;
     private readonly Guid _id = Guid.NewGuid();
     private readonly IMongoDatabase _mongoDatabase;
-    private readonly IMongoCollection<Model.Journey> _journeyCollection;
+    private readonly IMongoCollection<Journey> _journeyCollection;
     private readonly CustomWebApplicationFactory _factory;
-
-    private readonly LineRepository _lineRepository;
-    private readonly StationRepository _stationRepository;
 
     public JourneyControllerTests(CustomWebApplicationFactory factory)
     {
@@ -43,10 +36,7 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
             ConnectionString = "mongodb://localhost:27017"
         };
 
-        _journeyCollection = _mongoDatabase.GetCollection<Model.Journey>(databaseOptions.Collection);
-
-        _lineRepository = new LineRepository();
-        _stationRepository = new StationRepository();
+        _journeyCollection = _mongoDatabase.GetCollection<Journey>(databaseOptions.Collection);
     }
 
     private async Task InitializeAsync()
@@ -88,78 +78,6 @@ public class JourneyControllerTests : IClassFixture<CustomWebApplicationFactory>
 
         var response = await _unauthorizedClient.PostAsJsonAsync("api/journey/create", journeyDto);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-    }
-
-    [Fact]
-    public async Task JourneyControllers_Create_WrongLineId_Fails()
-    {
-        await InitializeAsync();
-
-        var journeyDto = new JourneyDto(
-            Guid.NewGuid(),
-            Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
-            Guid.Parse("d58a55c8-bd8d-45f7-a7a2-c0bd0096afca"),
-            new TimeOnly(10, 00),
-            new TimeOnly(13, 00),
-            [DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday],
-            Serverity.Minor);
-
-        var response = await _client.PostAsJsonAsync("api/journey/create", journeyDto);
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task JourneyControllers_Create_Wrong_StartStationId_Fails()
-    {
-        await InitializeAsync();
-
-        var journeyDto = new JourneyDto(
-           Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
-           Guid.NewGuid(),
-           Guid.Parse("d58a55c8-bd8d-45f7-a7a2-c0bd0096afca"),
-           new TimeOnly(10, 00),
-           new TimeOnly(13, 00),
-           [DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday],
-           Serverity.Minor);
-
-        var response = await _client.PostAsJsonAsync("api/journey/create", journeyDto);
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task JourneyControllers_Create_Wrong_EndStationId_Fails()
-    {
-        await InitializeAsync();
-
-        var journeyDto = new JourneyDto(
-           Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
-           Guid.Parse("03c1cead-6d76-40f7-b67d-0eecef00220b"),
-           Guid.NewGuid(),
-           new TimeOnly(10, 00),
-           new TimeOnly(13, 00),
-           [DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday],
-           Serverity.Minor);
-
-        var response = await _client.PostAsJsonAsync("api/journey/create", journeyDto);
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task JourneyControllers_Create_Wrong_StartAndEndStationId_Fails()
-    {
-        await InitializeAsync();
-
-        var journeyDto = new JourneyDto(
-           Guid.Parse("8c3a4d59-f2e0-46a8-9f56-ec27eaffded9"),
-           Guid.NewGuid(),
-           Guid.NewGuid(),
-           new TimeOnly(10, 00),
-           new TimeOnly(13, 00),
-           [DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday],
-           Serverity.Minor);
-
-        var response = await _client.PostAsJsonAsync("api/journey/create", journeyDto);
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]

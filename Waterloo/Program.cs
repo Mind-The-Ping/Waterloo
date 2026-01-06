@@ -7,6 +7,8 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text;
 using Waterloo;
+using Waterloo.Clients.StanmoreClient;
+using Waterloo.Model.Options;
 using Waterloo.Options;
 using Waterloo.Repository.Journey;
 using Waterloo.Repository.Line;
@@ -62,13 +64,26 @@ else
     builder.Logging.AddConsole();
 }
 
+builder.Services.Configure<JourneyOptions>(
+    builder.Configuration.GetSection("Journey"));
+
 builder.Services.Configure<DatabaseOptions>(
     builder.Configuration.GetSection("Database"));
 
+builder.Services.Configure<StanmoreOptions>(
+    builder.Configuration.GetSection("Stanmore"));
+
+builder.Services.Configure<JwtOptions>(
+     builder.Configuration.GetSection("Jwt"));
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<IStanmoreClient, StanmoreClient>();
 builder.Services.AddScoped<LineRepository>();
 builder.Services.AddScoped<RouteRepository>();
 builder.Services.AddScoped<StationRepository>();
 builder.Services.AddScoped<IJourneyRepository,  JourneyRepository>();
+builder.Services.AddScoped<JourneyOrchestrator>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
