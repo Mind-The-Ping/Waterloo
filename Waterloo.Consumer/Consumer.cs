@@ -49,4 +49,32 @@ public class Consumer
 
         await messageActions.CompleteMessageAsync(message);
     }
+
+    [Function("PremiumUserEndCleanUp")]
+    public async Task CleanUpHandler(
+        [ServiceBusTrigger("%QueueDeleteJourneys%", Connection = "ServiceBusConnection")]
+        ServiceBusReceivedMessage message,
+        ServiceBusMessageActions messageActions)
+    {
+        _logger.LogInformation("Message ID: {id}", message.MessageId);
+        _logger.LogInformation("Message Body: {body}", message.Body);
+        _logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
+
+        try
+        {
+            var json = message.Body.ToArray();
+            var user = JsonSerializer.Deserialize<DeletePremiumJourneysMessage>(json);
+
+            var result = await _journeyRepository.RemovePremiumJourneysAsync(user!.UserId);
+
+            if (result.IsFailure) {
+                _logger.LogError(result.Error);
+            }
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex, "Could not deserialize expired premium user.");
+        }
+
+        await messageActions.CompleteMessageAsync(message);
+    }
 }
