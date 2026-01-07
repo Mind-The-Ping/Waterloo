@@ -27,4 +27,6 @@ public interface IJourneyRepository
     public Task<IEnumerable<JourneyReturn>> GetJourneysByUserIdAsync(Guid userId);
 
     public Task<Result<int>> GetUserJourneyCountAsync(Guid userId);
+
+    public Task<Result> RemovePremiumJourneysAsync(Guid userId);
 }

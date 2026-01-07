@@ -1434,6 +1434,92 @@ public class JourneyRepositoryTests
         result.Value.Should().Be(0);
     }
 
+    [Fact]
+    public async Task JourneyRepository_RemovePremiumJourneysAsync_Multiple_Journeys_Successful()
+    {
+        await InitializeAsync();
+
+        var userId = Guid.NewGuid();
+        var journeys = new List<Model.Journey>
+        {
+            new()
+            {
+                UserId = userId,
+                LineId = Guid.NewGuid(),
+                StationIds = [Guid.NewGuid()],
+                StartTime = new TimeOnly(5, 00),
+                EndTime = new TimeOnly(8, 00),
+                DaysToCheck = [DayOfWeek.Monday],
+                Serverity = Serverity.Severe,
+                DeletedAt = null,
+                CreatedAt = DateTime.UtcNow
+            },
+            new()
+            {
+                UserId = userId,
+                LineId = Guid.NewGuid(),
+                StationIds = [Guid.NewGuid()],
+                StartTime = new TimeOnly(5, 00),
+                EndTime = new TimeOnly(8, 00),
+                DaysToCheck = [DayOfWeek.Monday],
+                Serverity = Serverity.Severe,
+                DeletedAt = null,
+                CreatedAt = DateTime.UtcNow.AddDays(-10)
+            },
+        };
+
+        await _journeyCollection.InsertManyAsync(journeys);
+
+        var result = await _journeyRepository.RemovePremiumJourneysAsync(userId);
+
+        result.IsSuccess.Should().BeTrue();
+
+        var record = await _journeyCollection
+           .Find(x => x.UserId == userId && x.DeletedAt == null)
+           .ToListAsync();
+
+        record.Count.Should().Be(1);
+        record.First().Id.Should().Be(journeys.First().Id);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_RemovePremiumJourneysAsync_Single_Journey_Successful()
+    {
+        await InitializeAsync();
+        var journey = new Model.Journey()
+        {
+            UserId = Guid.NewGuid(),
+            LineId = Guid.NewGuid(),
+            StationIds = [Guid.NewGuid()],
+            StartTime = new TimeOnly(5, 00),
+            EndTime = new TimeOnly(8, 00),
+            DaysToCheck = [DayOfWeek.Monday],
+            Serverity = Serverity.Severe,
+        };
+
+        await _journeyCollection.InsertOneAsync(journey);
+
+        var result = await _journeyRepository.RemovePremiumJourneysAsync(journey.UserId);
+
+        result.IsSuccess.Should().BeTrue();
+
+        var record = await _journeyCollection
+           .Find(x => x.UserId == journey.UserId && x.DeletedAt == null)
+           .ToListAsync();
+
+        record.Count.Should().Be(1);
+        record.First().Id.Should().Be(journey.Id);
+    }
+
+    [Fact]
+    public async Task JourneyRepository_RemovePremiumJourneysAsync_None_Journey_Successful()
+    {
+        await InitializeAsync();
+        var result = await _journeyRepository.RemovePremiumJourneysAsync(Guid.NewGuid());
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
     private static TimeOnly ConvertToUtc(TimeOnly timeOnly)
     {
         var londonToday = TimeZoneInfo.ConvertTime(DateTime.Today, _londonTimeZone);

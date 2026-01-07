@@ -251,6 +251,51 @@ public class JourneyRepository(
             x.EndTime));
     }
 
+    public async Task<Result> RemovePremiumJourneysAsync(Guid userId)
+    {
+        try
+        {
+            var latestJourney = await _journeyCollection
+               .Find(j => j.UserId == userId && j.DeletedAt == null)
+               .SortByDescending(j => j.CreatedAt)
+               .Limit(1)
+               .FirstOrDefaultAsync();
+
+            if (latestJourney == null)
+            {
+                _logger.LogInformation(
+                    "No journeys found for user {userId}. Nothing to clean up.",
+                    userId);
+
+                return Result.Success();
+            }
+
+            var update = Builders<Model.Journey>.Update
+                .Set(x => x.DeletedAt, DateTime.UtcNow);
+
+            var result = await _journeyCollection.UpdateManyAsync(
+               j =>
+               j.UserId == userId &&
+               j.Id != latestJourney.Id &&
+               j.DeletedAt == null,
+                update);
+
+            _logger.LogInformation(
+               "Marked {count} premium journeys as deleted for user {userId}, keeping journey {journeyId}.",
+               result.ModifiedCount,
+               userId,
+               latestJourney.Id);
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            var message = $"Could not clean up premium journeys for user {userId}.";
+            _logger.LogError(ex, message);
+            return Result.Failure(message);
+        }
+    }
+
     private IEnumerable<AffectedUser> SelectBestPerJourney(IEnumerable<AffectedUser> all)
     {
         return all
