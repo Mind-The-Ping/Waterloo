@@ -62,10 +62,9 @@ public class Consumer
 
         try
         {
-            var json = message.Body.ToArray();
-            var user = JsonSerializer.Deserialize<DeletePremiumJourneysMessage>(json);
+            var payload = message.Body.ToObjectFromJson<DeletePremiumJourneysMessage>();
 
-            var result = await _journeyRepository.RemovePremiumJourneysAsync(user!.UserId);
+            var result = await _journeyRepository.RemovePremiumJourneysAsync(payload!.UserId);
 
             if (result.IsFailure) {
                 _logger.LogError(result.Error);
