@@ -79,6 +79,9 @@ public class JourneyRepository(
 
             var localStart = TimeZoneInfo.ConvertTimeFromUtc(utcStartDateTime, _londonTimeZone);
             var localEnd = TimeZoneInfo.ConvertTimeFromUtc(utcEndDateTime, _londonTimeZone);
+            var orderedDays = journey.DaysToCheck
+                .OrderBy(d => d)
+                .ToList();
 
             results.Add(new JourneyReturn(
                journey.Id,
@@ -87,7 +90,7 @@ public class JourneyRepository(
                _stationRepository.GetStationById(journey.StationIds.Last())!,
                TimeOnly.FromDateTime(localStart),
                TimeOnly.FromDateTime(localEnd),
-               journey.DaysToCheck,
+               orderedDays,
                journey.Serverity));
         }
 
