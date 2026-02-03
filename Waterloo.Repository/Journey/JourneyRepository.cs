@@ -412,32 +412,34 @@ public class JourneyRepository(
         return list.Where(d => !toRemove.Contains(d));
     }
 
-  
-
     private IEnumerable<AffectedUser> ApplyPerSegmentStationMasking(List<AffectedUser> selected)
     {
         var ordered = selected.OrderByDescending(s => s.Severity).ToList();
 
-        var seenStations = new HashSet<Guid>();
-        var result = new List<AffectedUser>();
+        var lockedStations = new HashSet<Guid>();
+        var finalResult = new List<AffectedUser>();
 
         foreach (var disruption in ordered)
         {
-            var maskedStations = disruption.AffectedStations
-            .Where(st => !seenStations.Contains(st.Id))
-            .ToList();
+            var uniqueStations = disruption.AffectedStations
+                .Where(st => !lockedStations.Contains(st.Id))
+                .ToList();
 
-            foreach (var st in maskedStations) {
-                seenStations.Add(st.Id);
+            if (uniqueStations.Count == 0) {
+                continue;
             }
 
-            result.Add(disruption with
+            foreach (var st in uniqueStations) {
+                lockedStations.Add(st.Id);
+            }
+
+            finalResult.Add(disruption with
             {
-                AffectedStations = maskedStations
+                AffectedStations = uniqueStations
             });
         }
 
-        return result.OrderByDescending(x => x.Severity);
+        return finalResult;
     }
 
     private static int GetDirection(List<Guid> master, List<Guid> partial)
