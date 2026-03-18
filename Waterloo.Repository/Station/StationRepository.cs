@@ -10,7 +10,8 @@ public class StationRepository
         "undergroundstation",
         "railstation",
         "dlrstation",
-        "tramstop"
+        "tramstop",
+        "station"
     ];
 
     private static Dictionary<string, string[]> _stationAliases;
